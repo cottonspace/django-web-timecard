@@ -18,6 +18,18 @@ Django で記述された Web ベースのシンプルなタイムカードシ�
 ### パスワード変更
 - ユーザは自分自身のパスワードを変更できます。
 
+## デモ
+- [https://cottonspace.pythonanywhere.com/worktime/login/](https://cottonspace.pythonanywhere.com/worktime/login/) にアクセスします。
+- 位置情報の取得はデモのため OFF にしています。
+- デモでは以下のユーザが使用可能です。
+- デモユーザのパスワードは 1 日に 1 回、以下のデフォルト値に初期化されます。
+
+| ID  | パスワード | 役割 |
+| ------------- | ------------- | ------------- |
+| demo1  | demodemo1  | 一般ユーザ |
+| demo2  | demodemo2  | 一般ユーザ |
+| manage  | manemane1  | 管理者 |
+
 ## インストール方法
 
 ### ダウンロードと設定の変更
@@ -46,7 +58,7 @@ python3 manage.py createsuperuser
 ```
 - 以下のコマンドで曜日別の就業時間を初期化します。ここではデフォルトの設定が作成されるので、あとの作業で、適切な就業時間のルールに編集します。
 ```
-python3 manage.py loaddata worktime.standardworkpattern
+python3 manage.py loaddata worktime/fixtures/standardworkpattern.json
 ```
 - サーバを起動します。例えば Django の機能で起動する場合は以下のコマンドを実行します。
 ```

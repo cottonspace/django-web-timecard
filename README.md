@@ -18,6 +18,18 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 ### Change Password
 - Users can change own password.
 
+## Demo
+- Access to [https://cottonspace.pythonanywhere.com/worktime/login/](https://cottonspace.pythonanywhere.com/worktime/login/).
+- Location information feature is turned off for demonstration purposes.
+- Those users can use the demo:
+- Demo user passwords are initialized to the default once a day.
+
+| id  | password | role |
+| ------------- | ------------- | ------------- |
+| demo1  | demodemo1  | employee |
+| demo2  | demodemo2  | employee |
+| manage  | manemane1  | manager |
+
 ## Installation
 
 ### Download and edit settings
@@ -46,7 +58,7 @@ python3 manage.py createsuperuser
 ```
 - Initialize the working hours for each day of the week with the following command. This will create default settings, so you can edit them later to create appropriate working hours rules.
 ```
-python3 manage.py loaddata worktime.standardworkpattern
+python3 manage.py loaddata worktime/fixtures/standardworkpattern.json
 ```
 - Start the server. For example, to start with Django's functions, run the following command.
 ```
