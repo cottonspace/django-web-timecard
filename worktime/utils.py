@@ -1,5 +1,6 @@
 import datetime
 import math
+from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 
 from django.contrib.auth.models import User
 from geopy.distance import geodesic
@@ -118,6 +119,20 @@ def round_down(value: int, step: int) -> int:
     return math.floor(value / step) * step
 
 
+def minutes_to_hours(minutes: int, quantize: str, rounding_mode) -> Decimal:
+    """整数の分から時間の単位に変換します。
+
+    Args:
+        minutes (int): 分
+        quantize (str): 精度
+        rounding_mode: 丸めモード
+
+    Returns:
+        Decimal: 時間単位の値
+    """
+    return (Decimal(minutes) / Decimal(60)).quantize(Decimal(quantize), rounding=rounding_mode)
+
+
 def worktime_calculation(obj) -> dict:
     """勤務時間ルールと打刻時間から勤務実績を計算します。
 
@@ -233,6 +248,8 @@ def summarize(objects) -> dict:
         'overtime_count': 0,
         'errors': 0
     }
+
+    # 全オブジェクトを加算
     for obj in objects:
         result['days'] += 1
         if obj['attendance']:
@@ -252,12 +269,14 @@ def summarize(objects) -> dict:
         if 0 < obj['overtime']:
             result['overtime_minutes'] += obj['overtime']
             result['overtime_count'] += 1
-        result['behind_hours'] = round_down(
-            result['behind_minutes'], timecard.settings.ROUND_MINUTE) / 60
-        result['early_hours'] = round_up(
-            result['early_minutes'], timecard.settings.ROUND_MINUTE) / 60
-        result['overtime_hours'] = round_up(
-            result['overtime_minutes'], timecard.settings.ROUND_MINUTE) / 60
+
+    # 時間単位の算出
+    result['behind_hours'] = minutes_to_hours(round_down(
+        result['behind_minutes'], timecard.settings.ROUND_MINUTE), '0.1', ROUND_FLOOR)
+    result['early_hours'] = minutes_to_hours(round_up(
+        result['early_minutes'], timecard.settings.ROUND_MINUTE), '0.1', ROUND_CEILING)
+    result['overtime_hours'] = minutes_to_hours(round_up(
+        result['overtime_minutes'], timecard.settings.ROUND_MINUTE), '0.1', ROUND_CEILING)
 
     # 結果返却
     return result
