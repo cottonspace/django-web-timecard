@@ -1,5 +1,4 @@
 import datetime
-import math
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 
 from django.contrib.auth.models import User
@@ -91,32 +90,6 @@ def cutout(threshold: int, value: int) -> int:
     if value < threshold:
         return 0
     return value
-
-
-def round_up(value: int, step: int) -> int:
-    """数値を指定した単位 (粒度) で丸めて切り上げます。
-
-    Args:
-        value (int): 数値
-        step (int): 単位 (粒度)
-
-    Returns:
-        int: 切り上げた数値
-    """
-    return math.ceil(value / step) * step
-
-
-def round_down(value: int, step: int) -> int:
-    """数値を指定した単位 (粒度) で丸めて切り下げます。
-
-    Args:
-        value (int): 数値
-        step (int): 単位 (粒度)
-
-    Returns:
-        int: 切り下げた数値
-    """
-    return math.floor(value / step) * step
 
 
 def minutes_to_hours(minutes: int, quantize: str, rounding_mode) -> Decimal:
@@ -271,12 +244,12 @@ def summarize(objects) -> dict:
             result['overtime_count'] += 1
 
     # 時間単位の算出
-    result['behind_hours'] = minutes_to_hours(round_down(
-        result['behind_minutes'], timecard.settings.ROUND_MINUTE), '0.1', ROUND_FLOOR)
-    result['early_hours'] = minutes_to_hours(round_up(
-        result['early_minutes'], timecard.settings.ROUND_MINUTE), '0.1', ROUND_CEILING)
-    result['overtime_hours'] = minutes_to_hours(round_up(
-        result['overtime_minutes'], timecard.settings.ROUND_MINUTE), '0.1', ROUND_CEILING)
+    result['behind_hours'] = minutes_to_hours(
+        result['behind_minutes'], '0.1', ROUND_FLOOR)
+    result['early_hours'] = minutes_to_hours(
+        result['early_minutes'], '0.1', ROUND_CEILING)
+    result['overtime_hours'] = minutes_to_hours(
+        result['overtime_minutes'], '0.1', ROUND_CEILING)
 
     # 結果返却
     return result
