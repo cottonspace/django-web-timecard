@@ -18,11 +18,6 @@ from django.contrib import messages
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Static file directory
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
-
 # Load local settings
 try:
     from .local_settings import *
