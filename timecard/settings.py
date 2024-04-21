@@ -9,14 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
-import os
-from pathlib import Path
-
 from django.contrib import messages
-
-# Base directory
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load local settings
 try:

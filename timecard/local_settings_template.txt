@@ -1,7 +1,8 @@
+import os
 from pathlib import Path
 
 # デバッグ設定
-DEBUG = True
+DEBUG = False
 
 # 許可する Host ヘッダ
 ALLOWED_HOSTS = ['%あなたのサーバのドメイン%']
@@ -15,6 +16,11 @@ DATABASES = {
         %あなたのデータベースの接続情報%
     }
 }
+
+# 静的ファイル公開定義 (運用時はコメントにしてください)
+STATICFILES_DIRS = (
+    os.path.join(Path(__file__).resolve().parent.parent, "static"),
+)
 
 # セッション有効期限 (秒)
 SESSION_COOKIE_AGE = %任意の秒数 (例: 2週間は 1209600)%
