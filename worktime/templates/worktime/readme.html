@@ -1,0 +1,63 @@
+{% extends 'worktime/base.html' %}
+{% block title %}使用方法 | {{ block.super }}{% endblock title %}
+{% block main %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+    #qrcode {
+        margin: 20px;
+    }
+</style>
+<div class="container">
+    <h3>機能説明</h3>
+    <ul>
+        <li>スマートフォンや PC から出勤と退勤の打刻をおこなえます。</li>
+        <li>ブラウザで <span id="site_url"></span> をブックマークすることをおすすめします。以下の QR コードでもアクセスできます。</li>
+        <div id="qrcode"></div>
+    </ul>
+    <script type="text/javascript">
+        var url = window.location.href.replace(/worktime\/readme\//, '');
+        document.getElementById('site_url').innerText = url;
+        new QRCode(document.getElementById("qrcode"), {
+            text: url,
+            width: 120,
+            height: 120
+        });
+    </script>
+    <h3>打刻</h3>
+    <ul>
+        {% if ENABLE_CHECK_LOCATION %}
+        <li>勤務場所から {{ MAX_DISTANCE }} メートル以内で打刻操作をおこなってください。</li>
+        {% endif %}
+        <li>ボタンを押してから打刻が記録されるまでに、タイムラグが生じる場合があります。</li>
+        <li>同じ日に複数回の出勤打刻をした場合は、同日の最初の打刻が採用されます。出勤の打刻に訂正が必要な場合は、管理者に申し出て修正を依頼してください。</li>
+        <li>同じ日に複数回の退勤打刻をした場合は、同日の最後の打刻が採用されます。このため打刻後に追加の業務が発生した場合は、そのまま再度の退勤打刻をおこなってください。再度出勤の打刻をおこなう必要はありません。</li>
+    </ul>
+    <h3>勤務表</h3>
+    <ul>
+        <li>月単位の打刻記録および勤務時間を確認できます。</li>
+    </ul>
+    <h3>パスワード変更</h3>
+    <ul>
+        <li>パスワードを変更することができます。</li>
+    </ul>
+    <h3>勤務時間</h3>
+    <ul>
+        <li>遅刻や早退が {{ MIN_BEHIND_MIN }} 分より短い場合は無視します。</li>
+        <li>休憩時間が定義されている場合は、勤務時間から休憩時間は控除します。</li>
+        <li>所定の始業時刻より出勤時刻が {{ MIN_EARLY_MIN }} 分よりも早い場合に早出勤務として扱います。</li>
+        <li>所定の終業時刻より退勤時刻が {{ MIN_OVERTIME_MIN }} 分よりも遅い場合に残業として扱います。</li>
+        <li>月単位の合計時間は {{ ROUND_MINUTE }} 分単位で時間単位に変換します。遅刻や早退の時間は切り下げし、早出や残業の時間は切り上げします。</li>
+    </ul>
+    <h3>制限事項</h3>
+    <ul>
+        <li>0 時から 24 時の間に出勤と退勤の順番で打刻がある場合のみ対応します。日付をまたぐ退勤や徹夜勤務は対応しておりません。エラーとして判定しますので、個別の調整を願います。</li>
+        <li>打刻の修正機能はありません。修正が必要な場合は、管理者に申し出て修正を依頼してください。</li>
+    </ul>
+    <h3>謝辞</h3>
+    <ul>
+        <li>画像イラストの素材は 「<a href="https://www.irasutoya.com/" target="_blank">いらすとや</a>」 の公開素材を利用しています。</li>
+        <li>音源データは 「<a href="https://www.springin.org/sound-stock/" target="_blank">Springin&#39; Sound Stock</a>」 の公開素材を利用しています。</li>
+        <li>祝日データは 「<a href="https://holidays-jp.github.io/" target="_blank">Holidays JP API</a>」 の公開データを利用しています。</li>
+    </ul>
+</div>
+{% endblock main %}

@@ -1,0 +1,90 @@
+[
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 0,
+        "fields": {
+            "attendance": true,
+            "begin": "09:00:00",
+            "end": "17:00:00",
+            "leave": "12:00:00",
+            "back": "13:00:00"
+        }
+    },
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 1,
+        "fields": {
+            "attendance": true,
+            "begin": "09:00:00",
+            "end": "17:00:00",
+            "leave": "12:00:00",
+            "back": "13:00:00"
+        }
+    },
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 2,
+        "fields": {
+            "attendance": true,
+            "begin": "09:00:00",
+            "end": "17:00:00",
+            "leave": "12:00:00",
+            "back": "13:00:00"
+        }
+    },
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 3,
+        "fields": {
+            "attendance": true,
+            "begin": "09:00:00",
+            "end": "17:00:00",
+            "leave": "12:00:00",
+            "back": "13:00:00"
+        }
+    },
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 4,
+        "fields": {
+            "attendance": true,
+            "begin": "09:00:00",
+            "end": "17:00:00",
+            "leave": "12:00:00",
+            "back": "13:00:00"
+        }
+    },
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 5,
+        "fields": {
+            "attendance": false,
+            "begin": null,
+            "end": null,
+            "leave": null,
+            "back": null
+        }
+    },
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 6,
+        "fields": {
+            "attendance": false,
+            "begin": null,
+            "end": null,
+            "leave": null,
+            "back": null
+        }
+    },
+    {
+        "model": "worktime.standardworkpattern",
+        "pk": 7,
+        "fields": {
+            "attendance": false,
+            "begin": null,
+            "end": null,
+            "leave": null,
+            "back": null
+        }
+    }
+]
