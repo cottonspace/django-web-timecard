@@ -1,6 +1,6 @@
 # django-web-timecard
 
-<img src="static/worktime/logo.svg" width="30%">
+![logo](static/worktime/logo.svg)
 
 Web based simple Time Card system written by django. Currently this application only supports Japanese and Japan holidays.
 
