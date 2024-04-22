@@ -3,10 +3,6 @@
 {% load custom_filter %}
 {% block main %}
 <style>
-    .calendar-title {
-        font-size: 30px;
-    }
-
     .table tr,
     .table td {
         white-space: nowrap;
@@ -14,19 +10,6 @@
     }
 
     @media print {
-        * {
-            pointer-events: none;
-        }
-
-        .calendar-title {
-            font-size: 24px !important;
-        }
-
-        .table * {
-            font-size: 12px !important;
-            padding: 2px 10px !important;
-        }
-
         .container {
             margin: 0;
         }
@@ -37,6 +20,11 @@
 
         .table-responsive {
             overflow: visible !important;
+        }
+
+        .table * {
+            font-size: 12px !important;
+            padding: 2px 10px !important;
         }
 
         .table tr {
@@ -50,9 +38,11 @@
         }
     }
 </style>
-<div class="container text-center mb-3">
+<div class="container text-center">
     <div class="row">
-        <div class="col calendar-title"><span id="clock-date">{{ year }}年{{ month }}月</span> <span id="display-name">{{ users | dict_value:username }}</span></div>
+        <div class="col mb-3">
+            <h2>{{ year }}年{{ month }}月 {{ users | dict_value:username }}</h2>
+        </div>
     </div>
 </div>
 <div class="container no-print">
