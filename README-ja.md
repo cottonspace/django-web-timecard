@@ -1,6 +1,6 @@
 # django-web-timecard
 
-![Logo](static/worktime/logo.svg)
+<img src="static/worktime/logo.svg" width="30%">
 
 Django で記述された Web ベースのシンプルなタイムカードシステムです。現在は日本語と日本の祝日にのみ対応しています。
 
