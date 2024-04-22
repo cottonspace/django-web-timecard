@@ -18,12 +18,14 @@
     <h3>機能説明</h3>
     <ul>
         <li>スマートフォンや PC から出勤と退勤の打刻をおこなえます。</li>
-        <li>ブラウザで <span id="site_url"></span> をブックマークすることをおすすめします。以下の QR コードでもアクセスできます。</li>
+        <li>ブラウザで <a id="site_url"></a> をブックマークすることをおすすめします。以下の QR コードでもアクセスできます。</li>
         <div id="qrcode"></div>
     </ul>
     <script type="text/javascript">
         var url = window.location.href.replace(/worktime\/readme\//, '');
-        document.getElementById('site_url').innerText = url;
+        var site_link = document.getElementById('site_url')
+        site_link.href = url;
+        site_link.innerText = url;
         new QRCode(document.getElementById("qrcode"), {
             text: url,
             width: 120,
