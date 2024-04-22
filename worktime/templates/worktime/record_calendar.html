@@ -1,13 +1,19 @@
 {% extends 'worktime/base.html' %}
-{% block title %}勤務表 | {{ block.super }}{% endblock title %}
 {% load custom_filter %}
 {% load humanize %}
+{% block title %}{{ year }}年{{ month }}月 {{ users | dict_value:username }} | {{ block.super }}{% endblock title %}
 {% block main %}
 <style>
     .table tr,
     .table td {
         white-space: nowrap;
         text-align: center;
+    }
+
+    .check {
+        width: 14px;
+        height: 14px;
+        stroke: green;
     }
 
     @media print {
@@ -45,6 +51,12 @@
             color: black !important;
             background-color: white !important;
             padding: 3px 8px !important;
+        }
+
+        .check {
+            width: 12px;
+            height: 12px;
+            stroke: black;
         }
     }
 </style>
@@ -149,7 +161,7 @@
                     {% if entry.past %}
                     {% if entry.work %}
                     <td>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </td>
