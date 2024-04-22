@@ -1,6 +1,7 @@
 {% extends 'worktime/base.html' %}
 {% block title %}勤務表 | {{ block.super }}{% endblock title %}
 {% load custom_filter %}
+{% load humanize %}
 {% block main %}
 <style>
     .table tr,
@@ -90,7 +91,7 @@
 {% if entries %}
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="summary" class="table">
+        <table id="summary" class="table align-middle">
             <thead>
                 <tr>
                     <th scope="col">状態</th>
@@ -110,9 +111,9 @@
                     <td>{% if summary.days %}{{ summary.days }} 日{% else %}-{% endif %}</td>
                     <td>{% if summary.attendance_days %}{{ summary.attendance_days }} 日{% else %}-{% endif %}</td>
                     <td>{% if summary.work_days %}{{ summary.work_days }} 日{% else %}-{% endif %}</td>
-                    <td>{% if summary.behind_minutes %}{{ summary.behind_count }} 回 ({{ summary.behind_minutes }} 分){% else %}-{% endif %}</td>
-                    <td>{% if summary.early_hours %}{{ summary.early_hours }} 時間 ({{ summary.early_minutes }} 分){% else %}-{% endif %}</td>
-                    <td>{% if summary.overtime_hours %}{{ summary.overtime_hours }} 時間 ({{ summary.overtime_minutes }} 分){% else %}-{% endif %}</td>
+                    <td>{% if summary.behind_minutes %}{{ summary.behind_count }} 回<br>({{ summary.behind_minutes | intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if summary.early_hours %}{{ summary.early_hours }} 時間<br>({{ summary.early_minutes | intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if summary.overtime_hours %}{{ summary.overtime_hours }} 時間<br>({{ summary.overtime_minutes | intcomma }} 分){% else %}-{% endif %}</td>
                 </tr>
             </tbody>
         </table>
