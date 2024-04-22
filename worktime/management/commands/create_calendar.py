@@ -3,29 +3,10 @@ import datetime
 
 import requests
 from django.core.management.base import BaseCommand
+from django.db.models import Max
 
 import timecard.settings
 from worktime.models import BusinessCalendar, StandardWorkPattern
-
-
-def download_json(url: str):
-    """インターネットから JSON データを取得します。
-
-    Args:
-        url (str): URL
-
-    Raises:
-        Exception: ダウンロード失敗
-
-    Returns:
-        Any: ダウンロードした JSON データ
-    """
-    response = requests.get(url)
-    if response.status_code == 200:
-        json_data = response.json()
-        return json_data
-    else:
-        raise Exception("Failed to download from {0}.".format(url))
 
 
 class Command(BaseCommand):
@@ -35,6 +16,35 @@ class Command(BaseCommand):
         BaseCommand: 基底コマンド
     """
     help = 'Create monthly calendar.'
+
+    def download_json(self, url: str):
+        """インターネットから JSON データを取得します。
+
+        Args:
+            url (str): URL
+
+        Raises:
+            Exception: ダウンロード失敗
+
+        Returns:
+            Any: ダウンロードした JSON データ
+        """
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception("Failed to download from {0}.".format(url))
+
+    def get_months(self, date) -> int:
+        """日付の月数を計算します。
+
+        Args:
+            date: 日時または日付
+
+        Returns:
+            int: 月数
+        """
+        return date.year * 12 + date.month - 1
 
     def create_calendar(self, holidays: dict, year: int, month: int):
         """指定した年月のカレンダを生成します。
@@ -72,45 +82,46 @@ class Command(BaseCommand):
                                             leave=pattern.leave,
                                             back=pattern.back
                                             )
-
-            # 完了メッセージ
             self.stdout.write(self.style.SUCCESS(
-                'Calendar %s created.' % (date.strftime("%Y-%m-%d"),)))
+                date.strftime('%Y-%m-%d created.')))
 
     def handle(self, *args, **options):
         """カスタムコマンドの処理を実行します。
         """
 
         # 祝日データをダウンロード
-        holidays = download_json(timecard.settings.HOLIDAY_DOWNLOAD_URL)
+        holidays = self.download_json(timecard.settings.HOLIDAY_DOWNLOAD_URL)
         holidays_dates = list(holidays.keys())
         holidays_dates.sort(reverse=True)
         max_holiday = datetime.datetime.strptime(holidays_dates[0], "%Y-%m-%d")
-        self.stdout.write(self.style.SUCCESS(max_holiday.strftime(
-            'Holiday data up to %Y-%m has been downloaded.')))
+        self.stdout.write(self.style.SUCCESS(
+            max_holiday.strftime('Holiday data downloaded up to %Y-%m.')))
 
-        # 作成対象期間の最終日を算出
+        # 現在の日付を取得
         now = datetime.datetime.now()
-        current_months = now.year * 12 + (now.month - 1)
-        months_1 = max_holiday.year * 12 + (max_holiday.month - 1)
-        months_2 = current_months + timecard.settings.CALENDAR_MONTHS
-        earlier_months = min(months_1, months_2)
+
+        # 作成対象の先頭月を算出
+        max_created_date = BusinessCalendar.objects.aggregate(max_date=Max('date'))[
+            'max_date']
+        if max_created_date is None:
+            start_months = self.get_months(now)
+        else:
+            start_months = self.get_months(max_created_date) + 1
+
+        # 作成対象の最終月を算出
+        months_1 = self.get_months(max_holiday)
+        months_2 = self.get_months(now) + timecard.settings.CALENDAR_MONTHS
+        end_months = min(months_1, months_2)
 
         # 対象の月をループ処理
-        months = current_months
-        while months <= earlier_months:
+        for months in range(start_months, end_months + 1):
 
             # 対象の年月を算出
             year = months // 12
             month = (months % 12) + 1
 
-            # 対象月のデータが未作成の場合は作成
-            first_date_of_month = datetime.datetime(year, month, 1)
-            if not BusinessCalendar.objects.filter(date=first_date_of_month).exists():
-                self.create_calendar(holidays, year, month)
-
-            # 次の月を処理
-            months += 1
+            # 対象月のデータを作成
+            self.create_calendar(holidays, year, month)
 
         # 完了メッセージ
-        self.stdout.write(self.style.SUCCESS('Calendar updated successfully.'))
+        self.stdout.write(self.style.SUCCESS('Calendar created.'))
