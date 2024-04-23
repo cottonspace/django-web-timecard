@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 from django.contrib import messages
 
+# Application information
+APP_SITE = 'https://github.com/cottonspace/django-web-timecard'
+APP_NAME = 'django-web-timecard'
+APP_VERSION = '0.9.0'
+
 # Load local settings
 try:
     from .local_settings import *
@@ -49,6 +54,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'worktime.context_processors.app_context',
             ],
         },
     },
