@@ -19,6 +19,7 @@ except ImportError:
 
 # Application definition
 INSTALLED_APPS = [
+    'worktime',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'worktime',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -94,9 +94,6 @@ DAY_OF_WEEK = ['月', '火', '水', '木', '金', '土', '日', '祝日']
 
 # 祝日データダウンロード用 URL
 HOLIDAY_DOWNLOAD_URL = 'https://holidays-jp.github.io/api/v1/date.json'
-
-# 地図表示用 URL
-LOCATION_MAP_URL = 'https://maps.google.com/maps?ll='
 
 # ログイン用 URL
 LOGIN_URL = '/worktime/login/'

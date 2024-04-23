@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
-from django.utils.html import format_html
 
 import timecard.settings
 
@@ -106,33 +105,21 @@ class TimeRecordAdmin(admin.ModelAdmin):
         """
         return False
 
-    def location(self, obj) -> str:
-        """位置情報の表示を編集します。
+    def display_location(self, obj):
+        """位置情報の表示文字列を取得します。
 
         Args:
-            obj: 打刻記録
+            obj: 打刻情報のオブジェクト
 
         Returns:
-            str: 表示情報
+            str: 位置情報
         """
-        if obj.latitude and obj.longitude and obj.accuracy:
-            if obj.accuracy < timecard.settings.MAX_ACCURACY:
-                distance = utils.location_distance(obj.latitude, obj.longitude)
-                if distance < timecard.settings.MAX_DISTANCE:
-                    linktext = '圏内'
-                else:
-                    linktext = "圏外 {:,d} m (± {:,.1f} m)".format(
-                        int(distance), obj.accuracy)
-                url = utils.location_map_url(obj.latitude, obj.longitude)
-                return format_html("<a href='{0}' target='_blank'>{1}</a>", url, linktext)
-            else:
-                return '低精度'
-        return '不明'
+        return obj.location()
 
     # 設定
-    location.short_description = '位置情報'
-    list_display = ['date', 'time', 'username',
-                    'action', 'location', 'created_at', 'updated_at']
+    display_location.short_description = '位置情報'
+    list_display = ['date', 'time', 'username', 'action',
+                    'display_location', 'created_at', 'updated_at']
     ordering = ['date', 'time']
     list_filter = ['date']
     search_fields = ['username']

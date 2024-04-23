@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from geopy.distance import geodesic
 
 import timecard.settings
 
@@ -131,6 +132,24 @@ class TimeRecord(models.Model):
             str: 文字列表現
         """
         return self.date.strftime('%Y-%m-%d (%a)') + ' ' + self.username
+
+    def location(self) -> str:
+        """位置情報の表示を編集します。
+
+        Returns:
+            str: 表示情報
+        """
+        if self.latitude and self.longitude and self.accuracy:
+            if self.accuracy < timecard.settings.MAX_ACCURACY:
+                distance = geodesic(
+                    timecard.settings.LOCATION_ORIGIN, (self.latitude, self.longitude)).m
+                if distance < timecard.settings.MAX_DISTANCE:
+                    return '圏内'
+                else:
+                    return "圏外 {:,d} m (± {:,.1f} m)".format(int(distance), self.accuracy)
+            else:
+                return '低精度'
+        return None
 
     class Meta:
         """メタ情報です。

@@ -2,7 +2,6 @@ import datetime
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 
 from django.contrib.auth.models import User
-from geopy.distance import geodesic
 
 import timecard.settings
 
@@ -43,21 +42,6 @@ def get_users(active: bool) -> dict:
         else:
             results[user.username] = display_name(user) + ' *'
     return results
-
-
-def location_distance(latitude: float, longitude: float) -> float:
-    """緯度と経度から設定した基点までの距離を算出します。
-
-    Args:
-        latitude (float): 緯度
-        longitude (float): 経度
-
-    Returns:
-        float: 設定した基点からの距離 (メートル)
-    """
-    if latitude and longitude:
-        return geodesic(timecard.settings.LOCATION_ORIGIN, (latitude, longitude)).m
-    return None
 
 
 def delta(time1: datetime.time, time2: datetime.time) -> int:
