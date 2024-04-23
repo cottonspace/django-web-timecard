@@ -1,4 +1,4 @@
-from django.conf import settings
+import timecard.settings
 
 
 def app_context(request) -> dict:
@@ -11,7 +11,7 @@ def app_context(request) -> dict:
         dict: コンテキストを格納した dict
     """
     return {
-        'APP_SITE': settings.APP_SITE,
-        'APP_NAME': settings.APP_NAME,
-        'APP_VERSION': settings.APP_VERSION,
+        'APP_SITE': timecard.settings.APP_SITE,
+        'APP_NAME': timecard.settings.APP_NAME,
+        'APP_VERSION': timecard.settings.APP_VERSION,
     }
