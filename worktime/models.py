@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from geopy.distance import geodesic
 
@@ -118,8 +119,10 @@ class TimeRecord(models.Model):
     time = models.TimeField('時刻')
     username = models.CharField('ユーザー名', max_length=150)
     action = models.CharField('種別', max_length=20)
-    latitude = models.FloatField('緯度', blank=True, null=True)
-    longitude = models.FloatField('経度', blank=True, null=True)
+    latitude = models.FloatField('緯度', blank=True, null=True, validators=[
+                                 MinValueValidator(-90), MaxValueValidator(90)])
+    longitude = models.FloatField('経度', blank=True, null=True, validators=[
+                                  MinValueValidator(-180), MaxValueValidator(180)])
     accuracy = models.FloatField('誤差', blank=True, null=True)
     ua = models.TextField('ブラウザ情報', max_length=400, blank=True, null=True)
     created_at = models.DateTimeField('作成日時', auto_now_add=True)
@@ -141,8 +144,12 @@ class TimeRecord(models.Model):
         """
         if self.latitude and self.longitude and self.accuracy:
             if self.accuracy < timecard.settings.MAX_ACCURACY:
-                distance = geodesic(
-                    timecard.settings.LOCATION_ORIGIN, (self.latitude, self.longitude)).m
+                origin = timecard.settings.LOCATION_ORIGIN
+                point = (self.latitude, self.longitude)
+                try:
+                    distance = geodesic(origin, point).m
+                except:
+                    return '計算不可'
                 if distance < timecard.settings.MAX_DISTANCE:
                     return '圏内'
                 else:
