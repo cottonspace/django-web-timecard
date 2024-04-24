@@ -32,9 +32,9 @@ def get_users(active: bool) -> dict:
         dict: ユーザ ID と表示形式の文字列の dict
     """
     if active:
-        users = User.objects.filter(is_active=True)
+        users = User.objects.filter(is_superuser=False, is_active=True)
     else:
-        users = User.objects
+        users = User.objects.filter(is_superuser=False)
     results = {}
     for user in users.order_by('-is_active', 'last_name', 'first_name', 'username'):
         if user.is_active:
