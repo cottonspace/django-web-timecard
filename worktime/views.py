@@ -1,7 +1,7 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
@@ -11,8 +11,19 @@ import timecard.settings
 
 from . import queries, utils
 from .forms import (CustomAuthenticationForm, CustomPasswordChangeForm,
-                    TimeRecordCalendarForm, TimeRecordForm)
+                    TimeRecordCalendarForm, TimeRecordForm,
+                    TimeRecordSummaryForm)
 from .models import TimeRecord
+
+
+class StaffRequiredMixin(AccessMixin):
+    """スタッフ権限を要求するミックスイン
+    """
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_staff:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 
 class UserLogin(LoginView):
@@ -139,6 +150,38 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
         return redirect(reverse('worktime:record_calendar') + f'?username={username}&year={year}&month={month}')
 
 
+class TimeRecordSummaryView(StaffRequiredMixin, FormView):
+    """勤務集計画面のビュー
+    """
+    template_name = 'worktime/record_summary.html'
+    form_class = TimeRecordSummaryForm
+
+    def get_context_data(self, **kwargs):
+        """コンテキストの返却
+        """
+        context = super().get_context_data(**kwargs)
+        today = datetime.datetime.today()
+        context['year'] = int(self.request.GET.get('year', today.year))
+        context['month'] = int(self.request.GET.get('month', today.month))
+        context['entries'] = []
+        for id, name in utils.get_users(True).items():
+            records = queries.get_monthly_records(
+                id, context['year'], context['month'])
+            summary = utils.summarize(records)
+            context['entries'].append({
+                'id': id,
+                'name': name,
+                'summary': summary})
+        return context
+
+    def form_valid(self, form):
+        """フォームの検査
+        """
+        year = form.cleaned_data['year']
+        month = form.cleaned_data['month']
+        return redirect(reverse('worktime:record_summary') + f'?year={year}&month={month}')
+
+
 class ReadmeView(TemplateView):
     """説明画面のビュー
     """
@@ -148,6 +191,7 @@ class ReadmeView(TemplateView):
         """コンテキストの返却
         """
         context = super().get_context_data(*args, **kwargs)
+        context['IS_STAFF'] = self.request.user.is_staff
         context["MAX_DISTANCE"] = timecard.settings.MAX_DISTANCE
         context["MIN_BEHIND_MIN"] = timecard.settings.MIN_BEHIND_MIN
         context["MIN_EARLY_MIN"] = timecard.settings.MIN_EARLY_MIN

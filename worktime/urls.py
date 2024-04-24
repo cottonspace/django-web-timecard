@@ -13,5 +13,7 @@ urlpatterns = [
     path('record/', views.TimeRecordView.as_view(), name='record'),
     path('record/calendar/', views.TimeRecordCalendarView.as_view(),
          name='record_calendar'),
+    path('record/summary/', views.TimeRecordSummaryView.as_view(),
+         name='record_summary'),
     path('readme/', views.ReadmeView.as_view(), name='readme'),
 ]

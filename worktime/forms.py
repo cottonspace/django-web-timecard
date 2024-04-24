@@ -56,3 +56,12 @@ class TimeRecordCalendarForm(forms.Form):
         forms: 継承するフォーム
     """
     username = forms.CharField(required=False)
+
+
+class TimeRecordSummaryForm(forms.Form):
+    """勤務集計画面のフォーム
+
+    Args:
+        forms: 継承するフォーム
+    """
+    pass

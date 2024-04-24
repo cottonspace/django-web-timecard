@@ -1,5 +1,5 @@
 {% extends 'worktime/base.html' %}
-{% block title %}使用方法 | {{ block.super }}{% endblock title %}
+{% block title %}使用方法{% if IS_STAFF %} (管理者用){% endif %} | {{ block.super }}{% endblock title %}
 {% block main %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
@@ -10,7 +10,7 @@
 <div class="container text-center">
     <div class="row">
         <div class="col">
-            <h2>使用方法</h2>
+            <h2>使用方法{% if IS_STAFF %} (管理者用){% endif %}</h2>
         </div>
     </div>
 </div>
@@ -44,11 +44,31 @@
     <h3>勤務表</h3>
     <ul>
         <li>月単位の打刻記録および勤務時間を確認できます。</li>
+        {% if IS_STAFF %}
+        <li>管理者は対象者をプルダウンで切り替えることができます。プルダウンには無効化されている利用者も表示されます。無効な利用者は名前の末尾にアスタリスク記号が付きます。</li>
+        {% endif %}
     </ul>
+    {% if IS_STAFF %}
+    <h3>勤務集計</h3>
+    <ul>
+        <li>管理者専用の機能です。</li>
+        <li>月単位ですべての有効な利用者の勤務時間のサマリを一覧で確認できます。</li>
+        <li>無効化されている利用者の勤務時間を確認するには、勤務表画面のプルダウンを利用してください。</li>
+    </ul>
+    {% endif %}
     <h3>パスワード変更</h3>
     <ul>
         <li>パスワードを変更することができます。</li>
     </ul>
+    {% if IS_STAFF %}
+    <h3>管理画面</h3>
+    <ul>
+        <li>管理者専用の機能です。</li>
+        <li>利用者の追加や変更ができます。</li>
+        <li>日付ごとに営業日や休業日の設定をおこなえます。</li>
+        <li>打刻記録の修正や確認ができます。打刻した端末の情報{% if ENABLE_CHECK_LOCATION %}や打刻場所の位置情報{% endif %}を確認することもできます。</li>
+    </ul>
+    {% endif %}
     <h3>勤務時間</h3>
     <ul>
         <li>遅刻や早退が {{ MIN_BEHIND_MIN }} 分より短い場合は無視します。</li>
