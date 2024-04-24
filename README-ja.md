@@ -88,4 +88,4 @@ python3 manage.py create_calendar
 - "有効" のチェックを外したユーザは、一覧表示の際に "氏名" のあとに * 記号がついて表示されます。
 
 ## ライセンス
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](LICENSE)
