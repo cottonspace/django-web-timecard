@@ -3,7 +3,6 @@ from django.contrib.admin.sites import AdminSite
 
 import timecard.settings
 
-from . import utils
 from .models import BusinessCalendar, StandardWorkPattern, TimeRecord
 
 # Admin 画面のタイトル

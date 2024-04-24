@@ -3,17 +3,16 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
-from django.db.models import Max, Min, OuterRef, Q, QuerySet, Subquery
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import FormView, TemplateView
 
 import timecard.settings
 
-from . import utils
+from . import queries, utils
 from .forms import (CustomAuthenticationForm, CustomPasswordChangeForm,
                     TimeRecordCalendarForm, TimeRecordForm)
-from .models import BusinessCalendar, TimeRecord
+from .models import TimeRecord
 
 
 class UserLogin(LoginView):
@@ -105,39 +104,6 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
     template_name = 'worktime/record_calendar.html'
     form_class = TimeRecordCalendarForm
 
-    def query_records(self, username: str, year: int, month: int) -> QuerySet:
-        """指定したユーザと年月の打刻情報を取得します。
-
-        Args:
-            username (str): ユーザ ID
-            year (int): 西暦年
-            month (int): 月
-
-        Returns:
-            QuerySet: 取得したクエリ結果
-        """
-        subquery = TimeRecord.objects.filter(date=OuterRef('date')).values('date').annotate(
-            begin_record=Min('time', filter=Q(action='出勤', username=username)),
-            end_record=Max('time', filter=Q(action='退勤', username=username))
-        )
-        queryset = BusinessCalendar.objects.filter(date__year=year, date__month=month).annotate(
-            begin_record=Subquery(subquery.values('begin_record')),
-            end_record=Subquery(subquery.values('end_record'))
-        ).values(
-            'date',
-            'holiday',
-            'attendance',
-            'begin',
-            'end',
-            'leave',
-            'back',
-            'begin_record',
-            'end_record'
-        )
-        for record in queryset:
-            record.update(utils.worktime_calculation(record))
-        return queryset
-
     def get_context_data(self, **kwargs):
         """コンテキストの返却
         """
@@ -150,7 +116,7 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
         today = datetime.datetime.today()
         context['year'] = int(self.request.GET.get('year', today.year))
         context['month'] = int(self.request.GET.get('month', today.month))
-        context['entries'] = self.query_records(
+        context['entries'] = queries.get_monthly_records(
             context['username'], context['year'], context['month'])
         context['summary'] = utils.summarize(context['entries'])
         context['users'] = utils.get_users(False)
