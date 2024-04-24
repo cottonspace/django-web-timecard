@@ -1,10 +1,73 @@
 {% extends 'worktime/base.html' %}
+{% load static %}
 {% block title %}使用方法{% if IS_STAFF %} (管理者用){% endif %} | {{ block.super }}{% endblock title %}
 {% block main %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
     #qrcode {
         margin: 20px;
+    }
+
+    .capture-small {
+        border: 1px solid #ccc;
+        max-width: 100%;
+        max-width: 100%;
+    }
+
+    .capture-large {
+        margin: 10px;
+        max-height: 90%;
+        max-width: 90%;
+    }
+
+    .capture-image {
+        text-align: center;
+        caret-color: transparent;
+    }
+
+    .capture-image figure {
+        margin: 0;
+        display: none;
+    }
+
+    .capture-image figure:target {
+        display: block;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+    }
+
+    .capture-image figure:target .overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(80, 80, 80, 0.8);
+        color: inherit;
+    }
+
+    .capture-image figure:target img {
+        animation: fadein .2s;
+    }
+
+    @keyframes fadein {
+        0% {
+            transform: scale(0.8);
+            opacity: 0.2;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
     }
 </style>
 <div class="container text-center">
@@ -21,17 +84,6 @@
         <li>ブラウザで <a id="site_url"></a> をブックマークすることをおすすめします。以下の QR コードでもアクセスできます。</li>
         <div id="qrcode"></div>
     </ul>
-    <script type="text/javascript">
-        var url = window.location.href.replace(/worktime\/readme\//, '');
-        var site_link = document.getElementById('site_url')
-        site_link.href = url;
-        site_link.innerText = url;
-        new QRCode(document.getElementById("qrcode"), {
-            text: url,
-            width: 120,
-            height: 120
-        });
-    </script>
     <h3>打刻</h3>
     <ul>
         {% if ENABLE_CHECK_LOCATION %}
@@ -41,6 +93,19 @@
         <li>同じ日に複数回の出勤打刻をした場合は、同日の最初の打刻が採用されます。出勤の打刻に訂正が必要な場合は、管理者に申し出て修正を依頼してください。</li>
         <li>同じ日に複数回の退勤打刻をした場合は、同日の最後の打刻が採用されます。このため打刻後に追加の業務が発生した場合は、そのまま再度の退勤打刻をおこなってください。再度出勤の打刻をおこなう必要はありません。</li>
     </ul>
+    <div class="container-fluid capture-image">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-8 m-3">
+                <a href="#capture-1"><img class="capture-small" src="{% static 'worktime/capture_record.png' %}"></a>
+                <figure id="capture-1">
+                    <a class="overlay" id="overlay-1" href="#overlay-1">
+                        <img class="capture-large" src="{% static 'worktime/capture_record.png' %}">
+                        <figcaption>打刻画面</figcaption>
+                    </a>
+                </figure>
+            </div>
+        </div>
+    </div>
     <h3>勤務表</h3>
     <ul>
         <li>月単位の打刻記録および勤務時間を確認できます。</li>
@@ -48,6 +113,19 @@
         <li>管理者は対象者をプルダウンで切り替えることができます。プルダウンには無効化されている利用者も表示されます。無効な利用者は名前の末尾にアスタリスク記号が付きます。</li>
         {% endif %}
     </ul>
+    <div class="container-fluid capture-image">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-8 m-3">
+                <a href="#capture-2"><img class="capture-small" src="{% static 'worktime/capture_record_calendar.png' %}"></a>
+                <figure id="capture-2">
+                    <a class="overlay" id="overlay-2" href="#overlay-2">
+                        <img class="capture-large" src="{% static 'worktime/capture_record_calendar.png' %}">
+                        <figcaption>勤務表画面</figcaption>
+                    </a>
+                </figure>
+            </div>
+        </div>
+    </div>
     {% if IS_STAFF %}
     <h3>勤務集計</h3>
     <ul>
@@ -55,11 +133,37 @@
         <li>月単位ですべての有効な利用者の勤務時間のサマリを一覧で確認できます。</li>
         <li>無効化されている利用者の勤務時間を確認するには、勤務表画面のプルダウンを利用してください。</li>
     </ul>
+    <div class="container-fluid capture-image">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-8 m-3">
+                <a href="#capture-3"><img class="capture-small" src="{% static 'worktime/capture_record_summary.png' %}"></a>
+                <figure id="capture-3">
+                    <a class="overlay" id="overlay-3" href="#overlay-3">
+                        <img class="capture-large" src="{% static 'worktime/capture_record_summary.png' %}">
+                        <figcaption>勤務集計画面</figcaption>
+                    </a>
+                </figure>
+            </div>
+        </div>
+    </div>
     {% endif %}
     <h3>パスワード変更</h3>
     <ul>
         <li>パスワードを変更することができます。</li>
     </ul>
+    <div class="container-fluid capture-image">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-8 m-3">
+                <a href="#capture-4"><img class="capture-small" src="{% static 'worktime/capture_password_change.png' %}"></a>
+                <figure id="capture-4">
+                    <a class="overlay" id="overlay-4" href="#overlay-4">
+                        <img class="capture-large" src="{% static 'worktime/capture_password_change.png' %}">
+                        <figcaption>パスワード変更画面</figcaption>
+                    </a>
+                </figure>
+            </div>
+        </div>
+    </div>
     {% if IS_STAFF %}
     <h3>管理画面</h3>
     <ul>
@@ -88,4 +192,15 @@
         <li>祝日データは 「<a href="https://holidays-jp.github.io/" target="_blank">Holidays JP API</a>」 の公開データを利用しています。</li>
     </ul>
 </div>
+<script type="text/javascript">
+    var url = window.location.href.replace(/worktime\/readme\/([\?#].*)?/, '');
+    var site_link = document.getElementById('site_url')
+    site_link.href = url;
+    site_link.innerText = url;
+    new QRCode(document.getElementById("qrcode"), {
+        text: url,
+        width: 120,
+        height: 120
+    });
+</script>
 {% endblock main %}
