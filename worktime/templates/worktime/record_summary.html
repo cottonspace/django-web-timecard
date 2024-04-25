@@ -71,6 +71,7 @@
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                 <button class="btn btn-outline-secondary" onclick="window.print();">印刷</button>
+                <button class="btn btn-outline-secondary" onclick="download_csv();">ダウンロード</button>
             </div>
         </div>
     </div>
@@ -94,9 +95,9 @@
                     <th><a href="{% url 'worktime:record_calendar' %}?username={{ entry.id }}&year={{ year }}&month={{ month }}">{{ entry.name }}</a></th>
                     <td>{% if entry.summary.errors %}{{ entry.summary.errors }} 個{% else %}-{% endif %}</td>
                     <td>{% if entry.summary.work_days %}{{ entry.summary.work_days }} 日{% else %}-{% endif %}</td>
-                    <td>{% if entry.summary.behind_minutes %}{{ entry.summary.behind_count }} 回 ({{ entry.summary.behind_minutes | intcomma }} 分){% else %}-{% endif %}</td>
-                    <td>{% if entry.summary.early_hours %}{{ entry.summary.early_hours }} 時間 ({{ entry.summary.early_minutes | intcomma }} 分){% else %}-{% endif %}</td>
-                    <td>{% if entry.summary.overtime_hours %}{{ entry.summary.overtime_hours }} 時間 ({{ entry.summary.overtime_minutes | intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if entry.summary.behind_minutes %}{{ entry.summary.behind_count }} 回 ({{ entry.summary.behind_minutes|intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if entry.summary.early_hours %}{{ entry.summary.early_hours }} 時間 ({{ entry.summary.early_minutes|intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if entry.summary.overtime_hours %}{{ entry.summary.overtime_hours }} 時間 ({{ entry.summary.overtime_minutes|intcomma }} 分){% else %}-{% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -104,18 +105,82 @@
     </div>
 </div>
 <script>
-    function show_calendar(delta) {
-        const months = Number("{{ year }}") * 12 + (Number("{{ month }}") - 1) + delta;
-        const now = new Date();
-        let year, month;
-        if (delta == 0) {
-            year = now.getFullYear();
-            month = now.getMonth();
-        } else {
-            year = Math.floor(months / 12);
-            month = months % 12;
+    const year = Number("{{ year }}")
+    const month = Number("{{ month }}")
+    const entries = JSON.parse('{{ entries|json_dumps|safe }}');
+    function create_rows() {
+        let rows = [[
+            'ID',
+            '氏名',
+            '年',
+            '月',
+            '日数(日)',
+            '営業日(日)',
+            '出勤日(日)',
+            '遅刻早退(回)',
+            '遅刻早退(時間)',
+            '遅刻早退(分)',
+            '早出(回)',
+            '早出(時間)',
+            '早出(分)',
+            '残業(回)',
+            '残業(時間)',
+            '残業(分)',
+            'エラー(個)'
+        ]];
+        for (let entry of entries) {
+            let summary = entry.summary;
+            rows.push([
+                '"' + entry.id + '"',
+                '"' + entry.name + '"',
+                year,
+                month,
+                summary.days,
+                summary.attendance_days,
+                summary.work_days,
+                summary.behind_count,
+                summary.behind_hours,
+                summary.behind_minutes,
+                summary.early_count,
+                summary.early_hours,
+                summary.early_minutes,
+                summary.overtime_count,
+                summary.overtime_hours,
+                summary.overtime_minutes,
+                summary.errors
+            ])
         }
-        location.href = "{% url 'worktime:record_summary' %}?year=" + year + "&month=" + (month + 1)
+        return rows;
+    }
+    function download_csv() {
+        const now = new Date();
+        let current = (now.getFullYear()).toString();
+        current += (now.getMonth() + 1).toString().padStart(2, '0');
+        current += (now.getDate()).toString().padStart(2, '0');
+        const bom = new Uint8Array([0xef, 0xbb, 0xbf])
+        const data = create_rows().map(columns => columns.join(',')).join('\n')
+        const filename = 'summary-' + year.toString().padStart(4, '0') + '-' + month.toString().padStart(2, '0') + '-' + current + '.csv';
+        download(new Blob([bom, data]), filename, { type: 'text/csv' });
+    }
+    function download(blob, filename, options) {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = URL.createObjectURL(blob, options);
+        link.click();
+        URL.revokeObjectURL(link.href)
+    }
+    function show_calendar(delta) {
+        const months = year * 12 + (month - 1) + delta;
+        const now = new Date();
+        let n_year, n_month;
+        if (delta == 0) {
+            n_year = now.getFullYear();
+            n_month = now.getMonth() + 1;
+        } else {
+            n_year = Math.floor(months / 12);
+            n_month = months % 12 + 1;
+        }
+        location.href = "{% url 'worktime:record_summary' %}?year=" + n_year + "&month=" + n_month
     }
 </script>
 {% endblock main %}

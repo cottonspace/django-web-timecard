@@ -1,7 +1,7 @@
 {% extends 'worktime/base.html' %}
 {% load custom_filter %}
 {% load humanize %}
-{% block title %}{{ year }}年{{ month }}月 {{ users | dict_value:username }} | {{ block.super }}{% endblock title %}
+{% block title %}{{ year }}年{{ month }}月 {{ users|dict_value:username|default:username }} | {{ block.super }}{% endblock title %}
 {% block main %}
 <style>
     .table tr,
@@ -63,7 +63,7 @@
 <div class="container text-center">
     <div class="row">
         <div class="col mb-3">
-            <h2>{{ year }}年{{ month }}月 {{ users | dict_value:username }}</h2>
+            <h2>{{ year }}年{{ month }}月 {{ users|dict_value:username|default:username }}</h2>
         </div>
     </div>
 </div>
@@ -73,6 +73,9 @@
         <div class="col-lg-6 mb-3">
             <form id="record_calendar" method="get">
                 <select class="form-select" name="username" onchange="this.form.submit()">
+                    {% if users|dict_value:username is None %}
+                    <option value=""></option>
+                    {% endif %}
                     {% for o_username, o_display in users.items %}
                     {% if o_username == username %}
                     <option value="{{ o_username }}" selected>{{ o_display }}</option>
@@ -100,6 +103,11 @@
         </div>
     </div>
 </div>
+{% if users|dict_value:username is None %}
+<div class="alert alert-danger" role="alert">
+    {{ username }} の勤務表はありません
+</div>
+{% else %}
 {% if entries %}
 <div class="container mb-3">
     <div class="table-responsive">
@@ -123,9 +131,9 @@
                     <td>{% if summary.days %}{{ summary.days }} 日{% else %}-{% endif %}</td>
                     <td>{% if summary.attendance_days %}{{ summary.attendance_days }} 日{% else %}-{% endif %}</td>
                     <td>{% if summary.work_days %}{{ summary.work_days }} 日{% else %}-{% endif %}</td>
-                    <td>{% if summary.behind_minutes %}{{ summary.behind_count }} 回<br>({{ summary.behind_minutes | intcomma }} 分){% else %}-{% endif %}</td>
-                    <td>{% if summary.early_hours %}{{ summary.early_hours }} 時間<br>({{ summary.early_minutes | intcomma }} 分){% else %}-{% endif %}</td>
-                    <td>{% if summary.overtime_hours %}{{ summary.overtime_hours }} 時間<br>({{ summary.overtime_minutes | intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if summary.behind_minutes %}{{ summary.behind_count }} 回<br>({{ summary.behind_minutes|intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if summary.early_hours %}{{ summary.early_hours }} 時間<br>({{ summary.early_minutes|intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if summary.overtime_hours %}{{ summary.overtime_hours }} 時間<br>({{ summary.overtime_minutes|intcomma }} 分){% else %}-{% endif %}</td>
                 </tr>
             </tbody>
         </table>
@@ -156,7 +164,7 @@
                     {% else %}
                 <tr>
                     {% endif %}
-                    <th>{{ entry.date | date:"j (D)" }}</th>
+                    <th>{{ entry.date|date:"j (D)" }}</th>
                     <td>{{ entry.holiday }}</td>
                     {% if entry.past %}
                     {% if entry.work %}
@@ -171,12 +179,12 @@
                     {% else %}
                     <td></td>
                     {% endif %}
-                    <td>{{ entry.begin_record | default:"" }}</td>
-                    <td>{{ entry.end_record | default:"" }}</td>
-                    <td>{{ entry.behind | default:"" }}</td>
-                    <td>{{ entry.early | default:"" }}</td>
-                    <td>{{ entry.overtime | default:"" }}</td>
-                    <td>{{ entry.error | default:"" }}</td>
+                    <td>{{ entry.begin_record|default:"" }}</td>
+                    <td>{{ entry.end_record|default:"" }}</td>
+                    <td>{{ entry.behind|default:"" }}</td>
+                    <td>{{ entry.early|default:"" }}</td>
+                    <td>{{ entry.overtime|default:"" }}</td>
+                    <td>{{ entry.error|default:"" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -185,23 +193,26 @@
 </div>
 {% else %}
 <div class="alert alert-secondary" role="alert">
-    営業日カレンダが作成されていません。
+    営業日カレンダが作成されていません
 </div>
 {% endif %}
+{% endif %}
 <script>
+    const year = Number("{{ year }}")
+    const month = Number("{{ month }}")
     function show_calendar(delta) {
         const username = "{{ username }}";
-        const months = Number("{{ year }}") * 12 + (Number("{{ month }}") - 1) + delta;
+        const months = year * 12 + (month - 1) + delta;
         const now = new Date();
-        let year, month;
+        let n_year, n_month;
         if (delta == 0) {
-            year = now.getFullYear();
-            month = now.getMonth();
+            n_year = now.getFullYear();
+            n_month = now.getMonth() + 1;
         } else {
-            year = Math.floor(months / 12);
-            month = months % 12;
+            n_year = Math.floor(months / 12);
+            n_month = months % 12 + 1;
         }
-        location.href = "{% url 'worktime:record_calendar' %}?username=" + username + "&year=" + year + "&month=" + (month + 1)
+        location.href = "{% url 'worktime:record_calendar' %}?username=" + username + "&year=" + n_year + "&month=" + n_month
     }
 </script>
 {% endblock main %}
