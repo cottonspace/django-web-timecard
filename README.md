@@ -9,6 +9,8 @@ Web based simple Time Card system written by django. Currently this application 
 ## Features
 User can clock in and clock out from a smartphone or PC. Manager check users time records.
 
+<img src="static/worktime/capture_record.png" style="max-width:50%; height:auto;">
+
 ## Usage
 
 ### Time recording
