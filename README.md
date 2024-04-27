@@ -1,3 +1,5 @@
+[English](README.md) | [日本語](README-ja.md)
+
 # django-web-timecard
 
 ![logo](static/worktime/logo.svg)
