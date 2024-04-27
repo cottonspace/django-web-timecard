@@ -1,34 +1,44 @@
 {% extends "admin/change_form.html" %}
 {% block field_sets %}
 {{ block.super }}
-{% if original.latitude and original.longitude %}
-<h2>{{ original.location }}</h2>
-<div id="map"></div>
-<script>
-    function show_map(id, latitude, longitude, accuracy) {
-        let zoom = 20;
-        for (let param of [
-            [10000000, 1], [5000000, 2], [2000000, 3],
-            [1000000, 4], [500000, 5], [200000, 6],
-            [100000, 7], [50000, 8], [20000, 9],
-            [10000, 10], [5000, 11], [2000, 12],
-            [1000, 13], [500, 14], [200, 15],
-            [100, 17], [50, 18], [20, 19]]) {
-            if (param[0] < accuracy) {
-                zoom = param[1]; break;
-            }
-        }
-        let iframe = document.createElement('iframe');
-        iframe.loading = 'lazy';
-        iframe.width = '100%';
-        iframe.height = '400';
-        iframe.style = 'border: 0; margin-bottom: 8px;';
-        iframe.frameborder = '0';
-        iframe.allowfullscreen = ''
-        iframe.src = 'https://maps.google.com/maps?output=embed&t=m&z=' + zoom + '&q=' + latitude + ',' + longitude;
-        document.getElementById('map').appendChild(iframe);
+{% if DISPLAY_MAP %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+    #mapid {
+        margin-bottom: 20px;
     }
-    show_map('map', Number("{{ original.latitude }}"), Number("{{ original.longitude }}"), Number("{{ original.accuracy }}"));
+
+    .map_button {
+        display: inline-block;
+        border: 1px solid #888;
+        background: #fff;
+        color: #888;
+        margin: 8px 2px;
+        padding: 4px 20px;
+        border-radius: 4px;
+    }
+
+    .map_button:hover {
+        background: #eee;
+    }
+</style>
+<button type="button" class="map_button" onclick="map.setView(point);">打刻場所</button>
+<button type="button" class="map_button" onclick="map.setView(origin);">基点</button>
+<div id="mapid" style="width:100%; height:400px;"></div>
+<script>
+    const map = L.map('mapid');
+    const origin = [Number("{{ LOCATION_ORIGIN.0 }}"), Number("{{ LOCATION_ORIGIN.1 }}")];
+    const max_distance = Number("{{ MAX_DISTANCE }}");
+    const point = [Number("{{ original.latitude }}"), Number("{{ original.longitude }}")];
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+    L.marker(origin).addTo(map);
+    const point_marker = L.marker(point).addTo(map);
+    const point_popup = point_marker.bindPopup("{{ original.location }}", { autoClose: false });
+    L.polyline([origin, point], { 'color': 'yellow', 'weight': 4, 'opacity': 0.5 }).addTo(map);
+    L.circle(origin, { stroke: false, fillColor: "#1e90ff", fillOpacity: 0.2, radius: max_distance }).addTo(map);
+    map.setView(point, 20);
+    point_popup.openPopup();
 </script>
 {% endif %}
 {% endblock %}

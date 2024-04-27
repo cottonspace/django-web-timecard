@@ -115,6 +115,24 @@ class TimeRecordAdmin(admin.ModelAdmin):
         """
         return obj.location()
 
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        """詳細画面に拡張コンテキストを追加します。
+
+        Args:
+            request: リクエスト情報
+            object_id: オブジェクト ID
+            form_url: フォーム URL (デフォルトは "")
+            extra_context: 拡張コンテキスト (デフォルトは None)
+
+        Returns:
+            拡張コンテキストを適用したレスポンス
+        """
+        extra_context = extra_context or {}
+        extra_context['DISPLAY_MAP'] = True
+        extra_context['LOCATION_ORIGIN'] = timecard.local_settings.LOCATION_ORIGIN
+        extra_context['MAX_DISTANCE'] = timecard.local_settings.MAX_DISTANCE
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
+
     # 設定
     display_location.short_description = '位置情報'
     list_display = ['date', 'time', 'username', 'action',
