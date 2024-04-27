@@ -1,9 +1,11 @@
 import calendar
 import datetime
 
+import pytz
 import requests
 from django.core.management.base import BaseCommand
 from django.db.models import Max
+from ics import Calendar
 
 import timecard.settings
 from worktime.models import BusinessCalendar, StandardWorkPattern
@@ -17,23 +19,24 @@ class Command(BaseCommand):
     """
     help = 'Create monthly calendar.'
 
-    def download_json(self, url: str):
-        """インターネットから JSON データを取得します。
+    def download_ics(self, url: str, zone: str) -> dict:
+        """ics 形式のイベントデータをダウンロードします。
 
         Args:
             url (str): URL
-
-        Raises:
-            Exception: ダウンロード失敗
+            tz (str): タイムゾーン
 
         Returns:
-            Any: ダウンロードした JSON データ
+            dict: ダウンロードしたイベントデータ
         """
-        response = requests.get(url)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise Exception("Failed to download from {0}.".format(url))
+        cal = Calendar(requests.get(url).text)
+        service_zone = pytz.timezone(zone)
+        events = {}
+        for event in cal.events:
+            if event.begin.datetime:
+                events[event.begin.astimezone(
+                    service_zone).strftime('%Y-%m-%d')] = event.name
+        return dict(sorted(events.items()))
 
     def get_months(self, date) -> int:
         """日付の月数を計算します。
@@ -89,18 +92,20 @@ class Command(BaseCommand):
         """カスタムコマンドの処理を実行します。
         """
 
-        # 祝日データをダウンロード
+        # 祝日データ (ics) をダウンロード
         if timecard.settings.HOLIDAY_DOWNLOAD_URL:
-            holidays = self.download_json(timecard.settings.HOLIDAY_DOWNLOAD_URL)
+            holidays = self.download_ics(
+                timecard.settings.HOLIDAY_DOWNLOAD_URL, timecard.settings.TIME_ZONE)
             holidays_dates = list(holidays.keys())
             holidays_dates.sort(reverse=True)
-            max_holiday = datetime.datetime.strptime(holidays_dates[0], "%Y-%m-%d")
+            max_holiday = datetime.datetime.strptime(
+                holidays_dates[0], "%Y-%m-%d")
             self.stdout.write(self.style.SUCCESS(
                 max_holiday.strftime('Holiday data downloaded up to %Y-%m.')))
         else:
             holidays = {}
             max_holiday = datetime.datetime.max
-            
+
         # 現在の日付を取得
         now = datetime.datetime.now()
 

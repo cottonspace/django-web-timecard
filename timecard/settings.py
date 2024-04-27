@@ -14,7 +14,7 @@ from django.contrib import messages
 # Application information
 APP_SITE = 'https://github.com/cottonspace/django-web-timecard'
 APP_NAME = 'django-web-timecard'
-APP_VERSION = '0.9.3'
+APP_VERSION = '0.9.4'
 
 # Load local settings
 try:
@@ -98,8 +98,8 @@ MESSAGE_TAGS = {
 # 曜日文字列
 DAY_OF_WEEK = ['月', '火', '水', '木', '金', '土', '日', '祝日']
 
-# 祝日データダウンロード用 URL (祝日を自動設定しない場合は None を指定)
-HOLIDAY_DOWNLOAD_URL = 'https://holidays-jp.github.io/api/v1/date.json'
+# 祝日 ics データの URL (祝日を自動設定しない場合は None を指定)
+HOLIDAY_DOWNLOAD_URL = 'https://calendar.google.com/calendar/ical/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic.ics'
 
 # ログイン用 URL
 LOGIN_URL = '/worktime/login/'
