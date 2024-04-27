@@ -79,11 +79,19 @@ python3 manage.py create_calendar
 ```
 - Register the user who will be stamping the time by adding users as appropriate from the management screen.
 
-### Adding commands to monthly tasks
-- Register the following command to be executed once a month in a regular task such as crontab.
+### Adding commands to tasks
+- Register the following command to be executed at least once a month in a regular task such as crontab.
 ```
 python3 manage.py create_calendar
 ```
+
+### Delete business day calendar
+- If you want to reconfigure the business day calendar created with `create_calendar`, you can use the command below to delete the business day calendar for the specified month and beyond months.
+```
+python3 manage.py delete_calendar year month
+```
+- The missing month's business day calendar will be recreated by running `create_calendar`.
+- Business day calendars are managed on a monthly basis, so it is not possible to delete only specific days within a month.
 
 ### Disabling a user
 - If you want to disable a user due to retirement, etc., we recommend unchecking the user's "enabled" checkbox on the administrator screen. If you delete it, you will no longer be able to view that user's past attendance history.

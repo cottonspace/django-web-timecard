@@ -90,13 +90,17 @@ class Command(BaseCommand):
         """
 
         # 祝日データをダウンロード
-        holidays = self.download_json(timecard.settings.HOLIDAY_DOWNLOAD_URL)
-        holidays_dates = list(holidays.keys())
-        holidays_dates.sort(reverse=True)
-        max_holiday = datetime.datetime.strptime(holidays_dates[0], "%Y-%m-%d")
-        self.stdout.write(self.style.SUCCESS(
-            max_holiday.strftime('Holiday data downloaded up to %Y-%m.')))
-
+        if timecard.settings.HOLIDAY_DOWNLOAD_URL:
+            holidays = self.download_json(timecard.settings.HOLIDAY_DOWNLOAD_URL)
+            holidays_dates = list(holidays.keys())
+            holidays_dates.sort(reverse=True)
+            max_holiday = datetime.datetime.strptime(holidays_dates[0], "%Y-%m-%d")
+            self.stdout.write(self.style.SUCCESS(
+                max_holiday.strftime('Holiday data downloaded up to %Y-%m.')))
+        else:
+            holidays = {}
+            max_holiday = datetime.datetime.max
+            
         # 現在の日付を取得
         now = datetime.datetime.now()
 

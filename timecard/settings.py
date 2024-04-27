@@ -98,7 +98,7 @@ MESSAGE_TAGS = {
 # 曜日文字列
 DAY_OF_WEEK = ['月', '火', '水', '木', '金', '土', '日', '祝日']
 
-# 祝日データダウンロード用 URL
+# 祝日データダウンロード用 URL (祝日を自動設定しない場合は None を指定)
 HOLIDAY_DOWNLOAD_URL = 'https://holidays-jp.github.io/api/v1/date.json'
 
 # ログイン用 URL
