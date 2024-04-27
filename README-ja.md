@@ -9,7 +9,7 @@ Django で記述された Web ベースのシンプルなタイムカードシ�
 ## 機能
 ユーザは出勤と退勤の打刻をスマートフォンや PC からおこなえます。管理者はユーザの時間記録を確認できます。
 
-<img src="static/worktime/capture_record.png" style="max-width:50%; height:auto;">
+<img src="static/worktime/capture_record.png" width="50%">
 
 ## 使用方法
 
