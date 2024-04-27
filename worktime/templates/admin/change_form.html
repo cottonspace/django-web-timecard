@@ -7,6 +7,8 @@
 <style>
     #mapid {
         margin-bottom: 20px;
+        width: 100%;
+        height: 400px;
     }
 
     .map_button {
@@ -25,20 +27,29 @@
 </style>
 <button type="button" class="map_button" onclick="map.setView(point);">打刻場所</button>
 <button type="button" class="map_button" onclick="map.setView(origin);">基点</button>
-<div id="mapid" style="width:100%; height:400px;"></div>
+<div id="mapid"></div>
 <script>
     const map = L.map('mapid');
-    const origin = [Number("{{ LOCATION_ORIGIN.0 }}"), Number("{{ LOCATION_ORIGIN.1 }}")];
     const max_distance = Number("{{ MAX_DISTANCE }}");
+    const origin = [Number("{{ LOCATION_ORIGIN.0 }}"), Number("{{ LOCATION_ORIGIN.1 }}")];
     const point = [Number("{{ original.latitude }}"), Number("{{ original.longitude }}")];
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
-    L.marker(origin).addTo(map);
-    const point_marker = L.marker(point).addTo(map);
-    const point_popup = point_marker.bindPopup("{{ original.location }}", { autoClose: false });
-    L.polyline([origin, point], { 'color': 'yellow', 'weight': 4, 'opacity': 0.5 }).addTo(map);
-    L.circle(origin, { stroke: false, fillColor: "#1e90ff", fillOpacity: 0.2, radius: max_distance }).addTo(map);
-    map.setView(point, 20);
-    point_popup.openPopup();
+    function show_map() {
+        L.control.scale().addTo(map);
+        const layer_tile = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+        L.circle(origin, { stroke: false, fillColor: '#1e90ff', fillOpacity: 0.2, radius: max_distance }).addTo(map);
+        L.polyline([origin, point], { 'color': 'yellow', 'weight': 4, 'opacity': 0.5 }).addTo(map);
+        const icon_origin = L.icon({
+            iconUrl: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 200 200"><circle cx="100" cy="100" r="90" stroke-width="0" fill="yellow"></circle></svg>'),
+            iconSize: [14, 14],
+            iconAnchor: [7, 7]
+        });
+        const marker_origin = L.marker(origin, { icon: icon_origin }).addTo(map);
+        const marker_point = L.marker(point).addTo(map);
+        const point_popup = marker_point.bindPopup("{{ original.location }}", { autoClose: false });
+        map.fitBounds(L.latLngBounds(origin, point));
+        point_popup.openPopup();
+    }
+    window.addEventListener('load', show_map);
 </script>
 {% endif %}
 {% endblock %}
