@@ -54,6 +54,7 @@ DATABASES = {
     }
 }
 ```
+- You can easily create a local_settings.py file using the [django-web-timecard easy config tool](https://cottonspace.github.io/docs/tools/django-web-timecard-local-settings.html).
 
 ### Initialize
 - Run the following command in the django-web-timecard directory to prepare the database.
