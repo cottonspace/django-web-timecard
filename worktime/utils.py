@@ -3,8 +3,6 @@ from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 
 from django.contrib.auth.models import User
 
-import timecard.settings
-
 
 def display_name(user) -> str:
     """ユーザ名を表示形式に編集します。
@@ -59,21 +57,6 @@ def delta(time1: datetime.time, time2: datetime.time) -> int:
         seconds2 = time2.hour * 60 + time2.minute
         return seconds2 - seconds1
     return 0
-
-
-def cutout(threshold: int, value: int) -> int:
-    """数値の切り捨てをおこないます。
-
-    Args:
-        threshold (int): 閾値
-        value (int): 値
-
-    Returns:
-        int: 値が閾値未満の場合は 0 とみなした結果の値です。
-    """
-    if value < threshold:
-        return 0
-    return value
 
 
 def minutes_to_hours(minutes: int, quantize: str, rounding_mode) -> Decimal:
@@ -141,14 +124,14 @@ def worktime_calculation(obj) -> dict:
             else:
                 # 未到来日で打刻なし (正常)
                 return result
+
     except ValueError as e:
         result['error'] = e.args[0]
         return result
 
     # 非営業日の場合はすべて時間外として計算
     if not obj['attendance']:
-        result['overtime'] = cutout(timecard.settings.MIN_OVERTIME_MIN, delta(
-            obj['begin_record'], obj['end_record']))
+        result['overtime'] = delta(obj['begin_record'], obj['end_record'])
         return result
 
     # 標準勤務時間と実働時間の算出
@@ -167,16 +150,16 @@ def worktime_calculation(obj) -> dict:
         section2_record = 0
 
     # 不足時間の算出
-    result['behind'] = cutout(timecard.settings.MIN_BEHIND_MIN, (
-        section1_total - section1_record) + (section2_total - section2_record))
+    result['behind'] = (section1_total - section1_record) + \
+        (section2_total - section2_record)
 
     # 早出時間の算出
-    result['early'] = cutout(timecard.settings.MIN_EARLY_MIN, max(
-        0,  delta(obj['begin_record'], min(obj['end_record'], obj['begin']))))
+    result['early'] = max(0, delta(obj['begin_record'],
+                          min(obj['end_record'], obj['begin'])))
 
     # 残業時間の算出
-    result['overtime'] = cutout(timecard.settings.MIN_OVERTIME_MIN, max(
-        0,  delta(max(obj['end'], obj['begin_record']), obj['end_record'])))
+    result['overtime'] = max(
+        0, delta(max(obj['end'], obj['begin_record']), obj['end_record']))
 
     # 結果返却
     return result

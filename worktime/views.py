@@ -193,8 +193,5 @@ class ReadmeView(TemplateView):
         context = super().get_context_data(*args, **kwargs)
         context['IS_STAFF'] = self.request.user.is_staff
         context["MAX_DISTANCE"] = timecard.settings.MAX_DISTANCE
-        context["MIN_BEHIND_MIN"] = timecard.settings.MIN_BEHIND_MIN
-        context["MIN_EARLY_MIN"] = timecard.settings.MIN_EARLY_MIN
-        context["MIN_OVERTIME_MIN"] = timecard.settings.MIN_OVERTIME_MIN
         context["ENABLE_CHECK_LOCATION"] = timecard.settings.ENABLE_CHECK_LOCATION
         return context
