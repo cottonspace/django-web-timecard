@@ -43,17 +43,6 @@ Django で記述された Web ベースのシンプルなタイムカードシ�
 - アプリケーションのソースコードを Clone またはダウンロードします。
 - django-web-timecard/timecard ディレクトリにある local_settings_template.txt を、同じディレクトリに local_settings.py の名前でコピーします。
 - コピーして作成した local_settings.py の % から % の部分を、ご自身の環境にあわせて設定します。
-- SECRET_KEY を再作成する場合は [ランダム文字列生成ツール](https://cottonspace.github.io/tools/generate-random-text.html) をご利用ください。
-- LOCATION_ORIGIN の緯度と経度が分からない場合は [緯度経度取得ツール](https://cottonspace.github.io/tools/select-lat-lng.html) をご利用ください。
-- データベースの設定が分からない場合や簡易的にテストする場合は DATABASES は以下のように設定してください。
-```
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': Path(__file__).resolve().parent.parent / 'db.sqlite3',
-    }
-}
-```
 - [web-timecard 簡易設定ツール](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html) を利用すると簡単に local_settings.py ファイルを作成できます。
 
 ### アプリケーションの初期化
