@@ -43,17 +43,6 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 - Clone or download the application source code.
 - Copy local_settings_template.txt located in the django-web-timecard/timecard directory to the same directory as local_settings.py.
 - Edit the part from % to % of the local_settings.py according to your environment.
-- To recreate SECRET_KEY, please use [Random string generation tool](https://cottonspace.github.io/tools/generate-random-text.html).
-- To set LOCATION_ORIGIN, please use the [Latitude and Longitude check tool](https://cottonspace.github.io/tools/select-lat-lng.html).
-- If you do not know the database settings or want to test this application, please set DATABASES as follows.
-```
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': Path(__file__).resolve().parent.parent / 'db.sqlite3',
-    }
-}
-```
 - You can easily create a local_settings.py file using the [web-timecard easy config tool](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html).
 
 ### Initialize
