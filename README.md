@@ -55,9 +55,10 @@ python3 manage.py migrate
 ```
 python3 manage.py createsuperuser
 ```
-- Initialize the working hours for each day of the week with the following command. This will create default settings, so you can edit them later to create appropriate working hours rules.
+- Initialize the master datas with the following command. This will create default settings, so you can edit them later to create appropriate working rules.
 ```
-python3 manage.py loaddata worktime/fixtures/standardworkpattern.json
+python3 manage.py loaddata worktime/fixtures/standard-work-pattern.json
+python3 manage.py loaddata worktime/fixtures/time-off-pattern.json
 ```
 - Start the server. For example, to start with Django's functions, run the following command.
 ```

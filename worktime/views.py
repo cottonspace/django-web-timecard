@@ -5,15 +5,16 @@ from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
+from django.utils import dateformat
 from django.views.generic import FormView, TemplateView
 
 import timecard.settings
 
 from . import queries, utils
 from .forms import (CustomAuthenticationForm, CustomPasswordChangeForm,
-                    TimeRecordCalendarForm, TimeRecordForm,
+                    TimeOffRequestForm, TimeRecordCalendarForm, TimeRecordForm,
                     TimeRecordSummaryForm)
-from .models import TimeRecord
+from .models import TimeOffPattern, TimeOffRequest, TimeRecord
 
 
 class StaffRequiredMixin(AccessMixin):
@@ -31,7 +32,6 @@ class UserLogin(LoginView):
     """
     form_class = CustomAuthenticationForm
     template_name = 'worktime/auth_login.html'
-    redirect_field_name = 'redirect'
     redirect_authenticated_user = True
 
 
@@ -58,8 +58,8 @@ class PasswordChange(LoginRequiredMixin, PasswordChangeView):
 class TimeRecordView(LoginRequiredMixin, FormView):
     """打刻画面のビュー
     """
-    template_name = 'worktime/record.html'
     form_class = TimeRecordForm
+    template_name = 'worktime/record.html'
     success_url = reverse_lazy('worktime:record')
 
     def get_context_data(self, *args, **kwargs):
@@ -109,11 +109,45 @@ class TimeRecordView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
+class TimeOffRequestView(LoginRequiredMixin, FormView):
+    """休暇申請画面のビュー
+    """
+    form_class = TimeOffRequestForm
+    template_name = 'worktime/time_off_request.html'
+    success_url = reverse_lazy('worktime:record_calendar')
+
+    def form_valid(self, form):
+        """フォームの検査
+        """
+        request_date = form.cleaned_data['request_date']
+        records = TimeOffRequest.objects.filter(
+            date=request_date, username=self.request.user.username)
+        if records.exists():
+            form.add_error('request_date', '指定した日には既に申請が存在します')
+            return self.form_invalid(form)
+        pattern = TimeOffPattern.objects.get(
+            id=form.cleaned_data['pattern_id'])
+        TimeOffRequest.objects.create(
+            date=request_date,
+            username=self.request.user.username,
+            display_name=pattern.display_name,
+            attendance=pattern.attendance,
+            begin=pattern.begin,
+            end=pattern.end,
+            leave=pattern.leave,
+            back=pattern.back,
+            accepted=False
+        )
+        messages.success(self.request, dateformat.format(
+            request_date, 'Y/n/d (D)') + ' の ' + pattern.display_name + ' を申請しました')
+        return super().form_valid(form)
+
+
 class TimeRecordCalendarView(LoginRequiredMixin, FormView):
     """勤務表画面のビュー
     """
-    template_name = 'worktime/record_calendar.html'
     form_class = TimeRecordCalendarForm
+    template_name = 'worktime/record_calendar.html'
 
     def get_context_data(self, **kwargs):
         """コンテキストの返却
@@ -153,8 +187,8 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
 class TimeRecordSummaryView(StaffRequiredMixin, FormView):
     """勤務集計画面のビュー
     """
-    template_name = 'worktime/record_summary.html'
     form_class = TimeRecordSummaryForm
+    template_name = 'worktime/record_summary.html'
 
     def get_context_data(self, **kwargs):
         """コンテキストの返却

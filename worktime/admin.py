@@ -3,7 +3,8 @@ from django.contrib.admin.sites import AdminSite
 
 import timecard.settings
 
-from .models import BusinessCalendar, StandardWorkPattern, TimeRecord
+from .models import (BusinessCalendar, StandardWorkPattern, TimeOffPattern,
+                     TimeOffRequest, TimeRecord)
 
 # Admin 画面のタイトル
 AdminSite.site_header = 'Web タイムカード管理'
@@ -48,6 +49,24 @@ class StandardWorkPatternAdmin(admin.ModelAdmin):
 
 # 勤務パターンの管理モデルを登録
 admin.site.register(StandardWorkPattern, StandardWorkPatternAdmin)
+
+
+class TimeOffPatternAdmin(admin.ModelAdmin):
+    """休暇パターンの管理モデルです。
+
+    Args:
+        admin (ModelAdmin): 継承するモデル
+    """
+
+    # 設定
+    list_display = ['id', 'display_name',
+                    'attendance', 'begin', 'end', 'leave', 'back']
+    ordering = ['id']
+    actions = None
+
+
+# 休暇パターンの管理モデルを登録
+admin.site.register(TimeOffPattern, TimeOffPatternAdmin)
 
 
 class BusinessCalendarAdmin(admin.ModelAdmin):
@@ -145,3 +164,23 @@ class TimeRecordAdmin(admin.ModelAdmin):
 
 # 打刻記録の管理モデルを登録
 admin.site.register(TimeRecord, TimeRecordAdmin)
+
+
+class TimeOffRequestAdmin(admin.ModelAdmin):
+    """休暇申請の管理モデルです。
+
+    Args:
+        admin (ModelAdmin): 継承するモデル
+    """
+
+    # 設定
+    list_display = ['date', 'username', 'display_name',
+                    'accepted', 'created_at', 'updated_at']
+    ordering = ['date', 'username']
+    list_filter = ['date', 'username', 'accepted']
+    search_fields = ['username']
+    actions = None
+
+
+# 休暇申請の管理モデルを登録
+admin.site.register(TimeOffRequest, TimeOffRequestAdmin)

@@ -125,6 +125,23 @@
         </div>
     </div>
 </div>
+<div class="container">
+    <h3>休暇申請</h3>
+    <ul>
+        <li>日付を指定して休暇を取得することを管理者に申請します。管理者が申請を承認すると勤務表に休暇が反映されます。</li>
+        <li>休暇申請の変更が必要な場合は、管理者に申し出て修正を依頼してください。</li>
+    </ul>
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-8 m-3 clickable-box">
+            <a href="#capture-modal-5"><img src="{% static 'worktime/capture_time_off_request.png' %}"></a>
+            <figure id="capture-modal-5">
+                <a id="capture-5" href="#capture-5"><img src="{% static 'worktime/capture_time_off_request.png' %}"></a>
+            </figure>
+        </div>
+    </div>
+</div>
 {% if IS_STAFF %}
 <div class="container">
     <h3>勤務集計</h3>

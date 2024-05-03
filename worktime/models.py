@@ -53,6 +53,54 @@ class StandardWorkPattern(models.Model):
         verbose_name_plural = "勤務パターン"
 
 
+class TimeOffPattern(models.Model):
+    """休暇パターンのモデルです。
+
+    Args:
+        models: 継承するモデル
+
+    Raises:
+        ValidationError: 値の不正
+
+    Returns:
+        str: 文字列表現
+    """
+    id = models.IntegerField('ID', primary_key=True)
+    display_name = models.CharField('名称', max_length=40)
+    attendance = models.BooleanField('勤務', default=True)
+    begin = models.TimeField('勤務開始', blank=True, null=True)
+    end = models.TimeField('勤務終了', blank=True, null=True)
+    leave = models.TimeField('休憩開始', blank=True, null=True)
+    back = models.TimeField('休憩終了', blank=True, null=True)
+
+    def clean(self):
+        """値の検査
+
+        Raises:
+            ValidationError: 値の不正
+        """
+        if self.attendance:
+            if (not self.begin) or (not self.end):
+                raise ValidationError("勤務日は勤務開始と勤務終了の時刻は必須です。")
+        else:
+            if self.begin or self.end or self.leave or self.back:
+                raise ValidationError("非勤務日は時刻の指定は出来ません。")
+
+    def __str__(self):
+        """文字列表現を取得します。
+
+        Returns:
+            str: 文字列表現
+        """
+        return self.display_name
+
+    class Meta:
+        """メタ情報です。
+        """
+        verbose_name = "休暇パターン"
+        verbose_name_plural = "休暇パターン"
+
+
 class BusinessCalendar(models.Model):
     """営業日カレンダのモデルです。
 
@@ -163,3 +211,40 @@ class TimeRecord(models.Model):
         """
         verbose_name = "打刻記録"
         verbose_name_plural = "打刻記録"
+
+
+class TimeOffRequest(models.Model):
+    """休暇申請のモデルです。
+
+    Args:
+        models: 継承するモデル
+
+    Returns:
+        str: 文字列表現
+    """
+    id = models.AutoField('ID', primary_key=True)
+    date = models.DateField('日付')
+    username = models.CharField('ユーザー名', max_length=150)
+    display_name = models.CharField('名称', max_length=40)
+    attendance = models.BooleanField('勤務', default=True)
+    begin = models.TimeField('勤務開始', blank=True, null=True)
+    end = models.TimeField('勤務終了', blank=True, null=True)
+    leave = models.TimeField('休憩開始', blank=True, null=True)
+    back = models.TimeField('休憩終了', blank=True, null=True)
+    accepted = models.BooleanField('承認')
+    created_at = models.DateTimeField('作成日時', auto_now_add=True)
+    updated_at = models.DateTimeField('更新日時', auto_now=True)
+
+    def __str__(self):
+        """文字列表現を取得します。
+
+        Returns:
+            str: 文字列表現
+        """
+        return self.date.strftime('%Y-%m-%d (%a)') + ' ' + self.username + ' (' + self.display_name + ')'
+
+    class Meta:
+        """メタ情報です。
+        """
+        verbose_name = "休暇申請"
+        verbose_name_plural = "休暇申請"

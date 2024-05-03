@@ -55,9 +55,10 @@ python3 manage.py migrate
 ```
 python3 manage.py createsuperuser
 ```
-- 以下のコマンドで曜日別の就業時間を初期化します。ここではデフォルトの設定が作成されるので、あとの作業で、適切な就業時間のルールに編集します。
+- 以下のコマンドでマスタデータを初期化します。ここではデフォルトの設定が作成されるので、あとの作業で、適切な就業時間のルールに編集します。
 ```
-python3 manage.py loaddata worktime/fixtures/standardworkpattern.json
+python3 manage.py loaddata worktime/fixtures/standard-work-pattern.json
+python3 manage.py loaddata worktime/fixtures/time-off-pattern.json
 ```
 - サーバを起動します。例えば Django の機能で起動する場合は以下のコマンドを実行します。
 ```

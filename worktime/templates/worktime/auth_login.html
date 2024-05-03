@@ -17,6 +17,9 @@
     <div class="col-lg-5 col-md-8">
         <form action="{% url 'worktime:login' %}" method="post">
             {% csrf_token %}
+            {% if next %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% endif %}
             {% if form.non_field_errors %}
             <ul class="alert alert-danger list-unstyled">
                 {% for error in form.non_field_errors %}
