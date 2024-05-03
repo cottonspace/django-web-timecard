@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import dateformat
 from geopy.distance import geodesic
 
 import timecard.settings
@@ -144,7 +145,7 @@ class BusinessCalendar(models.Model):
         Returns:
             str: 文字列表現
         """
-        return self.date.strftime('%Y-%m-%d (%a)')
+        return dateformat.format(self.date, 'Y/n/d (D)')
 
     class Meta:
         """メタ情報です。
@@ -182,7 +183,7 @@ class TimeRecord(models.Model):
         Returns:
             str: 文字列表現
         """
-        return self.date.strftime('%Y-%m-%d (%a)') + ' ' + self.username
+        return dateformat.format(self.date, 'Y/n/d (D)') + ' ' + self.username
 
     def location(self) -> str:
         """位置情報の表示を編集します。
@@ -241,7 +242,7 @@ class TimeOffRequest(models.Model):
         Returns:
             str: 文字列表現
         """
-        return self.date.strftime('%Y-%m-%d (%a)') + ' ' + self.username + ' (' + self.display_name + ')'
+        return dateformat.format(self.date, 'Y/n/d (D)') + ' ' + self.username + ' (' + self.display_name + ')'
 
     class Meta:
         """メタ情報です。

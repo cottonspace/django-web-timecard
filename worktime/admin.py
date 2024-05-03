@@ -147,15 +147,16 @@ class TimeRecordAdmin(admin.ModelAdmin):
             拡張コンテキストを適用したレスポンス
         """
         extra_context = extra_context or {}
-        extra_context['DISPLAY_MAP'] = True
         extra_context['LOCATION_ORIGIN'] = timecard.local_settings.LOCATION_ORIGIN
         extra_context['MAX_DISTANCE'] = timecard.local_settings.MAX_DISTANCE
         return super().change_view(request, object_id, form_url, extra_context=extra_context)
 
     # 設定
     display_location.short_description = '位置情報'
-    list_display = ['date', 'time', 'username', 'action',
-                    'display_location', 'created_at', 'updated_at']
+    readonly_fields = ['date', 'time', 'username',
+                       'action', 'latitude', 'longitude', 'accuracy', 'ua']
+    list_display = ['date', 'time', 'username',
+                    'action', 'display_location', 'created_at']
     ordering = ['date', 'time']
     list_filter = ['date']
     search_fields = ['username']
@@ -174,12 +175,25 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
     """
 
     # 設定
-    list_display = ['date', 'username', 'display_name',
-                    'accepted', 'created_at', 'updated_at']
+    exclude = ['attendance', 'begin', 'end', 'leave', 'back']
+    readonly_fields = ['date', 'username', 'display_name']
+    list_display = ['date', 'username',
+                    'display_name', 'accepted', 'created_at']
     ordering = ['date', 'username']
     list_filter = ['date', 'username', 'accepted']
     search_fields = ['username']
-    actions = None
+    actions = ['action_accept']
+
+    def action_accept(self, request, queryset):
+        """選択したレコードを一括で承認します。
+
+        Args:
+            request: リクエスト情報
+            queryset: 選択されたレコード
+        """
+        queryset.update(accepted=True)
+
+    action_accept.short_description = '選択された 休暇申請 の承認'
 
 
 # 休暇申請の管理モデルを登録
