@@ -1,0 +1,98 @@
+{% extends 'worktime/base.html' %}
+{% load custom_filter %}
+{% block title %}休暇承認 | {{ block.super }}{% endblock title %}
+{% block main %}
+<style>
+    @media print {
+
+        *,
+        *::before,
+        *::after {
+            text-shadow: none !important;
+            box-shadow: none !important;
+        }
+
+        .container {
+            margin: 0;
+        }
+
+        .text-center {
+            text-align: left !important;
+        }
+
+        .table-responsive {
+            overflow: visible !important;
+        }
+
+        .table * {
+            font-size: 12px !important;
+        }
+
+        .table tr {
+            border-color: black !important;
+            page-break-inside: avoid;
+        }
+
+        .table td,
+        .table th {
+            color: black !important;
+            background-color: white !important;
+            padding: 3px 8px !important;
+        }
+    }
+</style>
+<div class="container text-center">
+    <div class="row">
+        <div class="col mb-3">
+            <h2>休暇承認</h2>
+        </div>
+    </div>
+</div>
+<form id="time_off_accept" action="{% url 'worktime:time_off_accept' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="">
+</form>
+{% if entries %}
+<script>
+    function send_accept(id) {
+        const form = document.getElementById('time_off_accept');
+        form.id.value = id;
+        form.submit();
+    }
+</script>
+<div class="container mb-3">
+    <div class="table-responsive">
+        <table id="calendar" class="table table-hover table-bordered align-middle text-nowrap text-center">
+            <thead>
+                <tr class="table-dark">
+                    <th scope="col">年度</th>
+                    <th scope="col">対象日</th>
+                    <th scope="col">氏名</th>
+                    <th scope="col">種別</th>
+                    <th scope="col">申請日時</th>
+                    <th scope="col">承認済</th>
+                    <th scope="col">承認</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.year }}</td>
+                    <td>{{ entry.date|date:"Y年n月j日(D)" }}</td>
+                    <td>{{ users|dict_value:entry.username|default:entry.username }}</td>
+                    <td>{{ entry.display_name }}</td>
+                    <td>{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
+                    <td>{{ entry.accepted_count }} 回</td>
+                    <td><button type="button" class="btn btn-success btn-sm" onclick="send_accept('{{ entry.id }}')">承認</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-success" role="alert">
+    承認待ちの休暇申請はありません
+</div>
+{% endif %}
+{% endblock main %}

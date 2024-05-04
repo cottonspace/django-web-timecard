@@ -6,18 +6,18 @@ from . import utils
 from .models import BusinessCalendar, TimeOffRequest, TimeRecord
 
 
-def count_time_off_requests(username: str, begin: datetime.date, end: datetime.date) -> dict:
+def count_time_off_requests(username: str, date_range: tuple[datetime.date, datetime.date]) -> dict:
     """指定したユーザが指定期間に申請した承認済の休暇申請の数を取得します。
 
     Args:
         username (str): ユーザ ID
-        begin (datetime.date): 開始日
-        end (datetime.date): 終了日 (集計に含みません)
+        date_range (tuple[datetime.date, datetime.date]): 期間 (終了日は範囲に含まれません)
 
     Returns:
         dict: 休暇名称をキーにした取得回数の dict
     """
     results = {}
+    begin, end = date_range
     for record in TimeOffRequest.objects.filter(date__gte=begin, date__lt=end, username=username, accepted=True).values('display_name').annotate(Count('display_name')):
         results[record['display_name']] = record['display_name__count']
     return results
@@ -87,7 +87,7 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
             record.update({
                 'time_off_request_id': time_off_request['id'],
                 'time_off_accepted': time_off_accepted,
-                'holiday': time_off_request['display_name'] + ('' if time_off_accepted else ' (承認待ち)')
+                'holiday': '休暇 (' + time_off_request['display_name'] + ')' + ('' if time_off_accepted else ' (承認待ち)')
             })
             if time_off_accepted:
                 record.update({

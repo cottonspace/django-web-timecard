@@ -88,12 +88,12 @@
                 {% for entry in entries %}
                 <tr>
                     <th><a href="{% url 'worktime:record_calendar' %}?username={{ entry.id }}&year={{ year }}&month={{ month }}">{{ entry.name }}</a></th>
-                    <td>{% if entry.summary.errors %}{{ entry.summary.errors }} 個{% else %}-{% endif %}</td>
-                    <td>{% if entry.summary.work_days %}{{ entry.summary.work_days }} 日{% else %}-{% endif %}</td>
-                    <td>{% if 0 < entry.summary.time_off_count %}{{ entry.summary.time_off_count }} 回{% if 0 < entry.summary.time_off_not_yet_accepted_count %} (承認待ち){% endif %}{% else %}-{% endif %}</td>
-                    <td>{% if entry.summary.behind_minutes %}{{ entry.summary.behind_count }} 回 ({{ entry.summary.behind_minutes|intcomma }} 分){% else %}-{% endif %}</td>
-                    <td>{% if entry.summary.early_hours %}{{ entry.summary.early_hours }} 時間 ({{ entry.summary.early_minutes|intcomma }} 分){% else %}-{% endif %}</td>
-                    <td>{% if entry.summary.overtime_hours %}{{ entry.summary.overtime_hours }} 時間 ({{ entry.summary.overtime_minutes|intcomma }} 分){% else %}-{% endif %}</td>
+                    <td>{% if entry.summary.errors %}{{ entry.summary.errors }} 個{% endif %}</td>
+                    <td>{% if entry.summary.work_days %}{{ entry.summary.work_days }} 日{% endif %}</td>
+                    <td>{% if 0 < entry.summary.time_off_count %}{{ entry.summary.time_off_count }} 回{% if 0 < entry.summary.time_off_not_yet_accepted_count %} (承認待ち){% endif %}{% endif %}</td>
+                    <td>{% if entry.summary.behind_minutes %}{{ entry.summary.behind_count }} 回 ({{ entry.summary.behind_minutes|intcomma }} 分){% endif %}</td>
+                    <td>{% if entry.summary.early_hours %}{{ entry.summary.early_hours }} 時間 ({{ entry.summary.early_minutes|intcomma }} 分){% endif %}</td>
+                    <td>{% if entry.summary.overtime_hours %}{{ entry.summary.overtime_hours }} 時間 ({{ entry.summary.overtime_minutes|intcomma }} 分){% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

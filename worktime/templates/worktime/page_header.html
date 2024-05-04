@@ -19,9 +19,10 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">管理機能</a>
                         <div class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'worktime:record_summary' %}">勤務集計</a></li>
-                            <li><a class="dropdown-item" href="{% url 'worktime:time_off_status' %}">休暇集計</a></li>
-                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">システム管理</a></li>
+                            <a class="dropdown-item" href="{% url 'worktime:record_summary' %}">勤務集計</a>
+                            <a class="dropdown-item" href="{% url 'worktime:time_off_list' %}">休暇承認</a>
+                            <a class="dropdown-item" href="{% url 'worktime:time_off_status' %}">休暇集計</a>
+                            <a class="dropdown-item" href="{% url 'admin:index' %}">システム管理</a>
                         </div>
                     </div>
                     {% endif %}
@@ -31,8 +32,9 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">こんにちは {{ user.get_username }} さん</a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'worktime:password_change' %}">パスワード変更</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="document.getElementById('logout_form').submit();">ログアウト</a></li>
+                            <a class="dropdown-item" href="{% url 'worktime:password_change' %}">パスワード変更</a>
+                            <hr class="dropdown-divider">
+                            <a class="dropdown-item" href="#" onclick="document.getElementById('logout_form').submit();">ログアウト</a>
                         </div>
                     </div>
                     {% else %}

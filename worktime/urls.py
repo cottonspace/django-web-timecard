@@ -14,6 +14,8 @@ urlpatterns = [
          name='time_off_status'),
     path('time_off/request/', views.TimeOffRequestView.as_view(),
          name='time_off_request'),
+    path('time_off/list/', views.TimeOffListView.as_view(),name='time_off_list'),
+    path('time_off/accept', views.time_off_accept, name='time_off_accept'),
     path('time_off/cancel', views.time_off_cancel, name='time_off_cancel'),
     path('record/', views.TimeRecordView.as_view(), name='record'),
     path('record/calendar/', views.TimeRecordCalendarView.as_view(),

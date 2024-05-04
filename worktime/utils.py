@@ -44,21 +44,33 @@ def get_users(active: bool) -> dict:
     return results
 
 
-def get_first_day_of_year(year: int, month: int) -> datetime.date:
-    """指定した年月を含む年度の最初の日を取得します。
+def get_first_day_of_year(day: datetime.date) -> datetime.date:
+    """指定した日を含む年度の最初の日を取得します。
 
     Args:
-        year (int): 年
-        month (int): 月 (1～12)
+        day (datetime.date): 日
 
     Returns:
-        datetime.date: 指定した年月を含む年度の最初の日
+        datetime.date: 指定した日を含む年度の最初の日
     """
     first_month = timecard.settings.YEAR_FIRST_MONTH
-    if first_month <= month:
-        return datetime.date(year, first_month, 1)
+    if first_month <= day.month:
+        return datetime.date(day.year, first_month, 1)
     else:
-        return datetime.date(year-1, first_month, 1)
+        return datetime.date(day.year - 1, first_month, 1)
+
+
+def get_year_range(year: int) -> tuple[datetime.date, datetime.date]:
+    """指定した年度の期間を取得します。
+
+    Args:
+        year (int): 年度
+
+    Returns:
+        tuple[datetime.date,datetime.date]: 指定した年度の最初の日と翌年度の最初の日
+    """
+    first_month = timecard.settings.YEAR_FIRST_MONTH
+    return datetime.date(year, first_month, 1), datetime.date(year + 1, first_month, 1)
 
 
 def delta(time1: datetime.time, time2: datetime.time) -> int:

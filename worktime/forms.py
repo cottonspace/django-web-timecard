@@ -50,9 +50,16 @@ class TimeRecordForm(forms.Form):
     accuracy = forms.CharField(widget=forms.HiddenInput, required=False)
     ua = forms.CharField(widget=forms.HiddenInput, required=False)
 
+class TimeOffListForm(forms.Form):
+    """休暇承認画面のフォーム
+
+    Args:
+        forms: 継承するフォーム
+    """
+    pass
 
 class TimeOffStatusForm(forms.Form):
-    """休暇申請ステータス画面のフォーム
+    """休暇集計画面のフォーム
 
     Args:
         forms: 継承するフォーム
