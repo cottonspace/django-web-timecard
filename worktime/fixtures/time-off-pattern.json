@@ -15,7 +15,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 2,
         "fields": {
-            "display_name": "有給 (午前休)",
+            "display_name": "午前休",
             "attendance": true,
             "begin": "13:00:00",
             "end": "17:00:00",
@@ -27,7 +27,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 3,
         "fields": {
-            "display_name": "有給 (午後休)",
+            "display_name": "午後休",
             "attendance": true,
             "begin": "09:00:00",
             "end": "12:00:00",
@@ -39,7 +39,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 10,
         "fields": {
-            "display_name": "特別 (病気)",
+            "display_name": "病気",
             "attendance": false,
             "begin": null,
             "end": null,
@@ -51,7 +51,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 11,
         "fields": {
-            "display_name": "特別 (慶弔)",
+            "display_name": "慶弔",
             "attendance": false,
             "begin": null,
             "end": null,
@@ -63,7 +63,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 12,
         "fields": {
-            "display_name": "特別 (結婚)",
+            "display_name": "結婚",
             "attendance": false,
             "begin": null,
             "end": null,
