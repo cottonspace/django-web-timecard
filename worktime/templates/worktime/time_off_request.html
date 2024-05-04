@@ -2,12 +2,6 @@
 {% block title %}休暇申請 | {{ block.super }}{% endblock title %}
 {% block main %}
 <style>
-    .table tr,
-    .table td {
-        white-space: nowrap;
-        text-align: center;
-    }
-
     .form-control {
         margin-top: 8px;
         margin-bottom: 8px;
@@ -54,7 +48,7 @@
 </script>
 <div class="container mt-5 mb-3">
     <div class="table-responsive">
-        <table id="entries" class="table table-hover align-middle">
+        <table id="entries" class="table table-hover align-middle text-nowrap text-center">
             <thead>
                 <tr>
                     <th scope="col">対象日</th>

@@ -3,6 +3,7 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import dateformat
@@ -12,7 +13,8 @@ import timecard.settings
 
 from . import queries, utils
 from .forms import (CustomAuthenticationForm, CustomPasswordChangeForm,
-                    TimeOffRequestForm, TimeRecordCalendarForm, TimeRecordForm,
+                    TimeOffRequestForm, TimeOffStatusForm,
+                    TimeRecordCalendarForm, TimeRecordForm,
                     TimeRecordSummaryForm)
 from .models import TimeOffPattern, TimeOffRequest, TimeRecord
 
@@ -109,6 +111,38 @@ class TimeRecordView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
+class TimeOffStatusView(StaffRequiredMixin, FormView):
+    """休暇集計画面のビュー
+    """
+    form_class = TimeOffStatusForm
+    template_name = 'worktime/time_off_status.html'
+    success_url = reverse_lazy('worktime:time_off_status')
+
+    def get_context_data(self, *args, **kwargs):
+        """コンテキストの返却
+        """
+        context = super().get_context_data(*args, **kwargs)
+        today = datetime.datetime.today()
+        first_day_of_year = utils.get_first_day_of_year(
+            today.year, today.month)
+        context['year'] = int(self.request.GET.get(
+            'year', first_day_of_year.year))
+        context["years"] = range(
+            first_day_of_year.year - 9, first_day_of_year.year + 1)
+        context["current_year"] = first_day_of_year.year
+        context['display_names'] = list(TimeOffPattern.objects.order_by(
+            'id').values_list('display_name', flat=True))
+        context['entries'] = []
+        for id, name in utils.get_users(True).items():
+            counts = queries.count_time_off_requests(id, datetime.date(context['year'], timecard.settings.YEAR_FIRST_MONTH, 1), datetime.date(
+                context['year'] + 1, timecard.settings.YEAR_FIRST_MONTH, 1))
+            context['entries'].append({
+                'id': id,
+                'name': name,
+                'counts': counts})
+        return context
+
+
 class TimeOffRequestView(LoginRequiredMixin, FormView):
     """休暇申請画面のビュー
     """
@@ -120,9 +154,11 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
         """コンテキストの返却
         """
         context = super().get_context_data(*args, **kwargs)
-        a_year_ago = datetime.date.today() - datetime.timedelta(days=365)
-        context["entries"] = TimeOffRequest.objects.filter(
-            username=self.request.user.username).filter(date__gte=a_year_ago).order_by("date")
+        today = datetime.datetime.today()
+        first_day_of_year = utils.get_first_day_of_year(
+            today.year, today.month)
+        context["entries"] = TimeOffRequest.objects.filter(username=self.request.user.username).filter(
+            Q(date__gte=first_day_of_year) | Q(accepted=False)).distinct().order_by("date")
         return context
 
     def form_valid(self, form):
@@ -225,21 +261,6 @@ class TimeRecordSummaryView(StaffRequiredMixin, FormView):
         return redirect(reverse('worktime:record_summary') + f'?year={year}&month={month}')
 
 
-class ReadmeView(TemplateView):
-    """説明画面のビュー
-    """
-    template_name = 'worktime/readme.html'
-
-    def get_context_data(self, *args, **kwargs):
-        """コンテキストの返却
-        """
-        context = super().get_context_data(*args, **kwargs)
-        context['IS_STAFF'] = self.request.user.is_staff
-        context["MAX_DISTANCE"] = timecard.settings.MAX_DISTANCE
-        context["ENABLE_CHECK_LOCATION"] = timecard.settings.ENABLE_CHECK_LOCATION
-        return context
-
-
 def time_off_cancel(request):
     """休暇申請の取り消し処理 (画面なし)
 
@@ -263,3 +284,19 @@ def time_off_cancel(request):
     else:
         messages.error(request, '指定された申請は存在しないか既に取り消されています')
     return redirect('worktime:time_off_request')
+
+
+class ReadmeView(TemplateView):
+    """説明画面のビュー
+    """
+    template_name = 'worktime/readme.html'
+
+    def get_context_data(self, *args, **kwargs):
+        """コンテキストの返却
+        """
+        context = super().get_context_data(*args, **kwargs)
+        context['IS_STAFF'] = self.request.user.is_staff
+        context["MAX_DISTANCE"] = timecard.settings.MAX_DISTANCE
+        context["YEAR_FIRST_MONTH"] = timecard.settings.YEAR_FIRST_MONTH
+        context["ENABLE_CHECK_LOCATION"] = timecard.settings.ENABLE_CHECK_LOCATION
+        return context

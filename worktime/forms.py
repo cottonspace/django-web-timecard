@@ -51,6 +51,15 @@ class TimeRecordForm(forms.Form):
     ua = forms.CharField(widget=forms.HiddenInput, required=False)
 
 
+class TimeOffStatusForm(forms.Form):
+    """休暇申請ステータス画面のフォーム
+
+    Args:
+        forms: 継承するフォーム
+    """
+    pass
+
+
 class TimeOffRequestForm(forms.Form):
     """休暇申請画面のフォーム
 

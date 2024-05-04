@@ -3,6 +3,8 @@ from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 
 from django.contrib.auth.models import User
 
+import timecard.settings
+
 
 def display_name(user) -> str:
     """ユーザ名を表示形式に編集します。
@@ -40,6 +42,23 @@ def get_users(active: bool) -> dict:
         else:
             results[user.username] = display_name(user) + ' *'
     return results
+
+
+def get_first_day_of_year(year: int, month: int) -> datetime.date:
+    """指定した年月を含む年度の最初の日を取得します。
+
+    Args:
+        year (int): 年
+        month (int): 月 (1～12)
+
+    Returns:
+        datetime.date: 指定した年月を含む年度の最初の日
+    """
+    first_month = timecard.settings.YEAR_FIRST_MONTH
+    if first_month <= month:
+        return datetime.date(year, first_month, 1)
+    else:
+        return datetime.date(year-1, first_month, 1)
 
 
 def delta(time1: datetime.time, time2: datetime.time) -> int:
@@ -186,6 +205,8 @@ def summarize(objects) -> dict:
         'early_count': 0,
         'overtime_minutes': 0,
         'overtime_count': 0,
+        'time_off_count': 0,
+        'time_off_not_yet_accepted_count': 0,
         'errors': 0
     }
 
@@ -209,6 +230,10 @@ def summarize(objects) -> dict:
         if 0 < obj['overtime']:
             result['overtime_minutes'] += obj['overtime']
             result['overtime_count'] += 1
+        if obj.get('time_off_request_id'):
+            result['time_off_count'] += 1
+            if not obj['time_off_accepted']:
+                result['time_off_not_yet_accepted_count'] += 1
 
     # 時間単位の算出
     result['behind_hours'] = minutes_to_hours(

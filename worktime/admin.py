@@ -174,6 +174,11 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         admin (ModelAdmin): 継承するモデル
     """
 
+    def has_add_permission(self, request, obj=None):
+        """追加を無効化します。
+        """
+        return False
+
     # 設定
     exclude = ['attendance', 'begin', 'end', 'leave', 'back']
     readonly_fields = ['date', 'username', 'display_name']

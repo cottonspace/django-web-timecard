@@ -3,7 +3,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 1,
         "fields": {
-            "display_name": "有給休暇",
+            "display_name": "有給",
             "attendance": false,
             "begin": null,
             "end": null,
@@ -15,7 +15,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 2,
         "fields": {
-            "display_name": "有給休暇 (午前休)",
+            "display_name": "有給 (午前休)",
             "attendance": true,
             "begin": "13:00:00",
             "end": "17:00:00",
@@ -27,7 +27,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 3,
         "fields": {
-            "display_name": "有給休暇 (午後休)",
+            "display_name": "有給 (午後休)",
             "attendance": true,
             "begin": "09:00:00",
             "end": "12:00:00",
@@ -39,7 +39,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 10,
         "fields": {
-            "display_name": "特別休暇 (病気)",
+            "display_name": "特別 (病気)",
             "attendance": false,
             "begin": null,
             "end": null,
@@ -51,7 +51,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 11,
         "fields": {
-            "display_name": "特別休暇 (慶弔)",
+            "display_name": "特別 (慶弔)",
             "attendance": false,
             "begin": null,
             "end": null,
@@ -63,7 +63,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 12,
         "fields": {
-            "display_name": "特別休暇 (結婚)",
+            "display_name": "特別 (結婚)",
             "attendance": false,
             "begin": null,
             "end": null,
@@ -75,7 +75,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 80,
         "fields": {
-            "display_name": "夏季休暇",
+            "display_name": "夏季",
             "attendance": false,
             "begin": null,
             "end": null,
@@ -87,7 +87,7 @@
         "model": "worktime.timeoffpattern",
         "pk": 81,
         "fields": {
-            "display_name": "年末年始休暇",
+            "display_name": "年末年始",
             "attendance": false,
             "begin": null,
             "end": null,

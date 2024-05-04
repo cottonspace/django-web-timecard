@@ -4,12 +4,6 @@
 {% block title %}{{ year }}年{{ month }}月 | {{ block.super }}{% endblock title %}
 {% block main %}
 <style>
-    .table tr,
-    .table td {
-        white-space: nowrap;
-        text-align: center;
-    }
-
     @media print {
 
         *,
@@ -78,12 +72,13 @@
 </div>
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="calendar" class="table table-hover table-bordered">
+        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">氏名</th>
                     <th scope="col">エラー</th>
                     <th scope="col">出勤日</th>
+                    <th scope="col">休暇申請</th>
                     <th scope="col">遅刻・早退</th>
                     <th scope="col">早出</th>
                     <th scope="col">残業</th>
@@ -95,6 +90,7 @@
                     <th><a href="{% url 'worktime:record_calendar' %}?username={{ entry.id }}&year={{ year }}&month={{ month }}">{{ entry.name }}</a></th>
                     <td>{% if entry.summary.errors %}{{ entry.summary.errors }} 個{% else %}-{% endif %}</td>
                     <td>{% if entry.summary.work_days %}{{ entry.summary.work_days }} 日{% else %}-{% endif %}</td>
+                    <td>{% if 0 < entry.summary.time_off_count %}{{ entry.summary.time_off_count }} 回{% if 0 < entry.summary.time_off_not_yet_accepted_count %} (承認待ち){% endif %}{% else %}-{% endif %}</td>
                     <td>{% if entry.summary.behind_minutes %}{{ entry.summary.behind_count }} 回 ({{ entry.summary.behind_minutes|intcomma }} 分){% else %}-{% endif %}</td>
                     <td>{% if entry.summary.early_hours %}{{ entry.summary.early_hours }} 時間 ({{ entry.summary.early_minutes|intcomma }} 分){% else %}-{% endif %}</td>
                     <td>{% if entry.summary.overtime_hours %}{{ entry.summary.overtime_hours }} 時間 ({{ entry.summary.overtime_minutes|intcomma }} 分){% else %}-{% endif %}</td>
@@ -117,6 +113,8 @@
             '日数(日)',
             '営業日(日)',
             '出勤日(日)',
+            '休暇申請(合計)(回)',
+            '休暇申請(承認待ち)(回)',
             '遅刻早退(回)',
             '遅刻早退(時間)',
             '遅刻早退(分)',
@@ -138,6 +136,8 @@
                 summary.days,
                 summary.attendance_days,
                 summary.work_days,
+                summary.time_off_count,
+                summary.time_off_not_yet_accepted_count,
                 summary.behind_count,
                 summary.behind_hours,
                 summary.behind_minutes,

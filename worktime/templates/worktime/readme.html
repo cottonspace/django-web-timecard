@@ -129,6 +129,7 @@
     <h3>休暇申請</h3>
     <ul>
         <li>日付を指定して休暇を取得することを管理者に申請します。管理者が申請を承認すると勤務表に休暇が反映されます。</li>
+        <li>画面の下部に今年度の全ての申請、および過去の年度の未承認の申請が表示されます。</li>
         <li>管理者が申請を承認する前は申請を取り消すことが出来ます。承認後に変更が必要な場合は、管理者に申し出て修正を依頼してください。</li>
     </ul>
 </div>
@@ -143,6 +144,23 @@
     </div>
 </div>
 {% if IS_STAFF %}
+<div class="container">
+    <h3>休暇集計</h3>
+    <ul>
+        <li>指定した年度 ({{ YEAR_FIRST_MONTH }}月1日から起算) の種類別の休暇の取得回数を表示します。</li>
+        <li>既に承認済の休暇が集計の対象です。承認待ちの休暇は含まれません。</li>
+    </ul>
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-8 m-3 clickable-box">
+            <a href="#capture-modal-6"><img src="{% static 'worktime/capture_time_off_request.png' %}"></a>
+            <figure id="capture-modal-6">
+                <a id="capture-6" href="#capture-6"><img src="{% static 'worktime/capture_time_off_status.png' %}"></a>
+            </figure>
+        </div>
+    </div>
+</div>
 <div class="container">
     <h3>勤務集計</h3>
     <ul>

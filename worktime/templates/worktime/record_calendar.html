@@ -4,12 +4,6 @@
 {% block title %}{{ year }}年{{ month }}月 {{ users|dict_value:username|default:username }} | {{ block.super }}{% endblock title %}
 {% block main %}
 <style>
-    .table tr,
-    .table td {
-        white-space: nowrap;
-        text-align: center;
-    }
-
     .check {
         width: 14px;
         height: 14px;
@@ -111,7 +105,7 @@
 {% if entries %}
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="summary" class="table align-middle">
+        <table id="summary" class="table align-middle text-nowrap text-center">
             <thead>
                 <tr>
                     <th scope="col">状態</th>
@@ -119,6 +113,7 @@
                     <th scope="col">日数</th>
                     <th scope="col">営業日</th>
                     <th scope="col">出勤日</th>
+                    <th scope="col">休暇申請</th>
                     <th scope="col">遅刻・早退</th>
                     <th scope="col">早出</th>
                     <th scope="col">残業</th>
@@ -131,6 +126,7 @@
                     <td>{% if summary.days %}{{ summary.days }} 日{% else %}-{% endif %}</td>
                     <td>{% if summary.attendance_days %}{{ summary.attendance_days }} 日{% else %}-{% endif %}</td>
                     <td>{% if summary.work_days %}{{ summary.work_days }} 日{% else %}-{% endif %}</td>
+                    <td>{% if 0 < summary.time_off_count %}{{ summary.time_off_count }} 回{% if 0 < summary.time_off_not_yet_accepted_count %}<br>(承認待ち){% endif %}{% else %}-{% endif %}</td>
                     <td>{% if summary.behind_minutes %}{{ summary.behind_count }} 回<br>({{ summary.behind_minutes|intcomma }} 分){% else %}-{% endif %}</td>
                     <td>{% if summary.early_hours %}{{ summary.early_hours }} 時間<br>({{ summary.early_minutes|intcomma }} 分){% else %}-{% endif %}</td>
                     <td>{% if summary.overtime_hours %}{{ summary.overtime_hours }} 時間<br>({{ summary.overtime_minutes|intcomma }} 分){% else %}-{% endif %}</td>
@@ -141,7 +137,7 @@
 </div>
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="calendar" class="table table-hover table-bordered">
+        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">日付</th>

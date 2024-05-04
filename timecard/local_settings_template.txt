@@ -28,6 +28,9 @@ SESSION_COOKIE_AGE = %任意の秒数 (例: 2週間は 1209600)%
 # 営業日カレンダを生成する月数 (月)
 CALENDAR_MONTHS = %任意の月数 (例: 1年は 12)%
 
+# 年度の最初の月
+YEAR_FIRST_MONTH = %1～12の値%
+
 # 距離判定の有効化
 ENABLE_CHECK_LOCATION = %位置情報を取得する場合は True%
 
