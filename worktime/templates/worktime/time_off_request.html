@@ -2,6 +2,12 @@
 {% block title %}休暇申請 | {{ block.super }}{% endblock title %}
 {% block main %}
 <style>
+    .table tr,
+    .table td {
+        white-space: nowrap;
+        text-align: center;
+    }
+
     .form-control {
         margin-top: 8px;
         margin-bottom: 8px;
@@ -48,13 +54,13 @@
 </script>
 <div class="container mt-5 mb-3">
     <div class="table-responsive">
-        <table id="entries" class="table table-hover align-middle text-nowrap">
+        <table id="entries" class="table table-hover align-middle">
             <thead>
                 <tr>
                     <th scope="col">対象日</th>
                     <th scope="col">種別</th>
                     <th scope="col">承認</th>
-                    <th scope="col">申請日</th>
+                    <th scope="col">申請日時</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -67,7 +73,7 @@
                     {% else %}
                     <td><button type="button" class="btn btn-secondary btn-sm" onclick="send_cancel('{{ entry.id }}')">取消</button></td>
                     {% endif %}
-                    <td>{{ entry.created_at|date:"Y年n月j日(D)" }}</td>
+                    <td>{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
