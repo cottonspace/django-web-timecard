@@ -161,24 +161,6 @@
 </div>
 {% if IS_STAFF %}
 <div class="container">
-    <h3>休暇集計</h3>
-    <ul>
-        <li>管理者専用の機能です。</li>
-        <li>指定した年度 ({{ YEAR_FIRST_MONTH }}月1日から起算) の種類別の休暇の取得回数を表示します。</li>
-        <li>既に承認済の休暇が集計の対象です。承認待ちの休暇は含まれません。</li>
-    </ul>
-</div>
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-lg-4 col-md-8 m-3 clickable-box">
-            <a href="#capture-modal-6"><img src="{% static 'worktime/capture_time_off_status.png' %}"></a>
-            <figure id="capture-modal-6">
-                <a id="capture-6" href="#capture-6"><img src="{% static 'worktime/capture_time_off_status.png' %}"></a>
-            </figure>
-        </div>
-    </div>
-</div>
-<div class="container">
     <h3>勤務集計</h3>
     <ul>
         <li>管理者専用の機能です。</li>
@@ -192,6 +174,24 @@
             <a href="#capture-modal-3"><img src="{% static 'worktime/capture_record_summary.png' %}"></a>
             <figure id="capture-modal-3">
                 <a id="capture-3" href="#capture-3"><img src="{% static 'worktime/capture_record_summary.png' %}"></a>
+            </figure>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <h3>休暇集計</h3>
+    <ul>
+        <li>管理者専用の機能です。</li>
+        <li>指定した年度 ({{ YEAR_FIRST_MONTH }}月1日から起算) の種類別の休暇の取得回数を表示します。</li>
+        <li>既に承認済の休暇が集計の対象です。承認待ちの休暇は含まれません。</li>
+    </ul>
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-8 m-3 clickable-box">
+            <a href="#capture-modal-6"><img src="{% static 'worktime/capture_time_off_status.png' %}"></a>
+            <figure id="capture-modal-6">
+                <a id="capture-6" href="#capture-6"><img src="{% static 'worktime/capture_time_off_status.png' %}"></a>
             </figure>
         </div>
     </div>
