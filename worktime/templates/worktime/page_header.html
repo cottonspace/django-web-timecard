@@ -14,30 +14,27 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'worktime:record_calendar' %}">勤務表</a>
                     </li>
-                    {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'worktime:time_off_request' %}">休暇申請</a>
                     </li>
-                    {% endif %}
-                    {% if user.is_staff %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:time_off_status' %}">休暇集計</a>
+                        <a class="nav-link" href="{% url 'worktime:readme' %}">使用方法</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:record_summary' %}">勤務集計</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin:index' %}">管理画面</a>
-                    </li>
-                    {% endif %}
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'worktime:password_change' %}">パスワード変更</a>
                     </li>
                     {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:readme' %}">使用方法</a>
+                    {% if user.is_staff %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">管理機能</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'worktime:time_off_status' %}">休暇集計</a></li>
+                            <li><a class="dropdown-item" href="{% url 'worktime:record_summary' %}">勤務集計</a></li>
+                            <li><a class="dropdown-item" href="{% url 'admin:index' %}">システム管理</a></li>
+                        </ul>
                     </li>
+                    {% endif %}
                 </ul>
                 {% if user.is_authenticated %}
                 <form class="d-flex" action="{% url 'worktime:logout' %}" method="post">

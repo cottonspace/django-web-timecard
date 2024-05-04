@@ -143,6 +143,22 @@
         </div>
     </div>
 </div>
+<div class="container">
+    <h3>パスワード変更</h3>
+    <ul>
+        <li>パスワードを変更することができます。</li>
+    </ul>
+</div>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-8 m-3 clickable-box">
+            <a href="#capture-modal-4"><img src="{% static 'worktime/capture_password_change.png' %}"></a>
+            <figure id="capture-modal-4">
+                <a id="capture-4" href="#capture-4"><img src="{% static 'worktime/capture_password_change.png' %}"></a>
+            </figure>
+        </div>
+    </div>
+</div>
 {% if IS_STAFF %}
 <div class="container">
     <h3>休暇集計</h3>
@@ -180,26 +196,8 @@
         </div>
     </div>
 </div>
-{% endif %}
 <div class="container">
-    <h3>パスワード変更</h3>
-    <ul>
-        <li>パスワードを変更することができます。</li>
-    </ul>
-</div>
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-lg-4 col-md-8 m-3 clickable-box">
-            <a href="#capture-modal-4"><img src="{% static 'worktime/capture_password_change.png' %}"></a>
-            <figure id="capture-modal-4">
-                <a id="capture-4" href="#capture-4"><img src="{% static 'worktime/capture_password_change.png' %}"></a>
-            </figure>
-        </div>
-    </div>
-</div>
-{% if IS_STAFF %}
-<div class="container">
-    <h3>管理画面</h3>
+    <h3>システム管理</h3>
     <ul>
         <li>管理者専用の機能です。</li>
         <li>利用者の追加や変更ができます。</li>
