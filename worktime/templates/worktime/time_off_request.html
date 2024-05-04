@@ -47,30 +47,32 @@
 </script>
 <div class="row justify-content-md-center mt-5">
     <div class="col-lg-6 col-md-8">
-        <table id="entries" class="table table-hover align-middle">
-            <thead>
-                <tr>
-                    <th scope="col">対象日</th>
-                    <th scope="col">種別</th>
-                    <th scope="col">承認</th>
-                    <th scope="col">申請日時</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                {% for entry in entries %}
-                <tr>
-                    <th>{{ entry.date|date:"n月j日(D)" }}</th>
-                    <td>{{ entry.display_name }}</td>
-                    {% if entry.accepted %}
-                    <td>承認済</td>
-                    {% else %}
-                    <td><button type="button" class="btn btn-secondary btn-sm" onclick="send_cancel('{{ entry.id }}')">取消</button></td>
-                    {% endif %}
-                    <td>{{ entry.created_at|date:"n月j日(D) H:i" }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="entries" class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">対象日</th>
+                        <th scope="col">種別</th>
+                        <th scope="col">承認</th>
+                        <th scope="col">申請日</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    {% for entry in entries %}
+                    <tr>
+                        <th>{{ entry.date|date:"Y年n月j日(D)" }}</th>
+                        <td>{{ entry.display_name }}</td>
+                        {% if entry.accepted %}
+                        <td>承認済</td>
+                        {% else %}
+                        <td><button type="button" class="btn btn-secondary btn-sm" onclick="send_cancel('{{ entry.id }}')">取消</button></td>
+                        {% endif %}
+                        <td>{{ entry.created_at|date:"Y年n月j日(D)" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endif %}
