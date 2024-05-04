@@ -1,4 +1,7 @@
 {% load static %}
+<form id="logout_form" action="{% url 'worktime:logout' %}" method="post">
+    {% csrf_token %}
+</form>
 <header>
     <nav class="navbar navbar-expand-lg bg-light fixed-top no-print">
         <div class="container-fluid">
@@ -7,41 +10,37 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:record' %}">打刻</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:record_calendar' %}">勤務表</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:time_off_request' %}">休暇申請</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:readme' %}">使用方法</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'worktime:password_change' %}">パスワード変更</a>
-                    </li>
-                    {% endif %}
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{% url 'worktime:record' %}">打刻</a>
+                    <a class="nav-item nav-link" href="{% url 'worktime:record_calendar' %}">勤務表</a>
+                    <a class="nav-item nav-link" href="{% url 'worktime:time_off_request' %}">休暇申請</a>
+                    <a class="nav-item nav-link" href="{% url 'worktime:readme' %}">使用方法</a>
                     {% if user.is_staff %}
-                    <li class="nav-item dropdown">
+                    <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">管理機能</a>
-                        <ul class="dropdown-menu">
+                        <div class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'worktime:record_summary' %}">勤務集計</a></li>
                             <li><a class="dropdown-item" href="{% url 'worktime:time_off_status' %}">休暇集計</a></li>
                             <li><a class="dropdown-item" href="{% url 'admin:index' %}">システム管理</a></li>
-                        </ul>
-                    </li>
+                        </div>
+                    </div>
                     {% endif %}
-                </ul>
-                {% if user.is_authenticated %}
-                <form class="d-flex" action="{% url 'worktime:logout' %}" method="post">
-                    {% csrf_token %}
-                    <button class="btn btn-success btn-sm" type="submit">{{ user.get_username }} からログアウト</button>
-                </form>
-                {% endif %}
+                </div>
+                <div class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">こんにちは {{ user.get_username }} さん</a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'worktime:password_change' %}">パスワード変更</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="document.getElementById('logout_form').submit();">ログアウト</a></li>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="nav-item">
+                        <a class="btn btn-success btn-sm" href="{% url 'worktime:login' %}">ログイン</a>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </nav>
