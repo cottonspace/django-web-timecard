@@ -114,7 +114,16 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
     """
     form_class = TimeOffRequestForm
     template_name = 'worktime/time_off_request.html'
-    success_url = reverse_lazy('worktime:record_calendar')
+    success_url = reverse_lazy('worktime:time_off_request')
+
+    def get_context_data(self, *args, **kwargs):
+        """コンテキストの返却
+        """
+        context = super().get_context_data(*args, **kwargs)
+        a_year_ago = datetime.date.today() - datetime.timedelta(days=365)
+        context["entries"] = TimeOffRequest.objects.filter(
+            username=self.request.user.username).filter(date__gte=a_year_ago).order_by("date")
+        return context
 
     def form_valid(self, form):
         """フォームの検査
@@ -229,3 +238,28 @@ class ReadmeView(TemplateView):
         context["MAX_DISTANCE"] = timecard.settings.MAX_DISTANCE
         context["ENABLE_CHECK_LOCATION"] = timecard.settings.ENABLE_CHECK_LOCATION
         return context
+
+
+def time_off_cancel(request):
+    """休暇申請の取り消し処理 (画面なし)
+
+    Args:
+        request: リクエスト情報
+        id: 取り消すデータのID
+
+    Returns:
+        レスポンス情報
+    """
+    id = request.POST.get('id', None)
+    record = TimeOffRequest.objects.filter(
+        id=id, username=request.user.username).first()
+    if record:
+        if record.accepted:
+            messages.warning(request, '承認済の申請は取り消しできません')
+        else:
+            record.delete()
+            messages.success(request, dateformat.format(
+                record.date, 'Y/n/d (D)') + ' の ' + record.display_name + ' を取り消しました')
+    else:
+        messages.error(request, '指定された申請は存在しないか既に取り消されています')
+    return redirect('worktime:time_off_request')
