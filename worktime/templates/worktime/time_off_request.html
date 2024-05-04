@@ -41,8 +41,9 @@
         if (!confirm('選択した申請を取り消しますか?')) {
             return;
         }
-        document.getElementById('time_off_cancel').id.value = id;
-        document.getElementById('time_off_cancel').submit();
+        const form = document.getElementById('time_off_cancel');
+        form.id.value = id;
+        form.submit();
     }
 </script>
 <div class="container mt-5 mb-3">
