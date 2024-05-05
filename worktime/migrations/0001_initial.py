@@ -71,7 +71,7 @@ class Migration(migrations.Migration):
                 ('end', models.TimeField(blank=True, null=True, verbose_name='勤務終了')),
                 ('leave', models.TimeField(blank=True, null=True, verbose_name='休憩開始')),
                 ('back', models.TimeField(blank=True, null=True, verbose_name='休憩終了')),
-                ('accepted', models.BooleanField(verbose_name='承認')),
+                ('accepted', models.BooleanField(default=False, verbose_name='承認')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='作成日時')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='更新日時')),
             ],

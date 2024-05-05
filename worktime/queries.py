@@ -2,7 +2,7 @@ import datetime
 
 from django.db.models import Count, Max, Min, OuterRef, Q, QuerySet, Subquery
 
-from . import utils
+from . import rules
 from .models import BusinessCalendar, TimeOffRequest, TimeRecord
 
 
@@ -48,7 +48,7 @@ def get_monthly_time_off_requests(username: str, year: int, month: int) -> Query
 
 
 def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
-    """指定したユーザと年月の打刻情報を取得します。承認済の休暇申請は勤務時間の計算に反映されます。
+    """指定したユーザと年月の打刻記録を取得します。承認済の休暇申請は勤務時間の計算に反映されます。
 
     Args:
         username (str): ユーザ ID
@@ -97,5 +97,5 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
                     'leave': time_off_request['leave'],
                     'back': time_off_request['back']
                 })
-        record.update(utils.worktime_calculation(record))
+        record.update(rules.worktime_calculation(record))
     return queryset_records

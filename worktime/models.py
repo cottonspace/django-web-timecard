@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -5,6 +6,8 @@ from django.utils import dateformat
 from geopy.distance import geodesic
 
 import timecard.settings
+
+from . import utils
 
 
 class StandardWorkPattern(models.Model):
@@ -155,7 +158,7 @@ class BusinessCalendar(models.Model):
 
 
 class TimeRecord(models.Model):
-    """打刻情報のモデルです。
+    """打刻記録のモデルです。
 
     Args:
         models: 継承するモデル
@@ -183,7 +186,15 @@ class TimeRecord(models.Model):
         Returns:
             str: 文字列表現
         """
-        return dateformat.format(self.date, 'Y/m/d (D)') + ' ' + self.username
+        return dateformat.format(self.date, 'Y/m/d (D)') + ' ' + self.display_username()
+
+    def display_username(self):
+        """氏名を取得します。
+
+        Returns:
+            str: 氏名文字列
+        """
+        return utils.display_name(User.objects.filter(username=self.username).first())
 
     def location(self) -> str:
         """位置情報の表示を編集します。
@@ -242,7 +253,15 @@ class TimeOffRequest(models.Model):
         Returns:
             str: 文字列表現
         """
-        return dateformat.format(self.date, 'Y/m/d (D)') + ' ' + self.username + ' (' + self.display_name + ')'
+        return dateformat.format(self.date, 'Y/m/d (D)') + ' ' + self.display_username() + ' (' + self.display_name + ')'
+
+    def display_username(self):
+        """氏名を取得します。
+
+        Returns:
+            str: 氏名文字列
+        """
+        return utils.display_name(User.objects.filter(username=self.username).first())
 
     class Meta:
         """メタ情報です。

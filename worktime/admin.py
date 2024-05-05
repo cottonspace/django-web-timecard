@@ -3,7 +3,6 @@ from django.contrib.admin.sites import AdminSite
 from django.utils import dateformat
 
 import timecard.settings
-import worktime.utils
 
 from .models import (BusinessCalendar, StandardWorkPattern, TimeOffPattern,
                      TimeOffRequest, TimeRecord)
@@ -92,7 +91,7 @@ class BusinessCalendarAdmin(admin.ModelAdmin):
         """フォーマット指定した日付文字列を取得します。
 
         Args:
-            obj: 勤務パターンのオブジェクト
+            obj: 営業日カレンダのオブジェクト
 
         Returns:
             str: 日付文字列
@@ -125,22 +124,22 @@ class TimeRecordAdmin(admin.ModelAdmin):
         """
         return False
 
-    def formatted_date(self, obj):
-        """フォーマット指定した日付文字列を取得します。
+    def display_username(self, obj):
+        """氏名を取得します。
 
         Args:
-            obj: 勤務パターンのオブジェクト
+            obj: 打刻記録のオブジェクト
 
         Returns:
-            str: 日付文字列
+            str: 氏名
         """
-        return dateformat.format(obj.date, 'Y/m/d (D)')
+        return obj.display_username()
 
     def display_action(self, obj):
         """打刻種別の表示用文字列を取得します。
 
         Args:
-            obj: 勤務パターンのオブジェクト
+            obj: 打刻記録のオブジェクト
 
         Returns:
             str: 表示用文字列
@@ -151,22 +150,11 @@ class TimeRecordAdmin(admin.ModelAdmin):
             return '退勤'
         return None
 
-    def display_username(self, obj):
-        """氏名を取得します。
-
-        Args:
-            obj: 勤務パターンのオブジェクト
-
-        Returns:
-            str: 氏名文字列
-        """
-        return worktime.utils.get_users(False).get(obj.username, obj.username)
-
     def display_location(self, obj):
         """位置情報の表示文字列を取得します。
 
         Args:
-            obj: 打刻情報のオブジェクト
+            obj: 打刻記録のオブジェクト
 
         Returns:
             str: 位置情報
@@ -191,14 +179,13 @@ class TimeRecordAdmin(admin.ModelAdmin):
         return super().change_view(request, object_id, form_url, extra_context=extra_context)
 
     # 設定
-    formatted_date.short_description = '日付'
-    display_action.short_description = '種別'
     display_username.short_description = '氏名'
+    display_action.short_description = '種別'
     display_location.short_description = '位置情報'
-    readonly_fields = ['date', 'time', 'username', 'display_username',
-                       'display_action', 'latitude', 'longitude', 'accuracy', 'ua']
-    exclude = ['action']
-    list_display = ['formatted_date', 'time', 'display_username',
+    readonly_fields = ['username', 'display_username',
+                       'date', 'time', 'display_action', 'accuracy', 'ua']
+    exclude = ['action', 'latitude', 'longitude']
+    list_display = ['date', 'time', 'username', 'display_username',
                     'display_action', 'display_location', 'created_at']
     ordering = ['date', 'time']
     list_filter = ['date']
@@ -222,37 +209,25 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         """
         return False
 
-    def formatted_date(self, obj):
-        """フォーマット指定した日付文字列を取得します。
-
-        Args:
-            obj: 勤務パターンのオブジェクト
-
-        Returns:
-            str: 日付文字列
-        """
-        return dateformat.format(obj.date, 'Y/m/d (D)')
-
     def display_username(self, obj):
         """氏名を取得します。
 
         Args:
-            obj: 勤務パターンのオブジェクト
+            obj: 休暇申請のオブジェクト
 
         Returns:
-            str: 氏名文字列
+            str: 氏名
         """
-        return worktime.utils.get_users(False).get(obj.username, obj.username)
+        return obj.display_username()
 
     # 設定
-    formatted_date.short_description = '日付'
     display_username.short_description = '氏名'
-    readonly_fields = ['date', 'username', 'display_username',
+    readonly_fields = ['username', 'display_username', 'date',
                        'display_name', 'attendance', 'begin', 'end', 'leave', 'back']
-    list_display = ['formatted_date', 'display_username',
+    list_display = ['date', 'username', 'display_username',
                     'display_name', 'accepted', 'created_at']
     ordering = ['date', 'username']
-    list_filter = ['date', 'username', 'accepted']
+    list_filter = ['date', 'accepted']
     search_fields = ['username']
     actions = ['action_accept']
 

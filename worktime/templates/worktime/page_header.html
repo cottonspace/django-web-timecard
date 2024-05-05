@@ -31,7 +31,7 @@
                 <div class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
                     <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">こんにちは {{ user.get_username }} さん</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">こんにちは {% if user.first_name or user.last_name %}{{ user.last_name }} {{ user.first_name }}{% else %}{{ user.get_username }}{% endif %} さん</a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <a class="dropdown-item" href="{% url 'worktime:password_change' %}">パスワード変更</a>
                             <hr class="dropdown-divider">

@@ -11,7 +11,7 @@ from django.views.generic import FormView, TemplateView
 
 import timecard.settings
 
-from . import queries, utils
+from . import queries, rules, utils
 from .forms import (CustomAuthenticationForm, CustomPasswordChangeForm,
                     TimeOffListForm, TimeOffRequestForm, TimeOffStatusForm,
                     TimeRecordCalendarForm, TimeRecordForm,
@@ -243,7 +243,7 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
         context['month'] = int(self.request.GET.get('month', today.month))
         context['entries'] = queries.get_monthly_records(
             context['username'], context['year'], context['month'])
-        context['summary'] = utils.summarize(context['entries'])
+        context['summary'] = rules.summarize(context['entries'])
         context['users'] = utils.get_users(False)
         return context
 
@@ -281,7 +281,7 @@ class TimeRecordSummaryView(StaffRequiredMixin, FormView):
         for id, name in utils.get_users(True).items():
             records = queries.get_monthly_records(
                 id, context['year'], context['month'])
-            summary = utils.summarize(records)
+            summary = rules.summarize(records)
             context['entries'].append({
                 'id': id,
                 'name': name,
