@@ -120,12 +120,6 @@ class TimeRecordAdmin(admin.ModelAdmin):
         admin (ModelAdmin): 継承するモデル
     """
 
-    def __init__(self, *args, **kwargs):
-        """インスタンスを初期化します。
-        """
-        super().__init__(*args, **kwargs)
-        self.users = worktime.utils.get_users(False)
-
     def has_add_permission(self, request, obj=None):
         """追加を無効化します。
         """
@@ -166,7 +160,7 @@ class TimeRecordAdmin(admin.ModelAdmin):
         Returns:
             str: 氏名文字列
         """
-        return self.users.get(obj.username, obj.username)
+        return worktime.utils.get_users(False).get(obj.username, obj.username)
 
     def display_location(self, obj):
         """位置情報の表示文字列を取得します。
@@ -223,12 +217,6 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         admin (ModelAdmin): 継承するモデル
     """
 
-    def __init__(self, *args, **kwargs):
-        """インスタンスを初期化します。
-        """
-        super().__init__(*args, **kwargs)
-        self.users = worktime.utils.get_users(False)
-
     def has_add_permission(self, request, obj=None):
         """追加を無効化します。
         """
@@ -254,7 +242,7 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         Returns:
             str: 氏名文字列
         """
-        return self.users.get(obj.username, obj.username)
+        return worktime.utils.get_users(False).get(obj.username, obj.username)
 
     # 設定
     formatted_date.short_description = '日付'
