@@ -52,7 +52,7 @@
         <ul class="list-group">
             <li class="list-group-item active" aria-current="true">最近 3 日間の打刻</li>
             {% for history in recent %}
-            <li class="list-group-item">{{ history.date|date:"n月j日(D)" }} {{ history.time|date:"H:i" }} {{ history.action }}</li>
+            <li class="list-group-item">{{ history.date|date:"n月j日(D)" }} {{ history.time|date:"H:i" }} {% if history.action == "begin" %}出勤{% elif history.action == "end" %}退勤{% endif %}</li>
             {% endfor %}
         </ul>
     </div>
