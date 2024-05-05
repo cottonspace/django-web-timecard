@@ -73,6 +73,7 @@ class TimeRecordView(LoginRequiredMixin, FormView):
         context["display_name"] = utils.display_name(self.request.user)
         context["recent"] = TimeRecord.objects.filter(username=self.request.user.username).filter(
             date__gte=date_from).order_by("-date", "-time")
+        context["actions"] = timecard.settings.RECORD_ACTIONS
         return context
 
     def string_to_float(self, string: str) -> float:

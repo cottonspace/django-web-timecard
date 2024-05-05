@@ -45,9 +45,7 @@
         });
         const marker_origin = L.marker(origin, { icon: icon_origin }).addTo(map);
         const marker_point = L.marker(point).addTo(map);
-        const point_popup = marker_point.bindPopup("{{ original.location }}", { autoClose: false });
         map.fitBounds(L.latLngBounds(origin, point));
-        point_popup.openPopup();
     }
     window.addEventListener('load', show_map);
 </script>

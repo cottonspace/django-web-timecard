@@ -144,11 +144,7 @@ class TimeRecordAdmin(admin.ModelAdmin):
         Returns:
             str: 表示用文字列
         """
-        if obj.action == 'begin':
-            return '出勤'
-        elif obj.action == 'end':
-            return '退勤'
-        return None
+        return timecard.settings.RECORD_ACTIONS.get(obj.action)
 
     def display_location(self, obj):
         """位置情報の表示文字列を取得します。
@@ -182,9 +178,8 @@ class TimeRecordAdmin(admin.ModelAdmin):
     display_username.short_description = '氏名'
     display_action.short_description = '種別'
     display_location.short_description = '位置情報'
-    readonly_fields = ['username', 'display_username',
-                       'date', 'time', 'display_action', 'accuracy', 'ua']
-    exclude = ['action', 'latitude', 'longitude']
+    readonly_fields = ['username', 'display_username', 'date', 'time', 'display_action', 'display_location', 'ua']
+    exclude = ['action', 'latitude', 'longitude', 'accuracy']
     list_display = ['date', 'time', 'username', 'display_username',
                     'display_action', 'display_location', 'created_at']
     ordering = ['date', 'time']
