@@ -219,7 +219,7 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
             accepted=False
         )
         messages.success(self.request, dateformat.format(
-            request_date, 'Y/n/d (D)') + ' の ' + pattern.display_name + ' を申請しました')
+            request_date, 'Y/m/d (D)') + ' の ' + pattern.display_name + ' を申請しました')
         return super().form_valid(form)
 
 
@@ -316,7 +316,7 @@ def time_off_accept(request):
                 record.accepted = True
                 record.save()
                 messages.success(request, dateformat.format(
-                    record.date, 'Y/n/d (D)') + ' の ' + record.username + ' の ' + record.display_name + ' を承認しました')
+                    record.date, 'Y/m/d (D)') + ' の ' + record.username + ' の ' + record.display_name + ' を承認しました')
         else:
             messages.error(request, '指定された申請は存在しないか既に取り消されています')
     else:
@@ -343,7 +343,7 @@ def time_off_cancel(request):
         else:
             record.delete()
             messages.success(request, dateformat.format(
-                record.date, 'Y/n/d (D)') + ' の ' + record.display_name + ' を取り消しました')
+                record.date, 'Y/m/d (D)') + ' の ' + record.display_name + ' を取り消しました')
     else:
         messages.error(request, '指定された申請は存在しないか既に取り消されています')
     return redirect('worktime:time_off_request')

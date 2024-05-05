@@ -145,7 +145,7 @@ class BusinessCalendar(models.Model):
         Returns:
             str: 文字列表現
         """
-        return dateformat.format(self.date, 'Y/n/d (D)')
+        return dateformat.format(self.date, 'Y/m/d (D)')
 
     class Meta:
         """メタ情報です。
@@ -183,7 +183,7 @@ class TimeRecord(models.Model):
         Returns:
             str: 文字列表現
         """
-        return dateformat.format(self.date, 'Y/n/d (D)') + ' ' + self.username
+        return dateformat.format(self.date, 'Y/m/d (D)') + ' ' + self.username
 
     def location(self) -> str:
         """位置情報の表示を編集します。
@@ -242,7 +242,7 @@ class TimeOffRequest(models.Model):
         Returns:
             str: 文字列表現
         """
-        return dateformat.format(self.date, 'Y/n/d (D)') + ' ' + self.username + ' (' + self.display_name + ')'
+        return dateformat.format(self.date, 'Y/m/d (D)') + ' ' + self.username + ' (' + self.display_name + ')'
 
     class Meta:
         """メタ情報です。

@@ -14,7 +14,7 @@ from django.contrib import messages
 # Application information
 APP_SITE = 'https://github.com/cottonspace/django-web-timecard'
 APP_NAME = 'django-web-timecard'
-APP_VERSION = '0.9.11'
+APP_VERSION = '0.9.12'
 
 # Load local settings
 try:

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
+from django.utils import dateformat
 
 import timecard.settings
 
@@ -86,20 +87,20 @@ class BusinessCalendarAdmin(admin.ModelAdmin):
         """
         return False
 
-    def weekday(self, obj):
-        """日付に対応する曜日文字列を取得します。
+    def formatted_date(self, obj):
+        """フォーマット指定した日付文字列を取得します。
 
         Args:
             obj: 勤務パターンのオブジェクト
 
         Returns:
-            str: 曜日文字列
+            str: 日付文字列
         """
-        return timecard.settings.DAY_OF_WEEK[obj.date.weekday()]
+        return dateformat.format(obj.date, 'Y/m/d (D)')
 
     # 設定
-    weekday.short_description = '曜日'
-    list_display = ['date', 'weekday', 'attendance',
+    formatted_date.short_description = '日付'
+    list_display = ['formatted_date', 'attendance',
                     'holiday', 'begin', 'end', 'leave', 'back']
     ordering = ['date']
     list_filter = ['date']
@@ -122,6 +123,17 @@ class TimeRecordAdmin(admin.ModelAdmin):
         """追加を無効化します。
         """
         return False
+
+    def formatted_date(self, obj):
+        """フォーマット指定した日付文字列を取得します。
+
+        Args:
+            obj: 勤務パターンのオブジェクト
+
+        Returns:
+            str: 日付文字列
+        """
+        return dateformat.format(obj.date, 'Y/m/d (D)')
 
     def display_location(self, obj):
         """位置情報の表示文字列を取得します。
@@ -152,10 +164,11 @@ class TimeRecordAdmin(admin.ModelAdmin):
         return super().change_view(request, object_id, form_url, extra_context=extra_context)
 
     # 設定
+    formatted_date.short_description = '日付'
     display_location.short_description = '位置情報'
     readonly_fields = ['date', 'time', 'username',
                        'action', 'latitude', 'longitude', 'accuracy', 'ua']
-    list_display = ['date', 'time', 'username',
+    list_display = ['formatted_date', 'time', 'username',
                     'action', 'display_location', 'created_at']
     ordering = ['date', 'time']
     list_filter = ['date']
@@ -179,10 +192,22 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         """
         return False
 
+    def formatted_date(self, obj):
+        """フォーマット指定した日付文字列を取得します。
+
+        Args:
+            obj: 勤務パターンのオブジェクト
+
+        Returns:
+            str: 日付文字列
+        """
+        return dateformat.format(obj.date, 'Y/m/d (D)')
+
     # 設定
+    formatted_date.short_description = '日付'
     readonly_fields = ['date', 'username', 'display_name',
                        'attendance', 'begin', 'end', 'leave', 'back']
-    list_display = ['date', 'username',
+    list_display = ['formatted_date', 'username',
                     'display_name', 'accepted', 'created_at']
     ordering = ['date', 'username']
     list_filter = ['date', 'username', 'accepted']
