@@ -3,6 +3,7 @@ from django.contrib.admin.sites import AdminSite
 from django.utils import dateformat
 
 import timecard.settings
+import worktime.utils
 
 from .models import (BusinessCalendar, StandardWorkPattern, TimeOffPattern,
                      TimeOffRequest, TimeRecord)
@@ -119,6 +120,12 @@ class TimeRecordAdmin(admin.ModelAdmin):
         admin (ModelAdmin): 継承するモデル
     """
 
+    def __init__(self, *args, **kwargs):
+        """インスタンスを初期化します。
+        """
+        super().__init__(*args, **kwargs)
+        self.users = worktime.utils.get_users(False)
+
     def has_add_permission(self, request, obj=None):
         """追加を無効化します。
         """
@@ -134,6 +141,17 @@ class TimeRecordAdmin(admin.ModelAdmin):
             str: 日付文字列
         """
         return dateformat.format(obj.date, 'Y/m/d (D)')
+
+    def display_username(self, obj):
+        """氏名を取得します。
+
+        Args:
+            obj: 勤務パターンのオブジェクト
+
+        Returns:
+            str: 氏名文字列
+        """
+        return self.users.get(obj.username, obj.username)
 
     def display_location(self, obj):
         """位置情報の表示文字列を取得します。
@@ -165,10 +183,11 @@ class TimeRecordAdmin(admin.ModelAdmin):
 
     # 設定
     formatted_date.short_description = '日付'
+    display_username.short_description = '氏名'
     display_location.short_description = '位置情報'
-    readonly_fields = ['date', 'time', 'username',
+    readonly_fields = ['date', 'time', 'username', 'display_username',
                        'action', 'latitude', 'longitude', 'accuracy', 'ua']
-    list_display = ['formatted_date', 'time', 'username',
+    list_display = ['formatted_date', 'time', 'display_username',
                     'action', 'display_location', 'created_at']
     ordering = ['date', 'time']
     list_filter = ['date']
@@ -187,6 +206,12 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         admin (ModelAdmin): 継承するモデル
     """
 
+    def __init__(self, *args, **kwargs):
+        """インスタンスを初期化します。
+        """
+        super().__init__(*args, **kwargs)
+        self.users = worktime.utils.get_users(False)
+
     def has_add_permission(self, request, obj=None):
         """追加を無効化します。
         """
@@ -203,11 +228,23 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         """
         return dateformat.format(obj.date, 'Y/m/d (D)')
 
+    def display_username(self, obj):
+        """氏名を取得します。
+
+        Args:
+            obj: 勤務パターンのオブジェクト
+
+        Returns:
+            str: 氏名文字列
+        """
+        return self.users.get(obj.username, obj.username)
+
     # 設定
     formatted_date.short_description = '日付'
-    readonly_fields = ['date', 'username', 'display_name',
-                       'attendance', 'begin', 'end', 'leave', 'back']
-    list_display = ['formatted_date', 'username',
+    display_username.short_description = '氏名'
+    readonly_fields = ['date', 'username', 'display_username',
+                       'display_name', 'attendance', 'begin', 'end', 'leave', 'back']
+    list_display = ['formatted_date', 'display_username',
                     'display_name', 'accepted', 'created_at']
     ordering = ['date', 'username']
     list_filter = ['date', 'username', 'accepted']

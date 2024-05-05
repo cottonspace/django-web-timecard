@@ -315,8 +315,9 @@ def time_off_accept(request):
             else:
                 record.accepted = True
                 record.save()
-                messages.success(request, dateformat.format(
-                    record.date, 'Y/m/d (D)') + ' の ' + record.username + ' の ' + record.display_name + ' を承認しました')
+                users = utils.get_users(False)
+                messages.success(request, users.get(record.username, record.username) + ' の ' +
+                                 dateformat.format(record.date, 'Y/m/d (D)') + ' の ' + record.display_name + ' を承認しました')
         else:
             messages.error(request, '指定された申請は存在しないか既に取り消されています')
     else:
