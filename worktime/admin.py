@@ -142,6 +142,21 @@ class TimeRecordAdmin(admin.ModelAdmin):
         """
         return dateformat.format(obj.date, 'Y/m/d (D)')
 
+    def display_action(self, obj):
+        """打刻種別の表示用文字列を取得します。
+
+        Args:
+            obj: 勤務パターンのオブジェクト
+
+        Returns:
+            str: 表示用文字列
+        """
+        if obj.action == 'begin':
+            return '出勤'
+        elif obj.action == 'end':
+            return '退勤'
+        return None
+
     def display_username(self, obj):
         """氏名を取得します。
 
@@ -183,12 +198,14 @@ class TimeRecordAdmin(admin.ModelAdmin):
 
     # 設定
     formatted_date.short_description = '日付'
+    display_action.short_description = '種別'
     display_username.short_description = '氏名'
     display_location.short_description = '位置情報'
     readonly_fields = ['date', 'time', 'username', 'display_username',
-                       'action', 'latitude', 'longitude', 'accuracy', 'ua']
+                       'display_action', 'latitude', 'longitude', 'accuracy', 'ua']
+    exclude = ['action']
     list_display = ['formatted_date', 'time', 'display_username',
-                    'action', 'display_location', 'created_at']
+                    'display_action', 'display_location', 'created_at']
     ordering = ['date', 'time']
     list_filter = ['date']
     search_fields = ['username']

@@ -59,8 +59,8 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
         QuerySet: 取得したクエリ結果
     """
     subquery = TimeRecord.objects.filter(date=OuterRef('date'), username=username).values('date').annotate(
-        begin_record=Min('time', filter=Q(action='出勤')),
-        end_record=Max('time', filter=Q(action='退勤'))
+        begin_record=Min('time', filter=Q(action='begin')),
+        end_record=Max('time', filter=Q(action='end'))
     )
     queryset_records = BusinessCalendar.objects.filter(date__year=year, date__month=month).annotate(
         begin_record=Subquery(subquery.values('begin_record')),

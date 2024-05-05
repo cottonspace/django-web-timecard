@@ -101,9 +101,9 @@ class TimeRecordView(LoginRequiredMixin, FormView):
             accuracy=self.string_to_float(form.cleaned_data['accuracy']),
             ua=form.cleaned_data['ua'],
         )
-        if action == '出勤':
+        if action == 'begin':
             sound = 'sound_begin'
-        elif action == '退勤':
+        elif action == 'end':
             sound = 'sound_end'
         else:
             sound = None
