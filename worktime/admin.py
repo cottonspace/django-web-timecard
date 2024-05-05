@@ -180,8 +180,8 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         return False
 
     # 設定
-    exclude = ['attendance', 'begin', 'end', 'leave', 'back']
-    readonly_fields = ['date', 'username', 'display_name']
+    readonly_fields = ['date', 'username', 'display_name',
+                       'attendance', 'begin', 'end', 'leave', 'back']
     list_display = ['date', 'username',
                     'display_name', 'accepted', 'created_at']
     ordering = ['date', 'username']
