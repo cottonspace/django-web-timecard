@@ -51,20 +51,12 @@
 </div>
 <div class="container no-print">
     <div class="row justify-content-center text-center">
-        <div class="col-lg-6 mb-3">
-            <form id="record_calendar" method="get">
-                <select class="form-select" name="year" onchange="this.form.submit()">
-                    {% for o_year in years %}
-                    {% if o_year == year %}
-                    <option value="{{ o_year }}" selected>{{ o_year }}年度</option>
-                    {% else %}
-                    <option value="{{ o_year }}">{{ o_year }}年度</option>
-                    {% endif %}
-                    {% endfor %}
-                </select>
-            </form>
-        </div>
         <div class="col mb-3">
+            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                <button class="btn btn-outline-secondary" onclick="show_calendar(-1)">&lt; 前年度</button>
+                <button class="btn btn-outline-secondary" onclick="show_calendar(0)">今年度</button>
+                <button class="btn btn-outline-secondary" onclick="show_calendar(1)">次年度 &gt;</button>
+            </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                 <button class="btn btn-outline-secondary" onclick="window.print();">印刷</button>
                 <button class="btn btn-outline-secondary" onclick="download_csv();">ダウンロード</button>
@@ -143,6 +135,13 @@
         link.href = URL.createObjectURL(blob, options);
         link.click();
         URL.revokeObjectURL(link.href)
+    }
+    function show_calendar(delta) {
+        if (delta == 0) {
+            location.href = "{% url 'worktime:time_off_status' %}"
+        } else {
+            location.href = "{% url 'worktime:time_off_status' %}?year=" + (year + delta)
+        }
     }
 </script>
 {% endblock main %}
