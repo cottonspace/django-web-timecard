@@ -10,20 +10,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <style>
-        @media screen {
-            body {
-                padding-top: 6rem;
-            }
-        }
-
-        @media print {
-            .no-print {
-                display: none;
-            }
+        body {
+            padding-top: 6rem;
         }
 
         a {
             text-decoration: none;
+        }
+
+        .print-header {
+            display: none;
         }
 
         .signature {
@@ -36,9 +32,11 @@
             z-index: 9999;
         }
     </style>
+    {% block extra_head %}
+    {% endblock %}
 </head>
 
-<body>
+<body class="d-flex flex-column vh-100">
     {% if messages %}
     <div id="alert-container" class="container-fluid text-center fixed-top">
         {% for message in messages %}
@@ -73,6 +71,7 @@
     {% endif %}
     {% include 'worktime/page_header.html' %}
     <main role="main" class="container">
+        <div class="print-header">日時: {% now "Y年m月d日 H:i:s" %} ユーザ: {{ user.username }}</div>
         {% block main %}
         {% endblock main %}
     </main>

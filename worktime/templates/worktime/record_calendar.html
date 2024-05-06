@@ -1,59 +1,19 @@
 {% extends 'worktime/base.html' %}
 {% load custom_filter %}
+{% load static %}
 {% load humanize %}
 {% block title %}{{ year }}年{{ month }}月 {{ users|dict_value:username|default:username }} | {{ block.super }}{% endblock title %}
-{% block main %}
+{% block extra_head %}
+<link href="{% static 'worktime/print.css' %}" rel="stylesheet">
 <style>
     .check {
         width: 14px;
         height: 14px;
         stroke: green;
     }
-
-    @media print {
-
-        *,
-        *::before,
-        *::after {
-            text-shadow: none !important;
-            box-shadow: none !important;
-        }
-
-        .container {
-            margin: 0;
-        }
-
-        .text-center {
-            text-align: left !important;
-        }
-
-        .table-responsive {
-            overflow: visible !important;
-        }
-
-        .table * {
-            font-size: 12px !important;
-        }
-
-        .table tr {
-            border-color: black !important;
-            page-break-inside: avoid;
-        }
-
-        .table td,
-        .table th {
-            color: black !important;
-            background-color: white !important;
-            padding: 3px 8px !important;
-        }
-
-        .check {
-            width: 12px;
-            height: 12px;
-            stroke: black;
-        }
-    }
 </style>
+{% endblock %}
+{% block main %}
 <div class="container text-center">
     <div class="row">
         <div class="col mb-3">

@@ -1,0 +1,54 @@
+@media print {
+    body {
+        padding-top: 0;
+    }
+
+    .no-print {
+        display: none;
+    }
+
+    .print-header {
+        display: block;
+        font-size: 60%;
+        margin-bottom: 20px;
+    }
+
+    *,
+    *::before,
+    *::after {
+        text-shadow: none !important;
+        box-shadow: none !important;
+    }
+
+    .container {
+        margin: 0;
+    }
+
+    .text-center {
+        text-align: left !important;
+    }
+
+    .table-responsive {
+        overflow: visible !important;
+    }
+
+    .table * {
+        font-size: 12px !important;
+    }
+
+    .table tr {
+        border-color: black !important;
+        page-break-inside: avoid;
+    }
+
+    .table td,
+    .table th {
+        color: black !important;
+        background-color: white !important;
+        padding: 3px 8px !important;
+    }
+
+    a {
+        color: black !important;
+    }
+}

@@ -1,47 +1,12 @@
 {% extends 'worktime/base.html' %}
 {% load custom_filter %}
+{% load static %}
 {% load humanize %}
 {% block title %}{{ year }}年度 休暇集計 | {{ block.super }}{% endblock title %}
+{% block extra_head %}
+<link href="{% static 'worktime/print.css' %}" rel="stylesheet">
+{% endblock %}
 {% block main %}
-<style>
-    @media print {
-
-        *,
-        *::before,
-        *::after {
-            text-shadow: none !important;
-            box-shadow: none !important;
-        }
-
-        .container {
-            margin: 0;
-        }
-
-        .text-center {
-            text-align: left !important;
-        }
-
-        .table-responsive {
-            overflow: visible !important;
-        }
-
-        .table * {
-            font-size: 12px !important;
-        }
-
-        .table tr {
-            border-color: black !important;
-            page-break-inside: avoid;
-        }
-
-        .table td,
-        .table th {
-            color: black !important;
-            background-color: white !important;
-            padding: 3px 8px !important;
-        }
-    }
-</style>
 <div class="container text-center">
     <div class="row">
         <div class="col mb-3">
