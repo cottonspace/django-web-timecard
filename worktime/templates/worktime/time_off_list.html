@@ -52,7 +52,6 @@
     {% csrf_token %}
     <input type="hidden" name="id" value="">
 </form>
-{% if entries %}
 <script>
     function send_accept(id) {
         const form = document.getElementById('time_off_accept');
@@ -75,6 +74,7 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
+                {% if entries %}
                 {% for entry in entries %}
                 <tr>
                     <td>{{ entry.year }}</td>
@@ -86,13 +86,13 @@
                     <td><button type="button" class="btn btn-success btn-sm" onclick="send_accept('{{ entry.id }}')">承認</button></td>
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="7">承認待ちの休暇申請はありません</td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
 </div>
-{% else %}
-<div class="alert alert-success" role="alert">
-    承認待ちの休暇申請はありません
-</div>
-{% endif %}
 {% endblock main %}

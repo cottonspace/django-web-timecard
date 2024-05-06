@@ -84,6 +84,7 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
+                {% if entries %}
                 {% for entry in entries %}
                 <tr>
                     <th>{{ entry.name }}</th>
@@ -92,6 +93,11 @@
                     {% endfor %}
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                    <td>休暇の取得はありません</td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>

@@ -97,12 +97,6 @@
         </div>
     </div>
 </div>
-{% if users|dict_value:username is None %}
-<div class="alert alert-danger" role="alert">
-    {{ username }} の勤務表はありません
-</div>
-{% else %}
-{% if entries %}
 <div class="container mb-3">
     <div class="table-responsive">
         <table id="summary" class="table align-middle text-nowrap text-center">
@@ -152,6 +146,7 @@
                 </tr>
             </thead>
             <tbody class="table-group-divider">
+                {% if entries %}
                 {% for entry in entries %}
                 {% if entry.error %}
                 <tr class="table-warning">
@@ -183,16 +178,15 @@
                     <td>{{ entry.error|default:"" }}</td>
                 </tr>
                 {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="9">営業日カレンダが作成されていません</td>
+                </tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
 </div>
-{% else %}
-<div class="alert alert-secondary" role="alert">
-    営業日カレンダが作成されていません
-</div>
-{% endif %}
-{% endif %}
 <script>
     const year = Number("{{ year }}")
     const month = Number("{{ month }}")
