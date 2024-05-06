@@ -5,7 +5,7 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-light fixed-top no-print">
         <div class="container-fluid">
-            <img class="navbar-brand" style="height:45px;" src="{% static 'worktime/logo.svg' %}">
+            <a href="{% url 'worktime:record' %}"><img class="navbar-brand" style="height:45px;" src="{% static 'worktime/logo.svg' %}"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -14,7 +14,6 @@
                     <a class="nav-item nav-link" href="{% url 'worktime:record' %}">打刻</a>
                     <a class="nav-item nav-link" href="{% url 'worktime:record_calendar' %}">勤務表</a>
                     <a class="nav-item nav-link" href="{% url 'worktime:time_off_request' %}">休暇申請</a>
-                    <a class="nav-item nav-link" href="{% url 'worktime:readme' %}">使用方法</a>
                     {% if user.is_staff %}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">管理機能</a>
@@ -34,6 +33,7 @@
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">こんにちは {% if user.first_name or user.last_name %}{{ user.last_name }} {{ user.first_name }}{% else %}{{ user.get_username }}{% endif %} さん</a>
                         <div class="dropdown-menu dropdown-menu-end">
                             <a class="dropdown-item" href="{% url 'worktime:password_change' %}">パスワード変更</a>
+                            <a class="dropdown-item" href="{% url 'worktime:readme' %}">使用方法</a>
                             <hr class="dropdown-divider">
                             <a class="dropdown-item" href="#" onclick="document.getElementById('logout_form').submit();">ログアウト</a>
                         </div>

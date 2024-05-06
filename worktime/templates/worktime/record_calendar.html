@@ -102,7 +102,6 @@
         <table id="summary" class="table align-middle text-nowrap text-center">
             <thead>
                 <tr>
-                    <th scope="col">状態</th>
                     <th scope="col">エラー</th>
                     <th scope="col">日数</th>
                     <th scope="col">営業日</th>
@@ -115,7 +114,6 @@
             </thead>
             <tbody class="table-group-divider">
                 <tr>
-                    <td>{% if summary.past_days == summary.days %}確定{% else %}未確定{% endif %}</td>
                     <td>{% if summary.errors %}{{ summary.errors }} 個{% else %}-{% endif %}</td>
                     <td>{% if summary.days %}{{ summary.days }} 日{% else %}-{% endif %}</td>
                     <td>{% if summary.attendance_days %}{{ summary.attendance_days }} 日{% else %}-{% endif %}</td>
