@@ -16,7 +16,7 @@
         font-size: 32px;
     }
 
-    li.action-begin {
+    table>tbody>tr.action-begin>td {
         background-color: #f8f9fa;
     }
 </style>
@@ -53,13 +53,18 @@
     </div>
 </form>
 <div class="row justify-content-center">
-    <div class="col-8 m-3">
-        <ul class="list-group">
-            <li class="list-group-item active" aria-current="true">最近 3 日間の打刻</li>
-            {% for history in recent %}
-            <li class="list-group-item action-{{ history.action }}">{{ history.date|date:"n月j日(D)" }} {{ history.time|date:"H:i" }} {{ actions|dict_value:history.action }}</li>
-            {% endfor %}
-        </ul>
+    <div class="col-md-6 col-sm-8 m-3">
+        <table class="table table-sm table-borderless table-hover text-nowrap text-center caption-top">
+            <caption>最近 3 日間の打刻</caption>
+            <tbody>
+                {% for history in recent %}
+                <tr class="action-{{ history.action }}">
+                    <td>{{ history.date|date:"n月j日(D)" }} {{ history.time|date:"H:i" }} {{ actions|dict_value:history.action }}</td>
+                    <td><span class="readable-time" data-text="{{ history.date|date:'Y-m-d' }} {{ history.time|date:'H:i:s' }}"></span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 <script>
@@ -69,6 +74,31 @@
         document.getElementById("clock-time").textContent = String(now.getHours()).padStart(2, "0") + ':' + String(now.getMinutes()).padStart(2, "0");
         document.getElementById("clock-second").textContent = ':' + String(now.getSeconds()).padStart(2, "0");
         setTimeout(show_clock, 1000);
+    }
+    function readable_time(dt1, dt2) {
+        const suffix = dt1 < dt2 ? '後' : '前'
+        const seconds = Math.floor(Math.abs(dt2 - dt1) / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30);
+        const years = Math.floor(days / 365);
+        if (seconds < 5) return '今';
+        if (seconds < 60) return dt1 < dt2 ? 'まもなく' : '1 分未満';
+        if (minutes < 60) return minutes + ' 分' + suffix;
+        if (days == 0) return hours + ' 時間' + suffix;
+        if (days == 1) return dt1 < dt2 ? '明日' : '昨日';
+        if (days < 32) return days + ' 日' + suffix;
+        if (months < 12) return months + 'ケ月' + suffix;
+        return years + '年' + suffix;
+    }
+    function auto_readable_time() {
+        const now = new Date();
+        document.querySelectorAll(".readable-time").forEach((item) => {
+            const dt = new Date(item.dataset.text)
+            item.innerText = readable_time(now, dt);
+        });
+        setTimeout(auto_readable_time, 10000);
     }
     async function record(action) {
         document.getElementsByName('action')[0].value = action;
@@ -92,5 +122,6 @@
         document.getElementById('record').submit();
     }
     show_clock();
+    auto_readable_time();
 </script>
 {% endblock main %}
