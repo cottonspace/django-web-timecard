@@ -55,7 +55,7 @@
 <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10 mt-5 mb-3">
         <table class="table table-sm table-borderless table-hover text-nowrap text-center caption-top">
-            <caption>直近の打刻 10 件</caption>
+            <caption class="text-center">直近の打刻 10 件</caption>
             <tbody>
                 {% for history in recent %}
                 <tr class="action-{{ history.action }}">
@@ -79,7 +79,14 @@
     }
     function readable_time(dt1, dt2) {
         const suffix = dt1 < dt2 ? '後' : '前'
-        const seconds = Math.floor(Math.abs(dt2 - dt1) / 1000);
+        let seconds;
+        if (dt1.toDateString() === dt2.toDateString()) {
+            seconds = Math.floor(Math.abs(dt2 - dt1) / 1000);
+        } else {
+            const d1 = new Date(dt1.setHours(0, 0, 0, 0));
+            const d2 = new Date(dt2.setHours(0, 0, 0, 0));
+            seconds = Math.floor(Math.abs(d2 - d1) / 1000);
+        }
         const minutes = Math.floor(seconds / 60);
         const hours = Math.floor(minutes / 60);
         const days = Math.floor(hours / 24);
@@ -100,7 +107,7 @@
             const dt = new Date(item.dataset.text)
             item.innerText = readable_time(now, dt);
         });
-        setTimeout(auto_readable_time, 10000);
+        setTimeout(auto_readable_time, 15000);
     }
     async function record(action) {
         document.getElementsByName('action')[0].value = action;
