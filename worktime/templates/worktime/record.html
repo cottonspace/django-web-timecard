@@ -53,13 +53,15 @@
     </div>
 </form>
 <div class="row justify-content-center">
-    <div class="col-md-6 col-sm-8 m-3">
+    <div class="col-lg-6 col-md-8 col-sm-10 mt-5 mb-3">
         <table class="table table-sm table-borderless table-hover text-nowrap text-center caption-top">
-            <caption>最近 3 日間の打刻</caption>
+            <caption>直近の打刻 10 件</caption>
             <tbody>
                 {% for history in recent %}
                 <tr class="action-{{ history.action }}">
-                    <td>{{ history.date|date:"n月j日(D)" }} {{ history.time|date:"H:i" }} {{ actions|dict_value:history.action }}</td>
+                    <td>{{ history.date|date:"n月j日(D)" }}</td>
+                    <td>{{ history.time|date:"H:i" }}</td>
+                    <td>{{ actions|dict_value:history.action }}</td>
                     <td><span class="readable-time" data-text="{{ history.date|date:'Y-m-d' }} {{ history.time|date:'H:i:s' }}"></span></td>
                 </tr>
                 {% endfor %}
@@ -84,12 +86,12 @@
         const months = Math.floor(days / 30);
         const years = Math.floor(days / 365);
         if (seconds < 5) return '今';
-        if (seconds < 60) return dt1 < dt2 ? 'まもなく' : '1 分未満';
-        if (minutes < 60) return minutes + ' 分' + suffix;
+        if (minutes < 1) return dt1 < dt2 ? 'まもなく' : '1 分未満';
+        if (hours < 1) return minutes + ' 分' + suffix;
         if (days == 0) return hours + ' 時間' + suffix;
         if (days == 1) return dt1 < dt2 ? '明日' : '昨日';
-        if (days < 32) return days + ' 日' + suffix;
-        if (months < 12) return months + 'ケ月' + suffix;
+        if (months < 1) return days + ' 日' + suffix;
+        if (years < 1) return months + 'ケ月' + suffix;
         return years + '年' + suffix;
     }
     function auto_readable_time() {

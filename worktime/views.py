@@ -67,12 +67,11 @@ class TimeRecordView(LoginRequiredMixin, FormView):
     def get_context_data(self, *args, **kwargs):
         """コンテキストの返却
         """
-        date_from = datetime.datetime.now().date() - datetime.timedelta(days=2)
         context = super().get_context_data(*args, **kwargs)
         context["is_enable_check_location"] = timecard.settings.ENABLE_CHECK_LOCATION
         context["display_name"] = utils.display_name(self.request.user)
-        context["recent"] = TimeRecord.objects.filter(username=self.request.user.username).filter(
-            date__gte=date_from).order_by("-date", "-time")
+        context["recent"] = TimeRecord.objects.filter(
+            username=self.request.user.username).order_by("-date", "-time")[:10]
         context["actions"] = timecard.settings.RECORD_ACTIONS
         return context
 
