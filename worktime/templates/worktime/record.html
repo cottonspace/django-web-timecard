@@ -38,7 +38,7 @@
             <div class="card">
                 <img src="{% static 'worktime/image_begin.png' %}" style="max-width:100%; object-fit:cover;">
                 <div class="card-body d-grid">
-                    <button type="button" class="btn btn-primary btn-lg" onclick="record('begin')">出勤</button>
+                    <button id="button_begin" type="button" class="btn btn-lg btn-{% if recent.0.action == 'begin' %}secondary{% else %}primary{% endif %}" onclick="record('begin')">出勤</button>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
             <div class="card">
                 <img src="{% static 'worktime/image_end.png' %}" style="max-width:100%; object-fit:cover;">
                 <div class="card-body d-grid">
-                    <button type="button" class="btn btn-secondary btn-lg" onclick="record('end')">退勤</button>
+                    <button id="button_end" type="button" class="btn btn-lg btn-{% if recent.0.action == 'begin' %}primary{% else %}secondary{% endif %}" onclick="record('end')">退勤</button>
                 </div>
             </div>
         </div>
