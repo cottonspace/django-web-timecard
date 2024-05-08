@@ -16,6 +16,11 @@
         font-size: 32px;
     }
 
+    .quiet-image {
+        filter: grayscale(100%);
+        opacity: 0.3;
+    }
+
     table>tbody>tr.action-begin>td {
         background-color: #f8f9fa;
     }
@@ -36,17 +41,17 @@
     <div class="row justify-content-center">
         <div class="col-5">
             <div class="card">
-                <img src="{% static 'worktime/image_begin.png' %}" style="max-width:100%; object-fit:cover;">
+                <img src="{% static 'worktime/image_begin.png' %}" class="{% if recent.0.action == 'begin' %}quiet-image{% endif %}" style="max-width:100%; object-fit:cover;">
                 <div class="card-body d-grid">
-                    <button id="button_begin" type="button" class="btn btn-lg btn-{% if recent.0.action == 'begin' %}secondary{% else %}primary{% endif %}" onclick="record('begin')">出勤</button>
+                    <a class="stretched-link btn btn-lg btn-{% if recent.0.action == 'begin' %}secondary{% else %}primary{% endif %}" onclick="record('begin')">出勤</a>
                 </div>
             </div>
         </div>
         <div class="col-5">
             <div class="card">
-                <img src="{% static 'worktime/image_end.png' %}" style="max-width:100%; object-fit:cover;">
+                <img src="{% static 'worktime/image_end.png' %}" class="{% if recent.0.action == 'end' %}quiet-image{% endif %}" style="max-width:100%; object-fit:cover;">
                 <div class="card-body d-grid">
-                    <button id="button_end" type="button" class="btn btn-lg btn-{% if recent.0.action == 'begin' %}primary{% else %}secondary{% endif %}" onclick="record('end')">退勤</button>
+                    <a class="stretched-link btn btn-lg btn-{% if recent.0.action == 'begin' %}primary{% else %}secondary{% endif %}" onclick="record('end')">退勤</a>
                 </div>
             </div>
         </div>
@@ -107,7 +112,7 @@
             const dt = new Date(item.dataset.text)
             item.innerText = readable_time(now, dt);
         });
-        setTimeout(auto_readable_time, 15000);
+        setTimeout(auto_readable_time, 30000);
     }
     async function record(action) {
         document.getElementsByName('action')[0].value = action;
