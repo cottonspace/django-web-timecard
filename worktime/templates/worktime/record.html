@@ -126,7 +126,10 @@
         });
         setTimeout(auto_readable_time, 30000);
     }
+    let record_clicked = false;
     async function record(action) {
+        if (record_clicked) return;
+        record_clicked = true;
         document.getElementsByName('action')[0].value = action;
         document.getElementsByName('ua')[0].value = navigator.userAgent;
         {% if is_enable_check_location %}
