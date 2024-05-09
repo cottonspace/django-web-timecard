@@ -35,12 +35,14 @@
         <div class="col"><span id="clock-time"></span><span id="clock-second"></span></div>
     </div>
 </div>
+{% if is_enable_record_sound %}
 <audio id="sound-begin" preload="auto">
     <source src="{% static 'worktime/sound_begin.mp3' %}" type="audio/mp3">
 </audio>
 <audio id="sound-end" preload="auto">
     <source src="{% static 'worktime/sound_end.mp3' %}" type="audio/mp3">
 </audio>
+{% endif %}
 <div class="container">
     <form id="record" method="post">
         {% csrf_token %}
@@ -143,10 +145,16 @@
             console.log(err)
         }
         {% endif %}
+        {% if is_enable_record_sound %}
         const sound = document.getElementById('sound-' + action);
         sound.currentTime = 0;
+        sound.addEventListener("ended", function () {
+            document.getElementById('record').submit();
+        });
         sound.play();
+        {% else %}
         document.getElementById('record').submit();
+        {% endif %}
     }
     show_clock();
     auto_readable_time();

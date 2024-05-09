@@ -69,6 +69,7 @@ class TimeRecordView(LoginRequiredMixin, FormView):
         """
         context = super().get_context_data(*args, **kwargs)
         context["is_enable_check_location"] = timecard.settings.ENABLE_CHECK_LOCATION
+        context["is_enable_record_sound"] = timecard.settings.ENABLE_RECORD_SOUND
         context["display_name"] = utils.display_name(self.request.user)
         context["recent"] = TimeRecord.objects.filter(
             username=self.request.user.username).order_by("-date", "-time")[:10]
