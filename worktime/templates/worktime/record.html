@@ -69,7 +69,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8 col-sm-10 mt-5 mb-3">
             <table class="table table-sm table-borderless table-hover text-nowrap text-center caption-top">
-                <caption class="text-center">直近の打刻 10 件</caption>
+                <caption class="text-center"><span class="inline-help" data-bs-title="同じ日に複数の打刻をした場合は、出勤は早い方、退勤は遅い方の時刻が、勤務時間に採用されます">直近の打刻 10 件</span></caption>
                 <tbody>
                     {% for history in recent %}
                     <tr class="action-{{ history.action }}">

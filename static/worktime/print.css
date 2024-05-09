@@ -48,6 +48,10 @@
         padding: 3px 8px !important;
     }
 
+    svg.check {
+        stroke: black !important;
+    }
+
     a {
         color: black !important;
     }

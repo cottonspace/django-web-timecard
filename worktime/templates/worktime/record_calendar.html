@@ -6,7 +6,7 @@
 {% block extra_head %}
 <link href="{% static 'worktime/print.css' %}" rel="stylesheet">
 <style>
-    .check {
+    svg.check {
         width: 14px;
         height: 14px;
         stroke: green;
@@ -138,7 +138,7 @@
                 {% endfor %}
                 {% else %}
                 <tr>
-                    <td colspan="9">営業日カレンダが作成されていません</td>
+                    <td colspan="9"><span class="inline-help" data-bs-title="未来のカレンダは定期的に準備されますのでお待ちください">営業日カレンダが作成されていません</span></td>
                 </tr>
                 {% endif %}
             </tbody>
