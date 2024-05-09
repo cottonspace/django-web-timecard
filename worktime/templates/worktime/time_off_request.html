@@ -1,4 +1,5 @@
 {% extends 'worktime/base.html' %}
+{% load custom_filter %}
 {% block title %}休暇申請 | {{ block.super }}{% endblock title %}
 {% block main %}
 <style>
@@ -31,6 +32,18 @@
         </form>
     </div>
 </div>
+<script>
+    const counts = JSON.parse('{{ counts|json_dumps|safe }}');
+    const options = document.getElementById('id_pattern_id').options;
+    for (let [name, count] of Object.entries(counts)) {
+        for (let i = 0; i < options.length; i++) {
+            if (options[i].textContent === name) {
+                options[i].textContent = name + ' (' + count + ')';
+                break;
+            }
+        }
+    }
+</script>
 {% if entries %}
 <form id="time_off_cancel" action="{% url 'worktime:time_off_cancel' %}" method="post">
     {% csrf_token %}

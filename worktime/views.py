@@ -101,7 +101,8 @@ class TimeRecordView(LoginRequiredMixin, FormView):
             accuracy=self.string_to_float(form.cleaned_data['accuracy']),
             ua=form.cleaned_data['ua'],
         )
-        messages.success(self.request, timecard.settings.RECORD_ACTIONS.get(action) + 'の打刻が完了しました')
+        messages.success(
+            self.request, timecard.settings.RECORD_ACTIONS.get(action) + 'の打刻が完了しました')
         return super().form_valid(form)
 
 
@@ -188,6 +189,8 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
         first_day_of_year = utils.get_first_day_of_year(today)
         context["entries"] = TimeOffRequest.objects.filter(username=self.request.user.username).filter(
             Q(date__gte=first_day_of_year) | Q(accepted=False)).distinct().order_by("date")
+        context["counts"] = queries.count_time_off_requests(
+            self.request.user.username, utils.get_year_range(first_day_of_year.year))
         return context
 
     def form_valid(self, form):
