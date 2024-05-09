@@ -55,7 +55,7 @@
     <script>
         window.addEventListener('load', function () {
             document.querySelectorAll('.inline-help').forEach(function (element) {
-                let label_for = element.dataset.labelForId;
+                let label_for = element.dataset.labelFor;
                 if (label_for) {
                     let labels = document.querySelectorAll("label[for='" + label_for + "']");
                     if (0 < labels.length) {
