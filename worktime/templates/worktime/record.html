@@ -35,6 +35,12 @@
         <div class="col"><span id="clock-time"></span><span id="clock-second"></span></div>
     </div>
 </div>
+<audio id="sound-begin" preload="auto">
+    <source src="{% static 'worktime/sound_begin.mp3' %}" type="audio/mp3">
+</audio>
+<audio id="sound-end" preload="auto">
+    <source src="{% static 'worktime/sound_end.mp3' %}" type="audio/mp3">
+</audio>
 <form id="record" method="post">
     {% csrf_token %}
     {{ form }}
@@ -133,6 +139,9 @@
             console.log(err)
         }
         {% endif %}
+        const sound = document.getElementById('sound-' + action);
+        sound.currentTime = 0;
+        sound.play();
         document.getElementById('record').submit();
     }
     show_clock();

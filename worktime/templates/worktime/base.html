@@ -33,6 +33,18 @@
             z-index: 9999;
         }
     </style>
+    {% if messages %}
+    <script>
+        window.addEventListener('load', function () {
+            document.querySelectorAll('.alert-auto-close').forEach(function (alert) {
+                new bootstrap.Alert(alert);
+                setTimeout(() => {
+                    bootstrap.Alert.getInstance(alert).close();
+                }, 4000);
+            })
+        });
+    </script>
+    {% endif %}
     {% block extra_head %}
     {% endblock %}
 </head>
@@ -49,26 +61,8 @@
                 </div>
             </div>
         </div>
-        {% if message.tags %}
-        {% static "worktime/" as static_path %}
-        <script>
-            const tags = "{{ message.tags }}".split(' ');
-            const sounds = tags.filter(tag => tag.startsWith("sound_"));
-            for (const sound_tag of Array.from(new Set(sounds))) {
-                new Audio('{{ static_path }}' + sound_tag + '.mp3').play();
-            }
-        </script>
-        {% endif %}
         {% endfor %}
     </div>
-    <script>
-        document.querySelectorAll('.alert-auto-close').forEach(function (alert) {
-            new bootstrap.Alert(alert);
-            setTimeout(() => {
-                bootstrap.Alert.getInstance(alert).close();
-            }, 4000);
-        });
-    </script>
     {% endif %}
     {% include 'worktime/page_header.html' %}
     <main role="main" class="container">

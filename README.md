@@ -15,7 +15,7 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 
 ### Time recording
 - Click button for "attendance at work" or "leaving work".
-- When you see a message or hear a sound effect, it indicates that time recording has been completed successfully.
+- When you see a message, it indicates that time recording has been completed successfully.
 - If you click in multiple times on the same day, the work time is first click to last click.
 
 ### Monthly time records

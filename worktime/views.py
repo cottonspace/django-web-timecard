@@ -101,14 +101,7 @@ class TimeRecordView(LoginRequiredMixin, FormView):
             accuracy=self.string_to_float(form.cleaned_data['accuracy']),
             ua=form.cleaned_data['ua'],
         )
-        if action == 'begin':
-            sound = 'sound_begin'
-        elif action == 'end':
-            sound = 'sound_end'
-        else:
-            sound = None
-        messages.success(self.request, timecard.settings.RECORD_ACTIONS.get(
-            action) + 'の打刻が完了しました', sound)
+        messages.success(self.request, timecard.settings.RECORD_ACTIONS.get(action) + 'の打刻が完了しました')
         return super().form_valid(form)
 
 
