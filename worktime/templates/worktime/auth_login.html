@@ -13,34 +13,36 @@
         </div>
     </div>
 </div>
-<div class="row justify-content-md-center">
-    <div class="col-lg-5 col-md-8">
-        <form action="{% url 'worktime:login' %}" method="post">
-            {% csrf_token %}
-            {% if next %}
-            <input type="hidden" name="next" value="{{ next }}" />
-            {% endif %}
-            {% if form.non_field_errors %}
-            <ul class="alert alert-danger list-unstyled">
-                {% for error in form.non_field_errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            <input type="hidden" name="redirect" value="{{ redirect }}">
-            {% for field in form %}
-            <div class="form-group">
-                <label class="col-6" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
-                {{ field }}
-                {{ field.errors }}
-            </div>
-            {% endfor %}
-            <div class="form-group row">
-                <div class="col-sm">
-                    <button type="submit" class="btn btn-primary btn-block">ログイン</button>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-lg-5 col-md-8">
+            <form action="{% url 'worktime:login' %}" method="post">
+                {% csrf_token %}
+                {% if next %}
+                <input type="hidden" name="next" value="{{ next }}" />
+                {% endif %}
+                {% if form.non_field_errors %}
+                <ul class="alert alert-danger list-unstyled">
+                    {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <input type="hidden" name="redirect" value="{{ redirect }}">
+                {% for field in form %}
+                <div class="form-group">
+                    <label class="col-6" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+                    {{ field }}
+                    {{ field.errors }}
                 </div>
-            </div>
-        </form>
+                {% endfor %}
+                <div class="form-group row">
+                    <div class="col-sm">
+                        <button type="submit" class="btn btn-primary btn-block">ログイン</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock main %}

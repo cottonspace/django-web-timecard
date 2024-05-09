@@ -13,10 +13,12 @@
         </div>
     </div>
 </div>
-<form id="time_off_accept" action="{% url 'worktime:time_off_accept' %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="id" value="">
-</form>
+<div class="container">
+    <form id="time_off_accept" action="{% url 'worktime:time_off_accept' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="id" value="">
+    </form>
+</div>
 <script>
     function send_accept(id) {
         const form = document.getElementById('time_off_accept');

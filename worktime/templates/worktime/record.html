@@ -41,43 +41,47 @@
 <audio id="sound-end" preload="auto">
     <source src="{% static 'worktime/sound_end.mp3' %}" type="audio/mp3">
 </audio>
-<form id="record" method="post">
-    {% csrf_token %}
-    {{ form }}
+<div class="container">
+    <form id="record" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <div class="row justify-content-center">
+            <div class="col-5">
+                <div class="card">
+                    <img src="{% static 'worktime/image_begin.png' %}" class="{% if recent.0.action == 'begin' %}quiet-image{% endif %}" style="max-width:100%; object-fit:cover;">
+                    <div class="card-body d-grid">
+                        <a class="stretched-link btn btn-lg btn-{% if recent.0.action == 'begin' %}secondary{% else %}primary{% endif %}" onclick="record('begin')">出勤</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card">
+                    <img src="{% static 'worktime/image_end.png' %}" class="{% if recent.0.action == 'end' %}quiet-image{% endif %}" style="max-width:100%; object-fit:cover;">
+                    <div class="card-body d-grid">
+                        <a class="stretched-link btn btn-lg btn-{% if recent.0.action == 'begin' %}primary{% else %}secondary{% endif %}" onclick="record('end')">退勤</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container">
     <div class="row justify-content-center">
-        <div class="col-5">
-            <div class="card">
-                <img src="{% static 'worktime/image_begin.png' %}" class="{% if recent.0.action == 'begin' %}quiet-image{% endif %}" style="max-width:100%; object-fit:cover;">
-                <div class="card-body d-grid">
-                    <a class="stretched-link btn btn-lg btn-{% if recent.0.action == 'begin' %}secondary{% else %}primary{% endif %}" onclick="record('begin')">出勤</a>
-                </div>
-            </div>
+        <div class="col-lg-6 col-md-8 col-sm-10 mt-5 mb-3">
+            <table class="table table-sm table-borderless table-hover text-nowrap text-center caption-top">
+                <caption class="text-center">直近の打刻 10 件</caption>
+                <tbody>
+                    {% for history in recent %}
+                    <tr class="action-{{ history.action }}">
+                        <td>{{ history.date|date:"n月j日(D)" }}</td>
+                        <td>{{ history.time|date:"H:i" }}</td>
+                        <td>{{ actions|dict_value:history.action }}</td>
+                        <td><span class="readable-time" data-text="{{ history.date|date:'Y-m-d' }} {{ history.time|date:'H:i:s' }}"></span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <div class="col-5">
-            <div class="card">
-                <img src="{% static 'worktime/image_end.png' %}" class="{% if recent.0.action == 'end' %}quiet-image{% endif %}" style="max-width:100%; object-fit:cover;">
-                <div class="card-body d-grid">
-                    <a class="stretched-link btn btn-lg btn-{% if recent.0.action == 'begin' %}primary{% else %}secondary{% endif %}" onclick="record('end')">退勤</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-<div class="row justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10 mt-5 mb-3">
-        <table class="table table-sm table-borderless table-hover text-nowrap text-center caption-top">
-            <caption class="text-center">直近の打刻 10 件</caption>
-            <tbody>
-                {% for history in recent %}
-                <tr class="action-{{ history.action }}">
-                    <td>{{ history.date|date:"n月j日(D)" }}</td>
-                    <td>{{ history.time|date:"H:i" }}</td>
-                    <td>{{ actions|dict_value:history.action }}</td>
-                    <td><span class="readable-time" data-text="{{ history.date|date:'Y-m-d' }} {{ history.time|date:'H:i:s' }}"></span></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 <script>

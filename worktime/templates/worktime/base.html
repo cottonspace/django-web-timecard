@@ -65,7 +65,7 @@
     </div>
     {% endif %}
     {% include 'worktime/page_header.html' %}
-    <main role="main" class="container">
+    <main role="main">
         <div class="print-header">日時: {% now "Y年m月d日 H:i:s" %} ユーザ: {{ user.username }}</div>
         {% block main %}
         {% endblock main %}
