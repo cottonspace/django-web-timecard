@@ -1,6 +1,6 @@
 [English](README.md) | [日本語](README-ja.md)
 
-# web-timecard
+# Web 勤怠管理
 
 ![logo](static/worktime/logo.svg)
 
