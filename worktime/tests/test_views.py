@@ -32,12 +32,12 @@ class TestNotLoggedInView(TestCase):
     def test_not_logged_in_time_off_accept_redirect(self):
         response = self.client.get('/worktime/time_off/accept/')
         self.assertRedirects(
-            response, '/worktime/time_off/list/', fetch_redirect_response=False)
+            response, '/worktime/login/?next=/worktime/time_off/accept/')
 
     def test_not_logged_in_time_off_cancel_redirect(self):
         response = self.client.get('/worktime/time_off/cancel/')
         self.assertRedirects(
-            response, '/worktime/time_off/request/', fetch_redirect_response=False)
+            response, '/worktime/login/?next=/worktime/time_off/cancel/')
 
     def test_not_logged_in_record_redirect(self):
         response = self.client.get('/worktime/record/')

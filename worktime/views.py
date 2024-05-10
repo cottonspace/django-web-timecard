@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.db.models import Q
@@ -295,6 +296,7 @@ class TimeRecordSummaryView(StaffRequiredMixin, FormView):
         return redirect(reverse('worktime:record_summary') + f'?year={year}&month={month}')
 
 
+@login_required
 def time_off_accept(request):
     """休暇申請の承認処理 (画面なし)
 
@@ -324,6 +326,7 @@ def time_off_accept(request):
     return redirect('worktime:time_off_list')
 
 
+@login_required
 def time_off_cancel(request):
     """休暇申請の取り消し処理 (画面なし)
 
