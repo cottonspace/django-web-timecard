@@ -37,6 +37,9 @@ ENABLE_CHECK_LOCATION = %位置情報を取得する場合は True%
 # 打刻効果音の有効化
 ENABLE_RECORD_SOUND = %効果音を鳴らす場合は True%
 
+# 打刻バイブレーションの有効化
+ENABLE_RECORD_VIBRATE = %振動させる場合は True%
+
 # 距離判定の基点とする位置 (緯度, 経度)
 LOCATION_ORIGIN = (%緯度%, %経度%)
 

@@ -130,6 +130,20 @@
     async function record(action) {
         if (record_clicked) return;
         record_clicked = true;
+        {% if is_enable_record_vibrate %}
+        try {
+            navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
+            if (navigator.vibrate) {
+                if (action == 'begin') {
+                    navigator.vibrate([150]);
+                } else if (action == 'end') {
+                    navigator.vibrate([150, 150, 150]);
+                }
+            }
+        } catch (err) {
+            console.log(err)
+        }
+        {% endif %}
         document.getElementsByName('action')[0].value = action;
         document.getElementsByName('ua')[0].value = navigator.userAgent;
         {% if is_enable_check_location %}
