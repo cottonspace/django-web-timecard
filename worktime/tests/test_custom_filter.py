@@ -1,6 +1,5 @@
 from decimal import Decimal
 
-import pytest
 from django.test import TestCase
 
 from worktime.templatetags.custom_filter import *
@@ -16,7 +15,7 @@ class TestCustomFilters(TestCase):
         self.assertEqual(dict_value(dict, 'baz'), None)
 
     def test_customfilter_dump_default_str(self):
-        with pytest.raises(TypeError):
+        with self.assertRaises(TypeError):
             dump_default('foo')
 
     def test_customfilter_dump_default_decimal(self):
