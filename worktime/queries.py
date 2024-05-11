@@ -7,19 +7,19 @@ from .models import BusinessCalendar, TimeOffRequest, TimeRecord
 
 
 def count_time_off_requests(username: str, date_range: tuple[datetime.date, datetime.date]) -> dict:
-    """指定したユーザが指定期間に申請した承認済の休暇申請の数を取得します。
+    """指定したユーザが指定期間に申請した休暇申請の数を取得します。
 
     Args:
         username (str): ユーザ ID
         date_range (tuple[datetime.date, datetime.date]): 期間 (終了日は範囲に含まれません)
 
     Returns:
-        dict: 休暇名称をキーにした取得回数の dict
+        dict: 休暇名称をキーにした申請回数の dict
     """
     results = {}
     begin, end = date_range
-    for record in TimeOffRequest.objects.filter(date__gte=begin, date__lt=end, username=username, accepted=True).values('display_name').annotate(Count('display_name')):
-        results[record['display_name']] = record['display_name__count']
+    for record in TimeOffRequest.objects.filter(date__gte=begin, date__lt=end, username=username).values('display_name').annotate(count=Count('id')):
+        results[record['display_name']] = record['count']
     return results
 
 

@@ -36,7 +36,7 @@
                     <th scope="col">氏名</th>
                     <th scope="col">種別</th>
                     <th scope="col">申請日時</th>
-                    <th scope="col">承認済</th>
+                    <th scope="col">申請回数</th>
                     <th scope="col">承認</th>
                 </tr>
             </thead>
@@ -49,7 +49,7 @@
                     <td>{{ users|dict_value:entry.username|default:entry.username }}</td>
                     <td>{{ entry.display_name }}</td>
                     <td>{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
-                    <td>{{ entry.accepted_count }} 回</td>
+                    <td>{{ entry.count }} 回</td>
                     <td><button type="button" class="btn btn-success btn-sm" onclick="send_accept('{{ entry.id }}')">承認</button></td>
                 </tr>
                 {% endfor %}

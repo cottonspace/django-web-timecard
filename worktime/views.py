@@ -135,7 +135,7 @@ class TimeOffListView(StaffRequiredMixin, FormView):
                 'username': record['username'],
                 'display_name': record['display_name'],
                 'created_at': record['created_at'],
-                'accepted_count': counts.get(record['display_name'], 0)
+                'count': counts.get(record['display_name'], 0)
             })
         context['entries'] = entries
         context['users'] = utils.get_users(False)
