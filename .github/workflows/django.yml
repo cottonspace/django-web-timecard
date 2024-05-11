@@ -44,6 +44,7 @@ jobs:
         echo "LOCATION_ORIGIN = (0, 0)" >> local_settings.py
         echo "MAX_ACCURACY = 1000" >> local_settings.py
         echo "MAX_DISTANCE = 1000" >> local_settings.py
+        cat local_settings.py
     - name: Migrate
       run: |
         python manage.py migrate
