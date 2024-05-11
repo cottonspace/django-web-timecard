@@ -32,6 +32,7 @@ jobs:
         echo "DEBUG = True" >> local_settings.py
         echo "ALLOWED_HOSTS = ['*']" >> local_settings.py
         echo "SECRET_KEY = 'abcdef123456'" >> local_settings.py
+        echo "BASE_DIR = Path(__file__).resolve().parent.parent" >> local_settings.py
         echo "DATABASES = { 'default': { 'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3', } }" >> local_settings.py
         echo "STATICFILES_DIRS = ( os.path.join(Path(__file__).resolve().parent.parent, 'static'), )" >> local_settings.py
         echo "SESSION_COOKIE_AGE = 3600" >> local_settings.py
