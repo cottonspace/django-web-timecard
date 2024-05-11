@@ -49,20 +49,20 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 - Run the following command in the django-web-timecard directory to prepare the database.
 ```
 pip install -r requirements.txt
-python3 manage.py migrate
+python manage.py migrate
 ```
 - Create a superuser with the following command.
 ```
-python3 manage.py createsuperuser
+python manage.py createsuperuser
 ```
 - Initialize the master datas with the following command. This will create default settings, so you can edit them later to create appropriate working rules.
 ```
-python3 manage.py loaddata worktime/fixtures/standard-work-pattern.json
-python3 manage.py loaddata worktime/fixtures/time-off-pattern.json
+python manage.py loaddata worktime/fixtures/standard-work-pattern.json
+python manage.py loaddata worktime/fixtures/time-off-pattern.json
 ```
 - Start the server. For example, to start with Django's functions, run the following command.
 ```
-python3 manage.py runserver
+python manage.py runserver
 ```
 
 ### Initial setting
@@ -70,20 +70,20 @@ python3 manage.py runserver
 - First, set the working time pattern for each day of the week on the "Work Pattern" screen. Be sure to perform this setting first before starting application operation.
 - Use the following command to initialize the working hours for each day of the week and create a business day calendar.
 ```
-python3 manage.py create_calendar
+python manage.py create_calendar
 ```
 - Register the user who will be stamping the time by adding users as appropriate from the management screen.
 
 ### Adding commands to tasks
 - Register the following command to be executed at least once a month in a regular task such as crontab.
 ```
-python3 manage.py create_calendar
+python manage.py create_calendar
 ```
 
 ### Delete business day calendar
 - If you want to reconfigure the business day calendar created with `create_calendar`, you can use the command below to delete the business day calendar for the specified month and beyond months.
 ```
-python3 manage.py delete_calendar year month
+python manage.py delete_calendar year month
 ```
 - The missing month's business day calendar will be recreated by running `create_calendar`.
 - Business day calendars are managed on a monthly basis, so it is not possible to delete only specific days within a month.
