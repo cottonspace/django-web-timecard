@@ -27,6 +27,7 @@ jobs:
         pip install -r requirements.txt
     - name: Create dummy local_settings.py
       run: |
+        find .
         echo "import os" > local_settings.py
         echo "from pathlib import Path" >> local_settings.py
         echo "DEBUG = True" >> local_settings.py
