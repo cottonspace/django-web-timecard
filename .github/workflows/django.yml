@@ -52,8 +52,8 @@ jobs:
         python manage.py createsuperuser
     - name: Load fixtures
       run: |
-        python manage.py loaddata worktime/fixtures/standard-work-pattern.json
-        python manage.py loaddata worktime/fixtures/time-off-pattern.json
+        python manage.py loaddata ./worktime/fixtures/standard-work-pattern.json
+        python manage.py loaddata ./worktime/fixtures/time-off-pattern.json
     - name: Create calendar
       run: |
         python manage.py create_calendar
