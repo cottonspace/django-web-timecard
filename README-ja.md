@@ -49,20 +49,20 @@ Django で記述された Web ベースのシンプルな勤怠管理システ�
 - django-web-timecard ディレクトリで以下のコマンドを実行し、データベースを準備します。
 ```
 pip install -r requirements.txt
-python3 manage.py migrate
+python manage.py migrate
 ```
 - 以下のコマンドでスーパーユーザを作成します。
 ```
-python3 manage.py createsuperuser
+python manage.py createsuperuser
 ```
 - 以下のコマンドでマスタデータを初期化します。ここではデフォルトの設定が作成されるので、あとの作業で、適切な就業時間のルールに編集します。
 ```
-python3 manage.py loaddata worktime/fixtures/standard-work-pattern.json
-python3 manage.py loaddata worktime/fixtures/time-off-pattern.json
+python manage.py loaddata worktime/fixtures/standard-work-pattern.json
+python manage.py loaddata worktime/fixtures/time-off-pattern.json
 ```
 - サーバを起動します。例えば Django の機能で起動する場合は以下のコマンドを実行します。
 ```
-python3 manage.py runserver
+python manage.py runserver
 ```
 
 ### 初期設定
@@ -70,20 +70,20 @@ python3 manage.py runserver
 - 最初に "勤務パターン" 画面で曜日別の就業時刻のパターンを設定します。この設定は、アプリケーションの運用を開始する前に、必ず最初におこなってください。
 - 以下のコマンドで曜日別の就業時間を初期化し、営業日カレンダを作成します。
 ```
-python3 manage.py create_calendar
+python manage.py create_calendar
 ```
 - 打刻をおこなうユーザを管理画面から適宜ユーザ追加で登録します。
 
 ### 自動タスクへのコマンド追加
 - crontab などの定期タスクで以下のコマンドが毎月 1 回以上実行されるように登録してください。
 ```
-python3 manage.py create_calendar
+python manage.py create_calendar
 ```
 
 ### 営業日カレンダの削除
 - `create_calendar` で作成した営業日カレンダの設定をやりなおす場合などは、以下のコマンドで指定した年月とそれ以降の営業日カレンダを削除することができます。
 ```
-python3 manage.py delete_calendar 年 月
+python manage.py delete_calendar 年 月
 ```
 - 不足している月の営業日カレンダは `create_calendar` を実行することで再度作成されます。
 - 営業日カレンダは月単位で管理されますので、月内の特定の日のみ削除することは出来ません。
