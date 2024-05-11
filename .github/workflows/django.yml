@@ -44,6 +44,19 @@ jobs:
         echo "LOCATION_ORIGIN = (0, 0)" >> local_settings.py
         echo "MAX_ACCURACY = 1000" >> local_settings.py
         echo "MAX_DISTANCE = 1000" >> local_settings.py
+    - name: Migrate
+      run: |
+        python manage.py migrate
+    - name: Create superuser
+      run: |
+        python manage.py createsuperuser
+    - name: Load fixtures
+      run: |
+        python manage.py loaddata worktime/fixtures/standard-work-pattern.json
+        python manage.py loaddata worktime/fixtures/time-off-pattern.json
+    - name: Create calendar
+      run: |
+        python manage.py create_calendar
     - name: Run Tests
       run: |
         python manage.py test
