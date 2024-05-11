@@ -27,26 +27,23 @@ jobs:
         pip install -r requirements.txt
     - name: Create dummy local_settings.py
       run: |
-        find .
-        echo "import os" > local_settings.py
-        echo "from pathlib import Path" >> local_settings.py
-        echo "DEBUG = True" >> local_settings.py
-        echo "ALLOWED_HOSTS = ['*']" >> local_settings.py
-        echo "SECRET_KEY = 'abcdef123456'" >> local_settings.py
-        echo "BASE_DIR = Path(__file__).resolve().parent.parent" >> local_settings.py
-        echo "DATABASES = { 'default': { 'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3', } }" >> local_settings.py
-        echo "STATICFILES_DIRS = ( os.path.join(Path(__file__).resolve().parent.parent, 'static'), )" >> local_settings.py
-        echo "SESSION_COOKIE_AGE = 3600" >> local_settings.py
-        echo "CALENDAR_MONTHS = 12" >> local_settings.py
-        echo "YEAR_FIRST_MONTH = 4" >> local_settings.py
-        echo "ENABLE_CHECK_LOCATION = True" >> local_settings.py
-        echo "ENABLE_RECORD_SOUND = True" >> local_settings.py
-        echo "ENABLE_RECORD_VIBRATE = True" >> local_settings.py
-        echo "LOCATION_ORIGIN = (0, 0)" >> local_settings.py
-        echo "MAX_ACCURACY = 1000" >> local_settings.py
-        echo "MAX_DISTANCE = 1000" >> local_settings.py
-        cat settings.py
-        cat local_settings.py
+        echo "import os" > ./timecard/local_settings.py
+        echo "from pathlib import Path" >> ./timecard/local_settings.py
+        echo "DEBUG = True" >> ./timecard/local_settings.py
+        echo "ALLOWED_HOSTS = ['*']" >> ./timecard/local_settings.py
+        echo "SECRET_KEY = 'abcdef123456'" >> ./timecard/local_settings.py
+        echo "BASE_DIR = Path(__file__).resolve().parent.parent" >> ./timecard/local_settings.py
+        echo "DATABASES = { 'default': { 'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3', } }" >> ./timecard/local_settings.py
+        echo "STATICFILES_DIRS = ( os.path.join(Path(__file__).resolve().parent.parent, 'static'), )" >> ./timecard/local_settings.py
+        echo "SESSION_COOKIE_AGE = 3600" >> ./timecard/local_settings.py
+        echo "CALENDAR_MONTHS = 12" >> ./timecard/local_settings.py
+        echo "YEAR_FIRST_MONTH = 4" >> ./timecard/local_settings.py
+        echo "ENABLE_CHECK_LOCATION = True" >> ./timecard/local_settings.py
+        echo "ENABLE_RECORD_SOUND = True" >> ./timecard/local_settings.py
+        echo "ENABLE_RECORD_VIBRATE = True" >> ./timecard/local_settings.py
+        echo "LOCATION_ORIGIN = (0, 0)" >> ./timecard/local_settings.py
+        echo "MAX_ACCURACY = 1000" >> ./timecard/local_settings.py
+        echo "MAX_DISTANCE = 1000" >> ./timecard/local_settings.py
     - name: Migrate
       run: |
         python manage.py migrate
