@@ -47,9 +47,6 @@ jobs:
     - name: Migrate
       run: |
         python manage.py migrate
-    - name: Create superuser
-      run: |
-        python manage.py createsuperuser
     - name: Load fixtures
       run: |
         python manage.py loaddata ./worktime/fixtures/standard-work-pattern.json
