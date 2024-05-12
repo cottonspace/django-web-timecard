@@ -43,7 +43,7 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 - Clone or download the application source code.
 - Copy local_settings_template.txt located in the django-web-timecard/timecard directory to the same directory as local_settings.py.
 - Edit the part from % to % of the local_settings.py according to your environment.
-- You can easily create a local_settings.py file using the [web-timecard easy config tool](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html).
+- You can easily create a local_settings.py file using the [Web attendance management easy config tool](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html).
 
 ### Initialize
 - Run the following command in the django-web-timecard directory to prepare the database.
