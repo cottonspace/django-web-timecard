@@ -136,6 +136,7 @@
     async function record(action) {
         if (record_clicked) return;
         record_clicked = true;
+        document.getElementsByName('action')[0].value = action;
         {% if is_enable_record_vibrate %}
         try {
             navigator.vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate;
@@ -150,8 +151,11 @@
             console.log(err)
         }
         {% endif %}
-        document.getElementsByName('action')[0].value = action;
-        document.getElementsByName('ua')[0].value = navigator.userAgent;
+        try {
+            document.getElementsByName('ua')[0].value = (navigator.userAgentData) ? JSON.stringify(navigator.userAgentData) : navigator.userAgent;
+        } catch (err) {
+            console.log(err)
+        }
         {% if is_enable_check_location %}
         try {
             let position = await new Promise((resolve, reject) => {
