@@ -11,9 +11,8 @@
         font-size: 100px;
     }
 
-    #clock-second {
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 32px;
+    #clock-seconds {
+        background-color: #bbb;
     }
 
     .quiet-image {
@@ -32,7 +31,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="col"><span id="clock-time"></span><span id="clock-second"></span></div>
+        <div class="col"><span id="clock-time"></span></div>
+    </div>
+    <div class="row">
+        <div class="col-8 mx-auto mb-3">
+            <div class="progress" role="progressbar" style="height:6px;">
+                <div id="clock-seconds" class="progress-bar"></div>
+            </div>
+        </div>
     </div>
 </div>
 {% if is_enable_record_sound %}
@@ -91,7 +97,7 @@
         let now = new Date();
         document.getElementById("clock-date").textContent = String(now.getMonth() + 1) + '/' + String(now.getDate()) + '(' + ['日', '月', '火', '水', '木', '金', '土'][now.getDay()] + ')'
         document.getElementById("clock-time").textContent = String(now.getHours()).padStart(2, "0") + ':' + String(now.getMinutes()).padStart(2, "0");
-        document.getElementById("clock-second").textContent = ':' + String(now.getSeconds()).padStart(2, "0");
+        document.getElementById("clock-seconds").style.width = Math.ceil(now.getSeconds() / 60 * 100) + '%';
         setTimeout(show_clock, 1000);
     }
     function readable_time(dt1, dt2) {
