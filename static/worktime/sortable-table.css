@@ -1,11 +1,20 @@
 th.sort-none::after {
     content: "";
+    display: inline-block;
+    font-size: 80%;
+    width: 1em;
 }
 
 th.sort-asc::after {
-    content: "\02191";
+    content: "\021be";
+    display: inline-block;
+    font-size: 80%;
+    width: 1em;
 }
 
 th.sort-desc::after {
-    content: "\02193";
+    content: "\021c2";
+    display: inline-block;
+    font-size: 80%;
+    width: 1em;
 }
