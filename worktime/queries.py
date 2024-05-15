@@ -1,9 +1,12 @@
+"""
+データベース問い合わせのモジュールです。
+"""
 import datetime
 
 from django.db.models import Count, Max, Min, OuterRef, Q, QuerySet, Subquery
 
-from . import rules
-from .models import BusinessCalendar, TimeOffRequest, TimeRecord
+from worktime.models import BusinessCalendar, TimeOffRequest, TimeRecord
+from worktime.rules import worktime_calculation
 
 
 def count_time_off_requests(username: str, date_range: tuple[datetime.date, datetime.date]) -> dict:
@@ -77,10 +80,12 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
         'end_record',
     )
     queryset_time_off_requests = get_monthly_time_off_requests(
-        username, year, month)
+        username, year, month
+    )
     for record in queryset_records:
         time_off_requests = queryset_time_off_requests.filter(
-            date=record['date'])
+            date=record['date']
+        )
         if time_off_requests.exists():
             time_off_request = time_off_requests[0]
             time_off_accepted = time_off_request['accepted']
@@ -97,5 +102,5 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
                     'leave': time_off_request['leave'],
                     'back': time_off_request['back']
                 })
-        record.update(rules.worktime_calculation(record))
+        record.update(worktime_calculation(record))
     return queryset_records

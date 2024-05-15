@@ -1,3 +1,6 @@
+"""
+アプリケーションの定義です。
+"""
 from django.apps import AppConfig
 
 

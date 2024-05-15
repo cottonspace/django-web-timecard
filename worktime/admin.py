@@ -1,11 +1,13 @@
+"""
+管理者サイトの定義です。
+"""
 from django.contrib import admin
 from django.contrib.admin.sites import AdminSite
 from django.utils import dateformat
 
 import timecard.settings
-
-from .models import (BusinessCalendar, StandardWorkPattern, TimeOffPattern,
-                     TimeOffRequest, TimeRecord)
+from worktime.models import (BusinessCalendar, StandardWorkPattern,
+                             TimeOffPattern, TimeOffRequest, TimeRecord)
 
 # Admin 画面のタイトル
 AdminSite.site_header = 'Web タイムカード管理'
@@ -13,6 +15,7 @@ AdminSite.site_title = 'Web タイムカード管理'
 AdminSite.index_title = '管理'
 
 
+@admin.register(StandardWorkPattern)
 class StandardWorkPatternAdmin(admin.ModelAdmin):
     """勤務パターンの管理モデルです。
 
@@ -48,10 +51,7 @@ class StandardWorkPatternAdmin(admin.ModelAdmin):
     actions = None
 
 
-# 勤務パターンの管理モデルを登録
-admin.site.register(StandardWorkPattern, StandardWorkPatternAdmin)
-
-
+@admin.register(TimeOffPattern)
 class TimeOffPatternAdmin(admin.ModelAdmin):
     """休暇パターンの管理モデルです。
 
@@ -60,16 +60,20 @@ class TimeOffPatternAdmin(admin.ModelAdmin):
     """
 
     # 設定
-    list_display = ['id', 'display_name',
-                    'attendance', 'begin', 'end', 'leave', 'back']
+    list_display = [
+        'id',
+        'display_name',
+        'attendance',
+        'begin',
+        'end',
+        'leave',
+        'back'
+    ]
     ordering = ['id']
     actions = None
 
 
-# 休暇パターンの管理モデルを登録
-admin.site.register(TimeOffPattern, TimeOffPatternAdmin)
-
-
+@admin.register(BusinessCalendar)
 class BusinessCalendarAdmin(admin.ModelAdmin):
     """営業日カレンダの管理モデルです。
 
@@ -100,18 +104,22 @@ class BusinessCalendarAdmin(admin.ModelAdmin):
 
     # 設定
     formatted_date.short_description = '日付'
-    list_display = ['formatted_date', 'attendance',
-                    'holiday', 'begin', 'end', 'leave', 'back']
+    list_display = [
+        'formatted_date',
+        'attendance',
+        'holiday',
+        'begin',
+        'end',
+        'leave',
+        'back'
+    ]
     ordering = ['date']
     list_filter = ['date']
     readonly_fields = ['date']
     actions = None
 
 
-# 営業日カレンダの管理モデルを登録
-admin.site.register(BusinessCalendar, BusinessCalendarAdmin)
-
-
+@admin.register(TimeRecord)
 class TimeRecordAdmin(admin.ModelAdmin):
     """打刻記録の管理モデルです。
 
@@ -178,20 +186,37 @@ class TimeRecordAdmin(admin.ModelAdmin):
     display_username.short_description = '氏名'
     display_action.short_description = '種別'
     display_location.short_description = '位置情報'
-    readonly_fields = ['username', 'display_username', 'date', 'time', 'display_action', 'display_location', 'ua']
-    exclude = ['action', 'latitude', 'longitude', 'accuracy']
-    list_display = ['date', 'time', 'username', 'display_username',
-                    'display_action', 'display_location', 'created_at']
+    readonly_fields = [
+        'username',
+        'display_username',
+        'date',
+        'time',
+        'display_action',
+        'display_location',
+        'ua'
+    ]
+    exclude = [
+        'action',
+        'latitude',
+        'longitude',
+        'accuracy'
+    ]
+    list_display = [
+        'date',
+        'time',
+        'username',
+        'display_username',
+        'display_action',
+        'display_location',
+        'created_at'
+    ]
     ordering = ['date', 'time']
     list_filter = ['date']
     search_fields = ['username']
     actions = None
 
 
-# 打刻記録の管理モデルを登録
-admin.site.register(TimeRecord, TimeRecordAdmin)
-
-
+@admin.register(TimeOffRequest)
 class TimeOffRequestAdmin(admin.ModelAdmin):
     """休暇申請の管理モデルです。
 
@@ -217,10 +242,25 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
 
     # 設定
     display_username.short_description = '氏名'
-    readonly_fields = ['username', 'display_username', 'date',
-                       'display_name', 'attendance', 'begin', 'end', 'leave', 'back']
-    list_display = ['date', 'username', 'display_username',
-                    'display_name', 'accepted', 'created_at']
+    readonly_fields = [
+        'username',
+        'display_username',
+        'date',
+        'display_name',
+        'attendance',
+        'begin',
+        'end',
+        'leave',
+        'back'
+    ]
+    list_display = [
+        'date',
+        'username',
+        'display_username',
+        'display_name',
+        'accepted',
+        'created_at'
+    ]
     ordering = ['date', 'username']
     list_filter = ['date', 'accepted']
     search_fields = ['username']
@@ -236,7 +276,3 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         queryset.update(accepted=True)
 
     action_accept.short_description = '選択された 休暇申請 の承認'
-
-
-# 休暇申請の管理モデルを登録
-admin.site.register(TimeOffRequest, TimeOffRequestAdmin)

@@ -1,7 +1,10 @@
+"""
+勤務時間計算の規則を定義するモジュールです。
+"""
 import datetime
 from decimal import ROUND_CEILING, ROUND_FLOOR
 
-from . import utils
+from worktime.utils import delta, minutes_to_hours
 
 
 def worktime_calculation(obj) -> dict:
@@ -62,22 +65,27 @@ def worktime_calculation(obj) -> dict:
 
     # 非営業日の場合はすべて時間外として計算
     if not obj['attendance']:
-        result['overtime'] = utils.delta(
-            obj['begin_record'], obj['end_record'])
+        result['overtime'] = delta(obj['begin_record'], obj['end_record'])
         return result
 
     # 標準勤務時間と実働時間の算出
     if obj['leave'] is not None and obj['back'] is not None:
-        section1_total = utils.delta(obj['begin'], obj['leave'])
-        section1_record = max(0, utils.delta(
-            max(obj['begin'], obj['begin_record']), min(obj['end_record'], obj['leave'])))
-        section2_total = utils.delta(obj['back'], obj['end'])
-        section2_record = max(0, utils.delta(
-            max(obj['back'], obj['begin_record']), min(obj['end_record'], obj['end'])))
+        section1_total = delta(obj['begin'], obj['leave'])
+        section1_record = max(0, delta(
+            max(obj['begin'], obj['begin_record']),
+            min(obj['end_record'], obj['leave'])
+        ))
+        section2_total = delta(obj['back'], obj['end'])
+        section2_record = max(0, delta(
+            max(obj['back'], obj['begin_record']),
+            min(obj['end_record'], obj['end'])
+        ))
     else:
-        section1_total = utils.delta(obj['begin'], obj['end'])
-        section1_record = max(0, utils.delta(
-            max(obj['begin'], obj['begin_record']), min(obj['end_record'], obj['end'])))
+        section1_total = delta(obj['begin'], obj['end'])
+        section1_record = max(0, delta(
+            max(obj['begin'], obj['begin_record']),
+            min(obj['end_record'], obj['end'])
+        ))
         section2_total = 0
         section2_record = 0
 
@@ -86,12 +94,16 @@ def worktime_calculation(obj) -> dict:
         (section2_total - section2_record)
 
     # 早出時間の算出
-    result['early'] = max(0, utils.delta(
-        obj['begin_record'], min(obj['end_record'], obj['begin'])))
+    result['early'] = max(0, delta(
+        obj['begin_record'],
+        min(obj['end_record'], obj['begin'])
+    ))
 
     # 残業時間の算出
-    result['overtime'] = max(0, utils.delta(
-        max(obj['end'], obj['begin_record']), obj['end_record']))
+    result['overtime'] = max(0, delta(
+        max(obj['end'], obj['begin_record']),
+        obj['end_record']
+    ))
 
     # 結果返却
     return result
@@ -149,12 +161,21 @@ def summarize(objects) -> dict:
                 result['time_off_not_yet_accepted_count'] += 1
 
     # 時間単位の算出
-    result['behind_hours'] = utils.minutes_to_hours(
-        result['behind_minutes'], '0.1', ROUND_FLOOR)
-    result['early_hours'] = utils.minutes_to_hours(
-        result['early_minutes'], '0.1', ROUND_CEILING)
-    result['overtime_hours'] = utils.minutes_to_hours(
-        result['overtime_minutes'], '0.1', ROUND_CEILING)
+    result['behind_hours'] = minutes_to_hours(
+        result['behind_minutes'],
+        '0.1',
+        ROUND_FLOOR
+    )
+    result['early_hours'] = minutes_to_hours(
+        result['early_minutes'],
+        '0.1',
+        ROUND_CEILING
+    )
+    result['overtime_hours'] = minutes_to_hours(
+        result['overtime_minutes'],
+        '0.1',
+        ROUND_CEILING
+    )
 
     # 結果返却
     return result

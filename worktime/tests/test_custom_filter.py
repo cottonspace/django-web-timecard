@@ -2,7 +2,8 @@ from decimal import Decimal
 
 from django.test import TestCase
 
-from worktime.templatetags.custom_filter import *
+from worktime.templatetags.custom_filter import (dict_value, dump_default,
+                                                 json_dumps)
 
 
 class TestCustomFilters(TestCase):

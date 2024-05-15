@@ -1,3 +1,6 @@
+"""
+ユーティリティメソッドです。
+"""
 import datetime
 from decimal import Decimal
 

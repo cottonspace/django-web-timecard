@@ -1,3 +1,6 @@
+"""
+モデルです。
+"""
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -6,8 +9,7 @@ from django.utils import dateformat
 from geopy.distance import geodesic
 
 import timecard.settings
-
-from . import utils
+from worktime.utils import display_name
 
 
 class StandardWorkPattern(models.Model):
@@ -171,10 +173,16 @@ class TimeRecord(models.Model):
     time = models.TimeField('時刻')
     username = models.CharField('ユーザー名', max_length=150)
     action = models.CharField('種別', max_length=20)
-    latitude = models.FloatField('緯度', blank=True, null=True, validators=[
-                                 MinValueValidator(-90), MaxValueValidator(90)])
-    longitude = models.FloatField('経度', blank=True, null=True, validators=[
-                                  MinValueValidator(-180), MaxValueValidator(180)])
+    latitude = models.FloatField(
+        '緯度', blank=True, null=True, validators=[
+            MinValueValidator(-90), MaxValueValidator(90)
+        ]
+    )
+    longitude = models.FloatField(
+        '経度', blank=True, null=True, validators=[
+            MinValueValidator(-180), MaxValueValidator(180)
+        ]
+    )
     accuracy = models.FloatField('誤差', blank=True, null=True)
     ua = models.TextField('ブラウザ情報', max_length=400, blank=True, null=True)
     created_at = models.DateTimeField('作成日時', auto_now_add=True)
@@ -194,7 +202,7 @@ class TimeRecord(models.Model):
         Returns:
             str: 氏名文字列
         """
-        return utils.display_name(User.objects.filter(username=self.username).first())
+        return display_name(User.objects.filter(username=self.username).first())
 
     def location(self) -> str:
         """位置情報の表示を編集します。
@@ -261,7 +269,7 @@ class TimeOffRequest(models.Model):
         Returns:
             str: 氏名文字列
         """
-        return utils.display_name(User.objects.filter(username=self.username).first())
+        return display_name(User.objects.filter(username=self.username).first())
 
     class Meta:
         """メタ情報です。

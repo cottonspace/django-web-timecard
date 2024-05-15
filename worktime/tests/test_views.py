@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from worktime.views import *
-
 
 class TestNotLoggedInView(TestCase):
     def test_not_logged_in_login_status_code(self):
@@ -12,47 +10,65 @@ class TestNotLoggedInView(TestCase):
     def test_not_logged_in_password_change_redirect(self):
         response = self.client.get('/worktime/password_change/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/password_change/')
+            response,
+            '/worktime/login/?next=/worktime/password_change/'
+        )
 
     def test_not_logged_in_time_off_status_redirect(self):
         response = self.client.get('/worktime/time_off/status/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/time_off/status/')
+            response,
+            '/worktime/login/?next=/worktime/time_off/status/'
+        )
 
     def test_not_logged_in_time_off_request_redirect(self):
         response = self.client.get('/worktime/time_off/request/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/time_off/request/')
+            response,
+            '/worktime/login/?next=/worktime/time_off/request/'
+        )
 
     def test_not_logged_in_time_off_list_redirect(self):
         response = self.client.get('/worktime/time_off/list/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/time_off/list/')
+            response,
+            '/worktime/login/?next=/worktime/time_off/list/'
+        )
 
     def test_not_logged_in_time_off_accept_redirect(self):
         response = self.client.get('/worktime/time_off/accept/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/time_off/accept/')
+            response,
+            '/worktime/login/?next=/worktime/time_off/accept/'
+        )
 
     def test_not_logged_in_time_off_cancel_redirect(self):
         response = self.client.get('/worktime/time_off/cancel/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/time_off/cancel/')
+            response,
+            '/worktime/login/?next=/worktime/time_off/cancel/'
+        )
 
     def test_not_logged_in_record_redirect(self):
         response = self.client.get('/worktime/record/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/record/')
+            response,
+            '/worktime/login/?next=/worktime/record/'
+        )
 
     def test_not_logged_in_record_calendar_redirect(self):
         response = self.client.get('/worktime/record/calendar/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/record/calendar/')
+            response,
+            '/worktime/login/?next=/worktime/record/calendar/'
+        )
 
     def test_not_logged_in_record_summary_redirect(self):
         response = self.client.get('/worktime/record/summary/')
         self.assertRedirects(
-            response, '/worktime/login/?next=/worktime/record/summary/')
+            response,
+            '/worktime/login/?next=/worktime/record/summary/'
+        )
 
     def test_not_logged_in_readme_status_code(self):
         response = self.client.get('/worktime/readme/')
@@ -62,7 +78,8 @@ class TestNotLoggedInView(TestCase):
 class TestUserLoggedInView(TestCase):
     def setUp(self):
         user = User.objects.create(
-            username='user01', password='12345678', email='user01@example.com')
+            username='user01', password='12345678', email='user01@example.com'
+        )
         self.client.force_login(user)
 
     def test_user_login_redirect(self):
@@ -88,12 +105,18 @@ class TestUserLoggedInView(TestCase):
     def test_user_time_off_accept_redirect(self):
         response = self.client.get('/worktime/time_off/accept/')
         self.assertRedirects(
-            response, '/worktime/time_off/list/', fetch_redirect_response=False)
+            response,
+            '/worktime/time_off/list/',
+            fetch_redirect_response=False
+        )
 
     def test_user_time_off_cancel_redirect(self):
         response = self.client.get('/worktime/time_off/cancel/')
         self.assertRedirects(
-            response, '/worktime/time_off/request/', fetch_redirect_response=False)
+            response,
+            '/worktime/time_off/request/',
+            fetch_redirect_response=False
+        )
 
     def test_user_record_status_code(self):
         response = self.client.get('/worktime/record/')
@@ -115,7 +138,8 @@ class TestUserLoggedInView(TestCase):
 class TestStaffLoggedInView(TestCase):
     def setUp(self):
         user = User.objects.create(
-            username='staff01', password='12345678', email='staff01@example.com')
+            username='staff01', password='12345678', email='staff01@example.com'
+        )
         user.is_staff = True
         user.save()
         self.client.force_login(user)
@@ -143,12 +167,18 @@ class TestStaffLoggedInView(TestCase):
     def test_staff_time_off_accept_redirect(self):
         response = self.client.get('/worktime/time_off/accept/')
         self.assertRedirects(
-            response, '/worktime/time_off/list/', fetch_redirect_response=False)
+            response,
+            '/worktime/time_off/list/',
+            fetch_redirect_response=False
+        )
 
     def test_staff_time_off_cancel_redirect(self):
         response = self.client.get('/worktime/time_off/cancel/')
         self.assertRedirects(
-            response, '/worktime/time_off/request/', fetch_redirect_response=False)
+            response,
+            '/worktime/time_off/request/',
+            fetch_redirect_response=False
+        )
 
     def test_staff_record_status_code(self):
         response = self.client.get('/worktime/record/')
@@ -170,7 +200,8 @@ class TestStaffLoggedInView(TestCase):
 class TestStaffAndSuperUserLoggedInView(TestCase):
     def setUp(self):
         user = User.objects.create(
-            username='superuser01', password='12345678', email='superuser01@example.com')
+            username='superuser01', password='12345678', email='superuser01@example.com'
+        )
         user.is_staff = True
         user.is_superuser = True
         user.save()
@@ -199,12 +230,18 @@ class TestStaffAndSuperUserLoggedInView(TestCase):
     def test_superuser_time_off_accept_redirect(self):
         response = self.client.get('/worktime/time_off/accept/')
         self.assertRedirects(
-            response, '/worktime/time_off/list/', fetch_redirect_response=False)
+            response,
+            '/worktime/time_off/list/',
+            fetch_redirect_response=False
+        )
 
     def test_superuser_time_off_cancel_redirect(self):
         response = self.client.get('/worktime/time_off/cancel/')
         self.assertRedirects(
-            response, '/worktime/time_off/request/', fetch_redirect_response=False)
+            response,
+            '/worktime/time_off/request/',
+            fetch_redirect_response=False
+        )
 
     def test_superuser_record_status_code(self):
         response = self.client.get('/worktime/record/')

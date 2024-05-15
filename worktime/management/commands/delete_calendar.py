@@ -1,3 +1,6 @@
+"""
+営業日カレンダ削除 の CLI 管理コマンドです。
+"""
 import datetime
 
 from django.core.management.base import BaseCommand

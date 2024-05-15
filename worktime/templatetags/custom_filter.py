@@ -1,3 +1,6 @@
+"""
+テンプレート用カスタムフィルタです。
+"""
 import json
 from decimal import Decimal
 

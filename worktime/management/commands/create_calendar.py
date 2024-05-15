@@ -1,3 +1,6 @@
+"""
+営業日カレンダ作成 の CLI 管理コマンドです。
+"""
 import calendar
 import datetime
 
@@ -34,8 +37,9 @@ class Command(BaseCommand):
         events = {}
         for event in cal.events:
             if event.begin.datetime:
-                events[event.begin.astimezone(
-                    service_zone).strftime('%Y-%m-%d')] = event.name
+                events[
+                    event.begin.astimezone(service_zone).strftime('%Y-%m-%d')
+                ] = event.name
         return dict(sorted(events.items()))
 
     def get_months(self, date) -> int:
@@ -77,16 +81,18 @@ class Command(BaseCommand):
                     holiday = '定休日'
 
             # 営業日レコードを生成
-            BusinessCalendar.objects.create(date=date,
-                                            holiday=holiday,
-                                            attendance=pattern.attendance,
-                                            begin=pattern.begin,
-                                            end=pattern.end,
-                                            leave=pattern.leave,
-                                            back=pattern.back
-                                            )
+            BusinessCalendar.objects.create(
+                date=date,
+                holiday=holiday,
+                attendance=pattern.attendance,
+                begin=pattern.begin,
+                end=pattern.end,
+                leave=pattern.leave,
+                back=pattern.back
+            )
             self.stdout.write(self.style.SUCCESS(
-                date.strftime('%Y-%m-%d created.')))
+                date.strftime('%Y-%m-%d created.')
+            ))
 
     def handle(self, *args, **options):
         """カスタムコマンドの処理を実行します。
@@ -95,13 +101,16 @@ class Command(BaseCommand):
         # 祝日データ (ics) をダウンロード
         if timecard.settings.HOLIDAY_DOWNLOAD_URL:
             holidays = self.download_ics(
-                timecard.settings.HOLIDAY_DOWNLOAD_URL, timecard.settings.TIME_ZONE)
+                timecard.settings.HOLIDAY_DOWNLOAD_URL, timecard.settings.TIME_ZONE
+            )
             holidays_dates = list(holidays.keys())
             holidays_dates.sort(reverse=True)
             max_holiday = datetime.datetime.strptime(
-                holidays_dates[0], "%Y-%m-%d")
+                holidays_dates[0], "%Y-%m-%d"
+            )
             self.stdout.write(self.style.SUCCESS(
-                max_holiday.strftime('Holiday data downloaded up to %Y-%m.')))
+                max_holiday.strftime('Holiday data downloaded up to %Y-%m.')
+            ))
         else:
             holidays = {}
             max_holiday = datetime.datetime.max
@@ -111,7 +120,8 @@ class Command(BaseCommand):
 
         # 作成対象の先頭月を算出
         max_created_date = BusinessCalendar.objects.aggregate(max_date=Max('date'))[
-            'max_date']
+            'max_date'
+        ]
         if max_created_date is None:
             start_months = self.get_months(now)
         else:

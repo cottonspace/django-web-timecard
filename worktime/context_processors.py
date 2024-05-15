@@ -1,3 +1,6 @@
+"""
+アプリケーション全体で使用するコンテキストを定義します。
+"""
 import timecard.settings
 
 

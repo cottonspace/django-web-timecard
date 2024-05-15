@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
+"""
+Django プロジェクト timecard の CLI 管理コマンドです。
+"""
 import os
 import sys
 

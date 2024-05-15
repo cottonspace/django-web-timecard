@@ -1,6 +1,8 @@
+import datetime
+
 from django.test import TestCase
 
-from worktime.rules import *
+from worktime.rules import worktime_calculation
 
 
 class TestWorktimeCalculationRulesValidations(TestCase):
@@ -46,8 +48,11 @@ class TestWorktimeCalculationRulesValidations(TestCase):
 
     def test_future_not_record_yet(self):
         obj = self.get_attendance(1)
-        self.assertEqual(worktime_calculation(obj), {
-                         'past': False, 'work': False, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None})
+        self.assertEqual(
+            worktime_calculation(obj), {
+                'past': False, 'work': False, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None
+            }
+        )
 
 
 class TestWorktimeCalculationRulesCalculations(TestCase):
@@ -73,36 +78,51 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj = self.get_attendance()
         obj['begin_record'] = datetime.time(9, 0, 0)
         obj['end_record'] = datetime.time(17, 0, 0)
-        self.assertEqual(worktime_calculation(obj), {
-                         'past': True, 'work': True, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None})
+        self.assertEqual(
+            worktime_calculation(obj), {
+                'past': True, 'work': True, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None
+            }
+        )
 
     def test_arriving_late(self):
         obj = self.get_attendance()
         obj['begin_record'] = datetime.time(10, 0, 0)
         obj['end_record'] = datetime.time(17, 0, 0)
-        self.assertEqual(worktime_calculation(obj), {
-                         'past': True, 'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None})
+        self.assertEqual(
+            worktime_calculation(obj), {
+                'past': True, 'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None
+            }
+        )
 
     def test_leaving_early(self):
         obj = self.get_attendance()
         obj['begin_record'] = datetime.time(9, 0, 0)
         obj['end_record'] = datetime.time(16, 0, 0)
-        self.assertEqual(worktime_calculation(obj), {
-                         'past': True, 'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None})
+        self.assertEqual(
+            worktime_calculation(obj), {
+                'past': True, 'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None
+            }
+        )
 
     def test_early_begin(self):
         obj = self.get_attendance()
         obj['begin_record'] = datetime.time(8, 0, 0)
         obj['end_record'] = datetime.time(17, 0, 0)
-        self.assertEqual(worktime_calculation(obj), {
-                         'past': True, 'work': True, 'behind': 0, 'early': 60, 'overtime': 0, 'error': None})
+        self.assertEqual(
+            worktime_calculation(obj), {
+                'past': True, 'work': True, 'behind': 0, 'early': 60, 'overtime': 0, 'error': None
+            }
+        )
 
     def test_later_end(self):
         obj = self.get_attendance()
         obj['begin_record'] = datetime.time(9, 0, 0)
         obj['end_record'] = datetime.time(18, 0, 0)
-        self.assertEqual(worktime_calculation(obj), {
-                         'past': True, 'work': True, 'behind': 0, 'early': 0, 'overtime': 60, 'error': None})
+        self.assertEqual(
+            worktime_calculation(obj), {
+                'past': True, 'work': True, 'behind': 0, 'early': 0, 'overtime': 60, 'error': None
+            }
+        )
 
     def test_arriving_late_in_break_time(self):
         obj1 = self.get_attendance()
@@ -111,8 +131,10 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj2 = self.get_attendance()
         obj2['begin_record'] = datetime.time(13, 0, 0)
         obj2['end_record'] = datetime.time(17, 0, 0)
-        self.assertEqual(worktime_calculation(
-            obj1), worktime_calculation(obj2))
+        self.assertEqual(
+            worktime_calculation(obj1),
+            worktime_calculation(obj2)
+        )
 
     def test_leaving_early_in_break_time(self):
         obj1 = self.get_attendance()
@@ -121,8 +143,10 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj2 = self.get_attendance()
         obj2['begin_record'] = datetime.time(9, 0, 0)
         obj2['end_record'] = datetime.time(13, 0, 0)
-        self.assertEqual(worktime_calculation(
-            obj1), worktime_calculation(obj2))
+        self.assertEqual(
+            worktime_calculation(obj1),
+            worktime_calculation(obj2)
+        )
 
     def test_arriving_late_in_break_time_at_no_breaktime_day(self):
         obj1 = self.get_attendance(False)

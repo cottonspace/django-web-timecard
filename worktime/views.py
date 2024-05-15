@@ -1,3 +1,6 @@
+"""
+ビュー定義です。
+"""
 import datetime
 
 from django.contrib import messages
@@ -11,13 +14,15 @@ from django.utils import dateformat
 from django.views.generic import FormView, TemplateView
 
 import timecard.settings
-
-from . import queries, rules, utils
-from .forms import (CustomAuthenticationForm, CustomPasswordChangeForm,
-                    TimeOffListForm, TimeOffRequestForm, TimeOffStatusForm,
-                    TimeRecordCalendarForm, TimeRecordForm,
-                    TimeRecordSummaryForm)
-from .models import TimeOffPattern, TimeOffRequest, TimeRecord
+from worktime.forms import (CustomAuthenticationForm, CustomPasswordChangeForm,
+                            TimeOffListForm, TimeOffRequestForm,
+                            TimeOffStatusForm, TimeRecordCalendarForm,
+                            TimeRecordForm, TimeRecordSummaryForm)
+from worktime.models import TimeOffPattern, TimeOffRequest, TimeRecord
+from worktime.queries import count_time_off_requests, get_monthly_records
+from worktime.rules import summarize
+from worktime.utils import (display_name, get_first_day_of_year, get_users,
+                            get_year_range)
 
 
 class StaffRequiredMixin(AccessMixin):
@@ -72,9 +77,10 @@ class TimeRecordView(LoginRequiredMixin, FormView):
         context["is_enable_check_location"] = timecard.settings.ENABLE_CHECK_LOCATION
         context["is_enable_record_sound"] = timecard.settings.ENABLE_RECORD_SOUND
         context["is_enable_record_vibrate"] = timecard.settings.ENABLE_RECORD_VIBRATE
-        context["display_name"] = utils.display_name(self.request.user)
+        context["display_name"] = display_name(self.request.user)
         context["recent"] = TimeRecord.objects.filter(
-            username=self.request.user.username).order_by("-date", "-time")[:10]
+            username=self.request.user.username
+        ).order_by("-date", "-time")[:10]
         context["actions"] = timecard.settings.RECORD_ACTIONS
         return context
 
@@ -105,7 +111,9 @@ class TimeRecordView(LoginRequiredMixin, FormView):
             ua=form.cleaned_data['ua'],
         )
         messages.success(
-            self.request, timecard.settings.RECORD_ACTIONS.get(action) + 'の打刻が完了しました')
+            self.request,
+            timecard.settings.RECORD_ACTIONS.get(action) + 'の打刻が完了しました'
+        )
         return super().form_valid(form)
 
 
@@ -121,13 +129,17 @@ class TimeOffListView(StaffRequiredMixin, FormView):
         """
         context = super().get_context_data(*args, **kwargs)
         records = TimeOffRequest.objects.filter(accepted=False).values(
-            'id', 'date', 'username', 'display_name', 'created_at').order_by('date')
+            'id',
+            'date',
+            'username',
+            'display_name',
+            'created_at'
+        ).order_by('date')
         entries = []
         for record in records:
-            year = utils.get_first_day_of_year(record['date']).year
-            year_range = utils.get_year_range(year)
-            counts = queries.count_time_off_requests(
-                record['username'], year_range)
+            year = get_first_day_of_year(record['date']).year
+            year_range = get_year_range(year)
+            counts = count_time_off_requests(record['username'], year_range)
             entries.append({
                 'id': record['id'],
                 'year': year,
@@ -138,7 +150,7 @@ class TimeOffListView(StaffRequiredMixin, FormView):
                 'count': counts.get(record['display_name'], 0)
             })
         context['entries'] = entries
-        context['users'] = utils.get_users(False)
+        context['users'] = get_users(False)
         return context
 
 
@@ -154,17 +166,21 @@ class TimeOffStatusView(StaffRequiredMixin, FormView):
         """
         context = super().get_context_data(*args, **kwargs)
         today = datetime.datetime.today()
-        first_day_of_year = utils.get_first_day_of_year(today)
+        first_day_of_year = get_first_day_of_year(today)
         context['year'] = int(self.request.GET.get(
-            'year', first_day_of_year.year))
+            'year', first_day_of_year.year
+        ))
         context['years'] = range(
-            first_day_of_year.year - 9, first_day_of_year.year + 1)
+            first_day_of_year.year - 9,
+            first_day_of_year.year + 1
+        )
         context['current_year'] = first_day_of_year.year
         context['entries'] = []
         display_names = []
-        for id, name in utils.get_users(True).items():
-            counts = queries.count_time_off_requests(
-                id, utils.get_year_range(context['year']))
+        for id, name in get_users(True).items():
+            counts = count_time_off_requests(
+                id, get_year_range(context['year'])
+            )
             for display_name in counts.keys():
                 if not display_name in display_names:
                     display_names.append(display_name)
@@ -172,7 +188,8 @@ class TimeOffStatusView(StaffRequiredMixin, FormView):
                 context['entries'].append({
                     'id': id,
                     'name': name,
-                    'counts': counts})
+                    'counts': counts
+                })
         context['display_names'] = sorted(display_names)
         return context
 
@@ -189,11 +206,13 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
         """
         context = super().get_context_data(*args, **kwargs)
         today = datetime.datetime.today()
-        first_day_of_year = utils.get_first_day_of_year(today)
+        first_day_of_year = get_first_day_of_year(today)
         context["entries"] = TimeOffRequest.objects.filter(username=self.request.user.username).filter(
-            Q(date__gte=first_day_of_year) | Q(accepted=False)).distinct().order_by("date")
-        context["counts"] = queries.count_time_off_requests(
-            self.request.user.username, utils.get_year_range(first_day_of_year.year))
+            Q(date__gte=first_day_of_year) | Q(accepted=False)
+        ).distinct().order_by("date")
+        context["counts"] = count_time_off_requests(
+            self.request.user.username, get_year_range(first_day_of_year.year)
+        )
         return context
 
     def form_valid(self, form):
@@ -206,7 +225,8 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
             form.add_error('request_date', '指定した日には既に申請が存在します')
             return self.form_invalid(form)
         pattern = TimeOffPattern.objects.get(
-            id=form.cleaned_data['pattern_id'])
+            id=form.cleaned_data['pattern_id']
+        )
         TimeOffRequest.objects.create(
             date=request_date,
             username=self.request.user.username,
@@ -218,8 +238,11 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
             back=pattern.back,
             accepted=False
         )
-        messages.success(self.request, dateformat.format(
-            request_date, 'Y/m/d (D)') + ' の ' + pattern.display_name + ' を申請しました')
+        messages.success(
+            self.request,
+            dateformat.format(request_date, 'Y/m/d (D)') +
+            ' の ' + pattern.display_name + ' を申請しました'
+        )
         return super().form_valid(form)
 
 
@@ -241,10 +264,11 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
         today = datetime.datetime.today()
         context['year'] = int(self.request.GET.get('year', today.year))
         context['month'] = int(self.request.GET.get('month', today.month))
-        context['entries'] = queries.get_monthly_records(
-            context['username'], context['year'], context['month'])
-        context['summary'] = rules.summarize(context['entries'])
-        context['users'] = utils.get_users(False)
+        context['entries'] = get_monthly_records(
+            context['username'], context['year'], context['month']
+        )
+        context['summary'] = summarize(context['entries'])
+        context['users'] = get_users(False)
         return context
 
     def get_initial(self):
@@ -252,7 +276,8 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
         """
         initial = super().get_initial()
         initial['username'] = self.request.GET.get(
-            'username', self.request.user.username)
+            'username', self.request.user.username
+        )
         return initial
 
     def form_valid(self, form):
@@ -278,14 +303,14 @@ class TimeRecordSummaryView(StaffRequiredMixin, FormView):
         context['year'] = int(self.request.GET.get('year', today.year))
         context['month'] = int(self.request.GET.get('month', today.month))
         context['entries'] = []
-        for id, name in utils.get_users(True).items():
-            records = queries.get_monthly_records(
-                id, context['year'], context['month'])
-            summary = rules.summarize(records)
+        for id, name in get_users(True).items():
+            records = get_monthly_records(
+                id, context['year'], context['month']
+            )
+            summary = summarize(records)
             context['entries'].append({
-                'id': id,
-                'name': name,
-                'summary': summary})
+                'id': id, 'name': name, 'summary': summary
+            })
         return context
 
     def form_valid(self, form):
@@ -316,9 +341,14 @@ def time_off_accept(request):
             else:
                 record.accepted = True
                 record.save()
-                users = utils.get_users(False)
-                messages.success(request, users.get(record.username, record.username) + ' の ' +
-                                 dateformat.format(record.date, 'Y/m/d (D)') + ' の ' + record.display_name + ' を承認しました')
+                users = get_users(False)
+                messages.success(
+                    request,
+                    users.get(record.username, record.username) + ' の ' +
+                    dateformat.format(
+                        record.date, 'Y/m/d (D)'
+                    ) + ' の ' + record.display_name + ' を承認しました'
+                )
         else:
             messages.error(request, '指定された申請は存在しないか既に取り消されています')
     else:
@@ -345,8 +375,11 @@ def time_off_cancel(request):
             messages.warning(request, '承認済の申請は取り消しできません')
         else:
             record.delete()
-            messages.success(request, dateformat.format(
-                record.date, 'Y/m/d (D)') + ' の ' + record.display_name + ' を取り消しました')
+            messages.success(
+                request,
+                dateformat.format(
+                    record.date, 'Y/m/d (D)'
+                ) + ' の ' + record.display_name + ' を取り消しました')
     else:
         messages.error(request, '指定された申請は存在しないか既に取り消されています')
     return redirect('worktime:time_off_request')
