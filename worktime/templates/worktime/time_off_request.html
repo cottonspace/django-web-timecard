@@ -1,6 +1,11 @@
 {% extends 'worktime/base.html' %}
 {% load custom_filter %}
+{% load static %}
 {% block title %}休暇申請 | {{ block.super }}{% endblock title %}
+{% block extra_head %}
+<link href="{% static 'worktime/sortable-table.css' %}" rel="stylesheet">
+<script src="{% static 'worktime/sortable-table.js' %}"></script>
+{% endblock %}
 {% block main %}
 <style>
     .form-control {
@@ -66,7 +71,7 @@
 </script>
 <div class="container mt-5 mb-3">
     <div class="table-responsive">
-        <table id="entries" class="table table-hover align-middle text-nowrap text-center">
+        <table id="entries" class="table table-hover align-middle text-nowrap text-center sortable">
             <thead>
                 <tr>
                     <th scope="col"><span class="inline-help" data-bs-title="未承認または今年度以降のすべての申請を表示します">対象日</span></th>
@@ -78,14 +83,14 @@
             <tbody class="table-group-divider">
                 {% for entry in entries %}
                 <tr>
-                    <th>{{ entry.date|date:"Y年n月j日(D)" }}</th>
+                    <th data-sort="{{ entry.date|date:"Ymd" }}">{{ entry.date|date:"Y年n月j日(D)" }}</th>
                     <td>{{ entry.display_name }}</td>
                     {% if entry.accepted %}
                     <td>承認済</td>
                     {% else %}
                     <td><button type="button" class="btn btn-secondary btn-sm" onclick="send_cancel('{{ entry.id }}')">取消</button></td>
                     {% endif %}
-                    <td>{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
+                    <td data-sort="{{ entry.created_at|date:"YmdHis" }}">{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

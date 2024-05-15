@@ -1,0 +1,11 @@
+th.sort-none::after {
+    content: "";
+}
+
+th.sort-asc::after {
+    content: "\02191";
+}
+
+th.sort-desc::after {
+    content: "\02193";
+}

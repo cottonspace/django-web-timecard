@@ -5,6 +5,8 @@
 {% block title %}{{ year }}年度 休暇集計 | {{ block.super }}{% endblock title %}
 {% block extra_head %}
 <link href="{% static 'worktime/print.css' %}" rel="stylesheet">
+<link href="{% static 'worktime/sortable-table.css' %}" rel="stylesheet">
+<script src="{% static 'worktime/sortable-table.js' %}"></script>
 {% endblock %}
 {% block main %}
 <div class="container text-center">
@@ -31,7 +33,7 @@
 </div>
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center">
+        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center sortable">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">氏名</th>
@@ -47,7 +49,7 @@
                     <th>{{ entry.name }}</th>
                     {% for display_name in display_names %}
                     {% with entry.counts|dict_value:display_name as count %}
-                    <td>{% if count %}{{ count }} 回{% endif %}</td>
+                    <td data-sort="{{ count }}">{% if count %}{{ count }} 回{% endif %}</td>
                     {% endwith %}
                     {% endfor %}
                 </tr>

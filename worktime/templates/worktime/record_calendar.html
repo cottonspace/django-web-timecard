@@ -12,6 +12,8 @@
         stroke: green;
     }
 </style>
+<link href="{% static 'worktime/sortable-table.css' %}" rel="stylesheet">
+<script src="{% static 'worktime/sortable-table.js' %}"></script>
 {% endblock %}
 {% block main %}
 <div class="container text-center">
@@ -89,7 +91,7 @@
 </div>
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center">
+        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center sortable">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">日付</th>
@@ -113,23 +115,23 @@
                     {% else %}
                 <tr>
                     {% endif %}
-                    <th>{{ entry.date|date:"j (D)" }}</th>
+                    <th data-sort="{{ entry.date|date:"j" }}">{{ entry.date|date:"j (D)" }}</th>
                     <td>{{ entry.holiday }}</td>
                     {% if entry.past %}
                     {% if entry.work %}
-                    <td>
+                    <td data-sort="1">
                         <svg class="check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="20 6 9 17 4 12"></polyline>
                         </svg>
                     </td>
                     {% else %}
-                    <td></td>
+                    <td data-sort="0"></td>
                     {% endif %}
                     {% else %}
                     <td></td>
                     {% endif %}
-                    <td>{{ entry.begin_record|default:"" }}</td>
-                    <td>{{ entry.end_record|default:"" }}</td>
+                    <td data-sort="{{ entry.begin_record|date:"Hi" }}">{{ entry.begin_record|default:"" }}</td>
+                    <td data-sort="{{ entry.end_record|date:"Hi" }}">{{ entry.end_record|default:"" }}</td>
                     <td>{{ entry.behind|default:"" }}</td>
                     <td>{{ entry.early|default:"" }}</td>
                     <td>{{ entry.overtime|default:"" }}</td>

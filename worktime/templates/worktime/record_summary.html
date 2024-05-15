@@ -5,6 +5,8 @@
 {% block title %}{{ year }}年{{ month }}月 | {{ block.super }}{% endblock title %}
 {% block extra_head %}
 <link href="{% static 'worktime/print.css' %}" rel="stylesheet">
+<link href="{% static 'worktime/sortable-table.css' %}" rel="stylesheet">
+<script src="{% static 'worktime/sortable-table.js' %}"></script>
 {% endblock %}
 {% block main %}
 <div class="container text-center">
@@ -33,7 +35,7 @@
 </div>
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center">
+        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center sortable">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">氏名</th>
@@ -49,12 +51,12 @@
                 {% for entry in entries %}
                 <tr>
                     <th><a href="{% url 'worktime:record_calendar' %}?username={{ entry.id }}&year={{ year }}&month={{ month }}">{{ entry.name }}</a></th>
-                    <td>{% if entry.summary.errors %}{{ entry.summary.errors }} 個{% endif %}</td>
-                    <td>{% if entry.summary.work_days %}{{ entry.summary.work_days }} 日{% endif %}</td>
-                    <td>{% if 0 < entry.summary.time_off_count %}{{ entry.summary.time_off_count }} 回{% if 0 < entry.summary.time_off_not_yet_accepted_count %} (承認待ち){% endif %}{% endif %}</td>
-                    <td>{% if entry.summary.behind_minutes %}{{ entry.summary.behind_count }} 回 ({{ entry.summary.behind_minutes|intcomma }} 分){% endif %}</td>
-                    <td>{% if entry.summary.early_hours %}{{ entry.summary.early_hours }} 時間 ({{ entry.summary.early_minutes|intcomma }} 分){% endif %}</td>
-                    <td>{% if entry.summary.overtime_hours %}{{ entry.summary.overtime_hours }} 時間 ({{ entry.summary.overtime_minutes|intcomma }} 分){% endif %}</td>
+                    <td data-sort="{{ entry.summary.errors }}">{% if entry.summary.errors %}{{ entry.summary.errors }} 個{% endif %}</td>
+                    <td data-sort="{{ entry.summary.work_days }}">{% if entry.summary.work_days %}{{ entry.summary.work_days }} 日{% endif %}</td>
+                    <td data-sort="{{ entry.summary.time_off_count }}">{% if 0 < entry.summary.time_off_count %}{{ entry.summary.time_off_count }} 回{% if 0 < entry.summary.time_off_not_yet_accepted_count %} (承認待ち){% endif %}{% endif %}</td>
+                    <td data-sort="{{ entry.summary.behind_count }}">{% if entry.summary.behind_minutes %}{{ entry.summary.behind_count }} 回 ({{ entry.summary.behind_minutes|intcomma }} 分){% endif %}</td>
+                    <td data-sort="{{ entry.summary.early_minutes }}">{% if entry.summary.early_hours %}{{ entry.summary.early_hours }} 時間 ({{ entry.summary.early_minutes|intcomma }} 分){% endif %}</td>
+                    <td data-sort="{{ entry.summary.overtime_minutes }}">{% if entry.summary.overtime_hours %}{{ entry.summary.overtime_hours }} 時間 ({{ entry.summary.overtime_minutes|intcomma }} 分){% endif %}</td>
                 </tr>
                 {% endfor %}
             </tbody>
