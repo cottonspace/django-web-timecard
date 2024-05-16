@@ -55,4 +55,11 @@
     a {
         color: black !important;
     }
+
+    .table th.sort-asc::after,
+    .table th.sort-desc::after,
+    .table th.sort-none::after {
+        display: inline !important;
+        width: auto !important;
+    }
 }
