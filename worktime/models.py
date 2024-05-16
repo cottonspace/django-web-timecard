@@ -251,6 +251,7 @@ class TimeOffRequest(models.Model):
     end = models.TimeField('勤務終了', blank=True, null=True)
     leave = models.TimeField('休憩開始', blank=True, null=True)
     back = models.TimeField('休憩終了', blank=True, null=True)
+    contact = models.TextField('連絡欄', max_length=2000, blank=True, null=True)
     accepted = models.BooleanField('承認', default=False)
     created_at = models.DateTimeField('作成日時', auto_now_add=True)
     updated_at = models.DateTimeField('更新日時', auto_now=True)

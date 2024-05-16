@@ -47,6 +47,22 @@ def get_users(active: bool) -> dict:
     return results
 
 
+def truncate_text(text: str, length: int, ellipsis: str) -> str:
+    """指定した長さより長い文字列を省略します。
+
+    Args:
+        text (str): 元の文字列
+        length (int): 制限する長さ
+        ellipsis (str): 省略記号
+
+    Returns:
+        str: 処理結果の文字列
+    """
+    if text is None:
+        return None
+    return text[:length] + (ellipsis if text[length:] else '')
+
+
 def get_first_day_of_year(day: datetime.date) -> datetime.date:
     """指定した日を含む年度の最初の日を取得します。
 

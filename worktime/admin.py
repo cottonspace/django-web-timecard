@@ -8,6 +8,7 @@ from django.utils import dateformat
 import timecard.settings
 from worktime.models import (BusinessCalendar, StandardWorkPattern,
                              TimeOffPattern, TimeOffRequest, TimeRecord)
+from worktime.utils import truncate_text
 
 # Admin 画面のタイトル
 AdminSite.site_header = 'Web タイムカード管理'
@@ -240,13 +241,26 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         """
         return obj.display_username()
 
+    def display_contact(self, obj):
+        """連絡欄を取得します。
+
+        Args:
+            obj: 休暇申請のオブジェクト
+
+        Returns:
+            str: 長さを切り詰めた連絡欄の文字列
+        """
+        return truncate_text(obj.contact, 20, ' ...')
+
     # 設定
     display_username.short_description = '氏名'
+    display_contact.short_description = '連絡欄'
     readonly_fields = [
         'username',
         'display_username',
         'date',
         'display_name',
+        'contact',
         'attendance',
         'begin',
         'end',
@@ -259,6 +273,7 @@ class TimeOffRequestAdmin(admin.ModelAdmin):
         'display_username',
         'display_name',
         'accepted',
+        'display_contact',
         'created_at'
     ]
     ordering = ['date', 'username']

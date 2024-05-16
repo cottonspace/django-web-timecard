@@ -84,6 +84,9 @@ class TimeOffRequestForm(forms.Form):
     pattern_id = forms.fields.ChoiceField(
         label='種別', required=True, widget=forms.widgets.Select
     )
+    contact = forms.CharField(
+        label='連絡欄', widget=forms.Textarea(attrs={'rows': '2'}), required=False
+    )
 
     def __init__(self, *args, **kwargs):
         """初期化

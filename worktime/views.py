@@ -133,7 +133,8 @@ class TimeOffListView(StaffRequiredMixin, FormView):
             'date',
             'username',
             'display_name',
-            'created_at'
+            'created_at',
+            'contact'
         ).order_by('date')
         entries = []
         for record in records:
@@ -147,7 +148,8 @@ class TimeOffListView(StaffRequiredMixin, FormView):
                 'username': record['username'],
                 'display_name': record['display_name'],
                 'created_at': record['created_at'],
-                'count': counts.get(record['display_name'], 0)
+                'count': counts.get(record['display_name'], 0),
+                'contact': record['contact']
             })
         context['entries'] = entries
         context['users'] = get_users(False)
@@ -231,6 +233,7 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
             date=request_date,
             username=self.request.user.username,
             display_name=pattern.display_name,
+            contact=form.cleaned_data['contact'],
             attendance=pattern.attendance,
             begin=pattern.begin,
             end=pattern.end,

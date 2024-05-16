@@ -40,6 +40,7 @@
                     <th scope="col">申請日時</th>
                     <th scope="col">申請回数</th>
                     <th scope="col">承認</th>
+                    <th scope="col">連絡欄</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -53,6 +54,7 @@
                     <td data-sort="{{ entry.created_at|date:"YmdHis" }}">{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
                     <td data-sort="{{ entry.count }}">{{ entry.count }} 回</td>
                     <td><button type="button" class="btn btn-success btn-sm" onclick="send_accept('{{ entry.id }}')">承認</button></td>
+                    <td>{{ entry.contact|default:""|truncatechars:20 }}</td>
                 </tr>
                 {% endfor %}
                 {% else %}
