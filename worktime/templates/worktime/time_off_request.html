@@ -84,15 +84,15 @@
             <tbody class="table-group-divider">
                 {% for entry in entries %}
                 <tr>
-                    <th data-sort="{{ entry.date|date:"Ymd" }}">{{ entry.date|date:"Y年n月j日(D)" }}</th>
+                    <th data-sort="{{ entry.date|date:'Ymd' }}">{{ entry.date|date:'Y年n月j日(D)' }}</th>
                     <td>{{ entry.display_name }}</td>
                     {% if entry.accepted %}
                     <td>承認済</td>
                     {% else %}
                     <td><button type="button" class="btn btn-secondary btn-sm" onclick="send_cancel('{{ entry.id }}')">取消</button></td>
                     {% endif %}
-                    <td data-sort="{{ entry.created_at|date:"YmdHis" }}">{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
-                    <td>{{ entry.contact|default:""|truncatechars:20 }}</td>
+                    <td data-sort="{{ entry.created_at|date:'YmdHis' }}">{{ entry.created_at|date:'Y年n月j日(D) H:i' }}</td>
+                    <td style="white-space:normal; text-align:left;">{{ entry.contact|default:""|linebreaksbr }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

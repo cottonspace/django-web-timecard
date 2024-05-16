@@ -48,13 +48,13 @@
                 {% for entry in entries %}
                 <tr>
                     <td>{{ entry.year }}</td>
-                    <td data-sort="{{ entry.date|date:"Ymd" }}">{{ entry.date|date:"Y年n月j日(D)" }}</td>
+                    <td data-sort="{{ entry.date|date:'Ymd' }}">{{ entry.date|date:'Y年n月j日(D)' }}</td>
                     <td>{{ users|dict_value:entry.username|default:entry.username }}</td>
                     <td>{{ entry.display_name }}</td>
-                    <td data-sort="{{ entry.created_at|date:"YmdHis" }}">{{ entry.created_at|date:"Y年n月j日(D) H:i" }}</td>
+                    <td data-sort="{{ entry.created_at|date:'YmdHis' }}">{{ entry.created_at|date:'Y年n月j日(D) H:i' }}</td>
                     <td data-sort="{{ entry.count }}">{{ entry.count }} 回</td>
                     <td><button type="button" class="btn btn-success btn-sm" onclick="send_accept('{{ entry.id }}')">承認</button></td>
-                    <td>{{ entry.contact|default:""|truncatechars:20 }}</td>
+                    <td style="white-space:normal; text-align:left;">{{ entry.contact|default:""|linebreaksbr }}</td>
                 </tr>
                 {% endfor %}
                 {% else %}

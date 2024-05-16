@@ -81,8 +81,8 @@
                 <tbody>
                     {% for history in recent %}
                     <tr class="action-{{ history.action }}">
-                        <td>{{ history.date|date:"n月j日(D)" }}</td>
-                        <td>{{ history.time|date:"H:i" }}</td>
+                        <td>{{ history.date|date:'n月j日(D)' }}</td>
+                        <td>{{ history.time|date:'H:i' }}</td>
                         <td>{{ actions|dict_value:history.action }}</td>
                         <td><span class="readable-time" data-text="{{ history.date|date:'Y-m-d' }} {{ history.time|date:'H:i:s' }}"></span></td>
                     </tr>

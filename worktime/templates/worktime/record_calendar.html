@@ -115,7 +115,7 @@
                     {% else %}
                 <tr>
                     {% endif %}
-                    <th data-sort="{{ entry.date|date:"j" }}">{{ entry.date|date:"j (D)" }}</th>
+                    <th data-sort="{{ entry.date|date:'j' }}">{{ entry.date|date:'j (D)' }}</th>
                     <td>{{ entry.holiday }}</td>
                     {% if entry.past %}
                     {% if entry.work %}
@@ -130,8 +130,8 @@
                     {% else %}
                     <td></td>
                     {% endif %}
-                    <td data-sort="{{ entry.begin_record|date:"Hi" }}">{{ entry.begin_record|default:"" }}</td>
-                    <td data-sort="{{ entry.end_record|date:"Hi" }}">{{ entry.end_record|default:"" }}</td>
+                    <td data-sort="{{ entry.begin_record|date:'Hi' }}">{{ entry.begin_record|default:"" }}</td>
+                    <td data-sort="{{ entry.end_record|date:'Hi' }}">{{ entry.end_record|default:"" }}</td>
                     <td>{{ entry.behind|default:"" }}</td>
                     <td>{{ entry.early|default:"" }}</td>
                     <td>{{ entry.overtime|default:"" }}</td>
