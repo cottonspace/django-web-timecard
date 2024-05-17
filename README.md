@@ -4,6 +4,7 @@
 ![logo](static/worktime/logo.svg)
 
 **T**ime **REC**ord **S**ystem
+
 Web based simple Time Card system written by django. Currently this application only supports Japanese and Japan holidays.
 
 ## Features
