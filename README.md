@@ -1,7 +1,7 @@
 [English](README.md) | [日本語](README-ja.md)
 
 # T-RECS
-Time RECord System
+**T**ime **REC**ord **S**ystem
 
 ![logo](static/worktime/logo.svg)
 
