@@ -3,3 +3,6 @@ geopy
 ics
 pytz
 requests
+# mysqlclient
+# psycopg2
+# psycopg2-binary
