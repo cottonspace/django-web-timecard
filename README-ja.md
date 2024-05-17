@@ -45,19 +45,23 @@ Django で記述された Web ベースのシンプルな勤怠管理（タイ�
 - コピーして作成した local_settings.py の % から % の部分を、ご自身の環境にあわせて設定します。
 - [T-RECS 簡易設定ツール](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html) を利用すると簡単に local_settings.py ファイルを作成できます。
 
-### アプリケーションの初期化
-- MySQL を使用する場合は django-web-timecard ディレクトリの requirements.txt ファイルで以下の行の先頭の `# ` を削除します。
-```
-# mysqlclient
-```
-- PostgreSQL を使用する場合は django-web-timecard ディレクトリの requirements.txt ファイルで以下の行の先頭の `# ` を削除します。
-```
-# psycopg2
-# psycopg2-binary
-```
-- django-web-timecard ディレクトリで以下のコマンドを実行し、データベースを準備します。
+### ライブラリのインストール
+- 以下のコマンドを実行し、必要なライブラリをインストールします。
 ```
 pip install -r requirements.txt
+```
+- MySQL を使用する場合は、追加で以下のコマンドを実行します。
+```
+pip install mysqlclient
+```
+- PostgreSQL を使用する場合は、追加で以下のコマンドを実行します。
+```
+pip install psycopg2-binary
+```
+
+### アプリケーションの初期化
+- django-web-timecard ディレクトリで以下のコマンドを実行し、データベースを準備します。
+```
 python manage.py migrate
 ```
 - 以下のコマンドでスーパーユーザを作成します。

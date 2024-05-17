@@ -45,19 +45,23 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 - Edit the part from % to % of the local_settings.py according to your environment.
 - You can easily create a local_settings.py file using the [T-RECS easy config tool](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html).
 
-### Initialize
-- If you use MySQL, delete `# ` from below lines of requirements.txt in django-web-timecard directory.
-```
-# mysqlclient
-```
-- If you use PostgreSQL, delete `# ` from below lines of requirements.txt in django-web-timecard directory.
-```
-# psycopg2
-# psycopg2-binary
-```
-- Run the following command in the django-web-timecard directory to prepare the database.
+### Install dependency libraries
+- Run the following command for install requirements libraries.
 ```
 pip install -r requirements.txt
+```
+- If you use MySQL, run following command also.
+```
+pip install mysqlclient
+```
+- If you use PostgreSQL, run following command also.
+```
+pip install psycopg2-binary
+```
+
+### Initialize application
+- Run the following command in the django-web-timecard directory to prepare the database.
+```
 python manage.py migrate
 ```
 - Create a superuser with the following command.
