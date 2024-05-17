@@ -11,8 +11,8 @@ from worktime.models import (BusinessCalendar, StandardWorkPattern,
 from worktime.utils import truncate_text
 
 # Admin 画面のタイトル
-AdminSite.site_header = 'Web タイムカード管理'
-AdminSite.site_title = 'Web タイムカード管理'
+AdminSite.site_header = 'システム管理'
+AdminSite.site_title = 'システム管理'
 AdminSite.index_title = '管理'
 
 

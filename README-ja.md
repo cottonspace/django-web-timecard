@@ -1,6 +1,6 @@
 [English](README.md) | [日本語](README-ja.md)
 
-# Web 勤怠管理
+# T-RECS (Time RECord System)
 
 ![logo](static/worktime/logo.svg)
 
