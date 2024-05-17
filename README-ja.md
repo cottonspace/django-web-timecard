@@ -3,7 +3,7 @@
 # T-RECS
 ![logo](static/worktime/logo.svg)
 
-**T**ime **REC**ord **S**ystem
+**T-RECS**: **T**ime **REC**ord **S**ystem
 
 Django で記述された Web ベースのシンプルな勤怠管理（タイムカード）システムです。現在は日本語と日本の祝日にのみ対応しています。
 
