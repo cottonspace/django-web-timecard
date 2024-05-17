@@ -1,6 +1,7 @@
 [English](README.md) | [日本語](README-ja.md)
 
-# T-RECS (Time RECord System)
+# T-RECS
+Time RECord System
 
 ![logo](static/worktime/logo.svg)
 
