@@ -41,7 +41,7 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 ## Installation
 
 ### Download and edit settings
-- Clone or download the application source code.
+- Clone or download the application source code from [repository](https://github.com/cottonspace/time-record-system).
 - Copy local_settings_template.txt to the same directory as local_settings.py.
 - Edit the part from % to % of the local_settings.py according to your environment.
 - You can easily create a local_settings.py file using the [T-RECS easy config tool](https://cottonspace.github.io/tools/time-record-system-local-settings.html).
