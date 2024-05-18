@@ -41,7 +41,7 @@ Django で記述された Web ベースのシンプルな勤怠管理（タイ�
 ## インストール方法
 
 ### ダウンロードと設定の変更
-- アプリケーションのソースコードを Clone またはダウンロードします。
+- [リポジトリ](https://github.com/cottonspace/time-record-system) からアプリケーションのソースコードを Clone またはダウンロードします。
 - local_settings_template.txt を、同じディレクトリに local_settings.py の名前でコピーします。
 - コピーして作成した local_settings.py の % から % の部分を、ご自身の環境にあわせて設定します。
 - [T-RECS 簡易設定ツール](https://cottonspace.github.io/tools/time-record-system-local-settings.html) を利用すると簡単に local_settings.py ファイルを作成できます。
