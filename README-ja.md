@@ -42,9 +42,9 @@ Django で記述された Web ベースのシンプルな勤怠管理（タイ�
 
 ### ダウンロードと設定の変更
 - アプリケーションのソースコードを Clone またはダウンロードします。
-- django-web-timecard/timecard ディレクトリにある local_settings_template.txt を、同じディレクトリに local_settings.py の名前でコピーします。
+- local_settings_template.txt を、同じディレクトリに local_settings.py の名前でコピーします。
 - コピーして作成した local_settings.py の % から % の部分を、ご自身の環境にあわせて設定します。
-- [T-RECS 簡易設定ツール](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html) を利用すると簡単に local_settings.py ファイルを作成できます。
+- [T-RECS 簡易設定ツール](https://cottonspace.github.io/tools/time-record-system-local-settings.html) を利用すると簡単に local_settings.py ファイルを作成できます。
 
 ### ライブラリのインストール
 - 以下のコマンドを実行し、必要なライブラリをインストールします。
@@ -61,7 +61,7 @@ pip install psycopg2-binary
 ```
 
 ### アプリケーションの初期化
-- django-web-timecard ディレクトリで以下のコマンドを実行し、データベースを準備します。
+- 以下のコマンドを実行し、データベースを準備します。
 ```
 python manage.py migrate
 ```

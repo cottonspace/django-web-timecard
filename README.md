@@ -42,9 +42,9 @@ User can clock in and clock out from a smartphone or PC. Manager check users tim
 
 ### Download and edit settings
 - Clone or download the application source code.
-- Copy local_settings_template.txt located in the django-web-timecard/timecard directory to the same directory as local_settings.py.
+- Copy local_settings_template.txt to the same directory as local_settings.py.
 - Edit the part from % to % of the local_settings.py according to your environment.
-- You can easily create a local_settings.py file using the [T-RECS easy config tool](https://cottonspace.github.io/tools/django-web-timecard-local-settings.html).
+- You can easily create a local_settings.py file using the [T-RECS easy config tool](https://cottonspace.github.io/tools/time-record-system-local-settings.html).
 
 ### Install dependency libraries
 - Run the following command for install requirements libraries.
@@ -61,7 +61,7 @@ pip install psycopg2-binary
 ```
 
 ### Initialize application
-- Run the following command in the django-web-timecard directory to prepare the database.
+- Run the following command to prepare the database.
 ```
 python manage.py migrate
 ```
