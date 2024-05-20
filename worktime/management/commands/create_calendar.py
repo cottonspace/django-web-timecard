@@ -62,6 +62,9 @@ class Command(BaseCommand):
             month (int): 月
         """
 
+        # 初期化
+        objects = []
+
         # 月内のすべての日をループ
         for day in range(1, calendar.monthrange(year, month)[1] + 1):
 
@@ -81,18 +84,21 @@ class Command(BaseCommand):
                     holiday = '定休日'
 
             # 営業日レコードを生成
-            BusinessCalendar.objects.create(
-                date=date,
-                holiday=holiday,
-                attendance=pattern.attendance,
-                begin=pattern.begin,
-                end=pattern.end,
-                leave=pattern.leave,
-                back=pattern.back
+            objects.append(
+                BusinessCalendar(
+                    date=date,
+                    holiday=holiday,
+                    attendance=pattern.attendance,
+                    begin=pattern.begin,
+                    end=pattern.end,
+                    leave=pattern.leave,
+                    back=pattern.back
+                )
             )
-            self.stdout.write(self.style.SUCCESS(
-                date.strftime('%Y-%m-%d created.')
-            ))
+            self.stdout.write(self.style.SUCCESS(date.strftime('%Y-%m-%d')))
+
+        # 一括作成
+        BusinessCalendar.objects.bulk_create(objects)
 
     def handle(self, *args, **options):
         """カスタムコマンドの処理を実行します。
