@@ -97,7 +97,7 @@
         let now = new Date();
         document.getElementById("clock-date").textContent = String(now.getMonth() + 1) + '/' + String(now.getDate()) + '(' + ['日', '月', '火', '水', '木', '金', '土'][now.getDay()] + ')'
         document.getElementById("clock-time").textContent = String(now.getHours()).padStart(2, "0") + ':' + String(now.getMinutes()).padStart(2, "0");
-        document.getElementById("clock-seconds").style.width = Math.ceil(now.getSeconds() / 60 * 100) + '%';
+        document.getElementById("clock-seconds").style.width = Math.round(now.getSeconds() / 60 * 100 * 10) / 10 + '%';
         setTimeout(show_clock, 1000);
     }
     function readable_time(dt1, dt2) {
