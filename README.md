@@ -102,6 +102,14 @@ python manage.py delete_calendar year month
 - The missing month's business day calendar will be recreated by running `create_calendar`.
 - Business day calendars are managed on a monthly basis, so it is not possible to delete only specific days within a month.
 
+### Batch registration users
+- User registration can be from the system administration screen one by one, but many users can be registered at batch using `create_users`.
+```
+python manage.py create_users file
+```
+- Input csvfile must be saved in UTF-8 (without bom).
+- The order of columns is id, password, last name, first name.
+
 ### Disabling a user
 - If you want to disable a user due to retirement, etc., we recommend unchecking the user's "enabled" checkbox on the administrator screen. If you delete it, you will no longer be able to view that user's past attendance history.
 - Users whose "Enabled" checkbox is unchecked will be displayed with a "*" symbol after their "Name" when displayed in a list.
