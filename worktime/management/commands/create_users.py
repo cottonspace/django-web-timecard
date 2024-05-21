@@ -28,7 +28,7 @@ class Command(BaseCommand):
         """
 
         # ユーザレコードを生成
-        f = open(options['file'], 'r', encoding='utf-8')
+        f = open(options['file'], 'r', encoding='utf_8_sig')
         reader = csv.reader(f)
         for columns in reader:
             try:

@@ -107,7 +107,7 @@ python manage.py delete_calendar 年 月
 ```
 python manage.py create_users ファイル
 ```
-- ファイルは CSV 形式で UTF-8 (BOM なし)で作成してください。
+- ファイルは CSV 形式で UTF-8 で作成してください。
 - 項目の並びは ID,パスワード,姓,名 の順です。
 
 ### ユーザの無効化

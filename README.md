@@ -107,7 +107,7 @@ python manage.py delete_calendar year month
 ```
 python manage.py create_users file
 ```
-- Input csvfile must be saved in UTF-8 (without bom).
+- Input csvfile must be saved in UTF-8.
 - The order of columns is id, password, last name, first name.
 
 ### Disabling a user
