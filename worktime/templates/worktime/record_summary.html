@@ -157,15 +157,28 @@
             tbody.removeChild(tbody.firstChild);
         }
         for (let entry of entries) {
-            let row = tbody.insertRow();
             let summary = entry['summary']
-            row.insertCell(0).innerHTML = "<a href=\"{% url 'worktime:record_calendar' %}?username=" + entry.id + "&year=" + year + "&month=" + month + "\">" + entry.name + "</a>";
-            row.insertCell(1).innerHTML = 0 < summary.errors ? summary.errors + ' 個' : '';
-            row.insertCell(2).innerHTML = 0 < summary.work_days ? summary.work_days + ' 日' : '';
-            row.insertCell(3).innerHTML = 0 < summary.time_off_count ? summary.time_off_count + ' 回' + (0 < summary.time_off_not_yet_accepted_count ? ' (承認待ち)' : '') : '';
-            row.insertCell(4).innerHTML = 0 < summary.behind_count ? summary.behind_count + ' 回 (' + summary.behind_minutes.toLocaleString() + ' 分)' : '';
-            row.insertCell(5).innerHTML = 0 < summary.early_hours ? summary.early_hours + ' 時間 (' + summary.early_minutes.toLocaleString() + ' 分)' : '';
-            row.insertCell(6).innerHTML = 0 < summary.overtime_hours ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
+            let row = tbody.insertRow();
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            const cell3 = row.insertCell(2);
+            const cell4 = row.insertCell(3);
+            const cell5 = row.insertCell(4);
+            const cell6 = row.insertCell(5);
+            const cell7 = row.insertCell(6);
+            cell1.innerHTML = "<a href=\"{% url 'worktime:record_calendar' %}?username=" + entry.id + "&year=" + year + "&month=" + month + "\">" + entry.name + "</a>";
+            cell2.innerHTML = 0 < summary.errors ? summary.errors + ' 個' : '';
+            cell2.setAttribute("data-sort", summary.errors)
+            cell3.innerHTML = 0 < summary.work_days ? summary.work_days + ' 日' : '';
+            cell3.setAttribute("data-sort", summary.work_days)
+            cell4.innerHTML = 0 < summary.time_off_count ? summary.time_off_count + ' 回' + (0 < summary.time_off_not_yet_accepted_count ? ' (承認待ち)' : '') : '';
+            cell4.setAttribute("data-sort", summary.time_off_count)
+            cell5.innerHTML = 0 < summary.behind_count ? summary.behind_count + ' 回 (' + summary.behind_minutes.toLocaleString() + ' 分)' : '';
+            cell5.setAttribute("data-sort", summary.behind_count)
+            cell6.innerHTML = 0 < summary.early_hours ? summary.early_hours + ' 時間 (' + summary.early_minutes.toLocaleString() + ' 分)' : '';
+            cell6.setAttribute("data-sort", summary.early_minutes)
+            cell7.innerHTML = 0 < summary.overtime_hours ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
+            cell7.setAttribute("data-sort", summary.overtime_minutes)
         }
     }
     window.addEventListener('load', async_load_entries);

@@ -324,7 +324,7 @@ def staff_required(func):
     @wraps(func)
     def wrapped_func(request, *args, **kwargs):
         if not request.user.is_staff:
-            return HttpResponseForbidden('指定された操作はスタッフ権限が必要です')
+            return HttpResponseForbidden('Forbidden')
         return func(request, *args, **kwargs)
     return wrapped_func
 
