@@ -7,6 +7,7 @@ from worktime.views import (PasswordChange, ReadmeView, TimeOffListView,
                             TimeOffRequestView, TimeOffStatusView,
                             TimeRecordCalendarView, TimeRecordSummaryView,
                             TimeRecordView, UserLogin, UserLogout,
+                            api_record_summary, api_users_list,
                             time_off_accept, time_off_cancel)
 
 # アプリケーション名
@@ -29,4 +30,6 @@ urlpatterns = [
          ),
     path('record/summary/', TimeRecordSummaryView.as_view(), name='record_summary'),
     path('readme/', ReadmeView.as_view(), name='readme'),
+    path('api/users/list/', api_users_list, name='api_users_list'),
+    path('api/record/summary/', api_record_summary, name='api_record_summary'),
 ]

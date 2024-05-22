@@ -35,19 +35,13 @@ class TestNotLoggedInView(TestCase):
             '/worktime/login/?next=/worktime/time_off/list/'
         )
 
-    def test_not_logged_in_time_off_accept_redirect(self):
+    def test_not_logged_in_time_off_accept_status_code(self):
         response = self.client.get('/worktime/time_off/accept/')
-        self.assertRedirects(
-            response,
-            '/worktime/login/?next=/worktime/time_off/accept/'
-        )
+        self.assertEqual(response.status_code, 403)
 
-    def test_not_logged_in_time_off_cancel_redirect(self):
+    def test_not_logged_in_time_off_cancel_status_code(self):
         response = self.client.get('/worktime/time_off/cancel/')
-        self.assertRedirects(
-            response,
-            '/worktime/login/?next=/worktime/time_off/cancel/'
-        )
+        self.assertEqual(response.status_code, 403)
 
     def test_not_logged_in_record_redirect(self):
         response = self.client.get('/worktime/record/')
@@ -73,6 +67,14 @@ class TestNotLoggedInView(TestCase):
     def test_not_logged_in_readme_status_code(self):
         response = self.client.get('/worktime/readme/')
         self.assertEqual(response.status_code, 200)
+
+    def test_not_logged_in_api_users_list_status_code(self):
+        response = self.client.get('/worktime/api/users/list/')
+        self.assertEqual(response.status_code, 403)
+
+    def test_not_logged_in_api_record_summary_status_code(self):
+        response = self.client.get('/worktime/api/record/summary/')
+        self.assertEqual(response.status_code, 403)
 
 
 class TestUserLoggedInView(TestCase):
@@ -102,21 +104,13 @@ class TestUserLoggedInView(TestCase):
         response = self.client.get('/worktime/time_off/list/')
         self.assertEqual(response.status_code, 403)
 
-    def test_user_time_off_accept_redirect(self):
+    def test_user_time_off_accept_status_code(self):
         response = self.client.get('/worktime/time_off/accept/')
-        self.assertRedirects(
-            response,
-            '/worktime/time_off/list/',
-            fetch_redirect_response=False
-        )
+        self.assertEqual(response.status_code, 403)
 
-    def test_user_time_off_cancel_redirect(self):
+    def test_user_time_off_cancel_redirect_status_code(self):
         response = self.client.get('/worktime/time_off/cancel/')
-        self.assertRedirects(
-            response,
-            '/worktime/time_off/request/',
-            fetch_redirect_response=False
-        )
+        self.assertEqual(response.status_code, 403)
 
     def test_user_record_status_code(self):
         response = self.client.get('/worktime/record/')
@@ -133,6 +127,14 @@ class TestUserLoggedInView(TestCase):
     def test_user_readme_status_code(self):
         response = self.client.get('/worktime/readme/')
         self.assertEqual(response.status_code, 200)
+
+    def test_user_api_users_list_status_code(self):
+        response = self.client.get('/worktime/api/users/list/')
+        self.assertEqual(response.status_code, 403)
+
+    def test_user_api_record_summary_status_code(self):
+        response = self.client.get('/worktime/api/record/summary/')
+        self.assertEqual(response.status_code, 403)
 
 
 class TestStaffLoggedInView(TestCase):
@@ -164,21 +166,13 @@ class TestStaffLoggedInView(TestCase):
         response = self.client.get('/worktime/time_off/list/')
         self.assertEqual(response.status_code, 200)
 
-    def test_staff_time_off_accept_redirect(self):
+    def test_staff_time_off_accept_status_code(self):
         response = self.client.get('/worktime/time_off/accept/')
-        self.assertRedirects(
-            response,
-            '/worktime/time_off/list/',
-            fetch_redirect_response=False
-        )
+        self.assertEqual(response.status_code, 302)
 
-    def test_staff_time_off_cancel_redirect(self):
+    def test_staff_time_off_cancel_status_code(self):
         response = self.client.get('/worktime/time_off/cancel/')
-        self.assertRedirects(
-            response,
-            '/worktime/time_off/request/',
-            fetch_redirect_response=False
-        )
+        self.assertEqual(response.status_code, 302)
 
     def test_staff_record_status_code(self):
         response = self.client.get('/worktime/record/')
@@ -194,6 +188,14 @@ class TestStaffLoggedInView(TestCase):
 
     def test_staff_readme_status_code(self):
         response = self.client.get('/worktime/readme/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_staff_api_users_list_status_code(self):
+        response = self.client.get('/worktime/api/users/list/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_staff_api_record_summary_status_code(self):
+        response = self.client.get('/worktime/api/record/summary/')
         self.assertEqual(response.status_code, 200)
 
 
@@ -227,21 +229,13 @@ class TestStaffAndSuperUserLoggedInView(TestCase):
         response = self.client.get('/worktime/time_off/list/')
         self.assertEqual(response.status_code, 200)
 
-    def test_superuser_time_off_accept_redirect(self):
+    def test_superuser_time_off_accept_status_code(self):
         response = self.client.get('/worktime/time_off/accept/')
-        self.assertRedirects(
-            response,
-            '/worktime/time_off/list/',
-            fetch_redirect_response=False
-        )
+        self.assertEqual(response.status_code, 302)
 
-    def test_superuser_time_off_cancel_redirect(self):
+    def test_superuser_time_off_cancel_status_code(self):
         response = self.client.get('/worktime/time_off/cancel/')
-        self.assertRedirects(
-            response,
-            '/worktime/time_off/request/',
-            fetch_redirect_response=False
-        )
+        self.assertEqual(response.status_code, 302)
 
     def test_superuser_record_status_code(self):
         response = self.client.get('/worktime/record/')
@@ -257,4 +251,12 @@ class TestStaffAndSuperUserLoggedInView(TestCase):
 
     def test_superuser_readme_status_code(self):
         response = self.client.get('/worktime/readme/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_superuser_api_users_list_status_code(self):
+        response = self.client.get('/worktime/api/users/list/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_superuser_api_record_summary_status_code(self):
+        response = self.client.get('/worktime/api/record/summary/')
         self.assertEqual(response.status_code, 200)

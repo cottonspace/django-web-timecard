@@ -2,12 +2,15 @@
 ビュー定義です。
 """
 import datetime
+from functools import wraps
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin, LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.db.models import Q
+from django.http import HttpResponseForbidden
+from django.http.response import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import dateformat
@@ -57,7 +60,7 @@ class PasswordChange(LoginRequiredMixin, PasswordChangeView):
     success_url = reverse_lazy('worktime:record')
 
     def form_valid(self, form):
-        """フォームの検査
+        """バリデーション成功
         """
         messages.success(self.request, 'パスワードが更新されました')
         return super().form_valid(form)
@@ -96,7 +99,7 @@ class TimeRecordView(LoginRequiredMixin, FormView):
         return float(string) if string else None
 
     def form_valid(self, form):
-        """フォームの検査
+        """バリデーション成功
         """
         now = datetime.datetime.now()
         action = form.cleaned_data['action']
@@ -218,7 +221,7 @@ class TimeOffRequestView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        """フォームの検査
+        """バリデーション成功
         """
         request_date = form.cleaned_data['request_date']
         records = TimeOffRequest.objects.filter(
@@ -284,7 +287,7 @@ class TimeRecordCalendarView(LoginRequiredMixin, FormView):
         return initial
 
     def form_valid(self, form):
-        """フォームの検査
+        """バリデーション成功
         """
         username = form.cleaned_data['username']
         year = form.cleaned_data['year']
@@ -305,26 +308,28 @@ class TimeRecordSummaryView(StaffRequiredMixin, FormView):
         today = datetime.datetime.today()
         context['year'] = int(self.request.GET.get('year', today.year))
         context['month'] = int(self.request.GET.get('month', today.month))
-        context['entries'] = []
-        for id, name in get_users(True).items():
-            records = get_monthly_records(
-                id, context['year'], context['month']
-            )
-            summary = summarize(records)
-            context['entries'].append({
-                'id': id, 'name': name, 'summary': summary
-            })
         return context
 
     def form_valid(self, form):
-        """フォームの検査
+        """バリデーション成功
         """
         year = form.cleaned_data['year']
         month = form.cleaned_data['month']
         return redirect(reverse('worktime:record_summary') + f'?year={year}&month={month}')
 
 
-@login_required
+def staff_required(func):
+    """スタッフ権限を要求するデコレータ
+    """
+    @wraps(func)
+    def wrapped_func(request, *args, **kwargs):
+        if not request.user.is_staff:
+            return HttpResponseForbidden('指定された操作はスタッフ権限が必要です')
+        return func(request, *args, **kwargs)
+    return wrapped_func
+
+
+@staff_required
 def time_off_accept(request):
     """休暇申請の承認処理 (画面なし)
 
@@ -336,30 +341,27 @@ def time_off_accept(request):
         レスポンス情報
     """
     id = request.POST.get('id', None)
-    if request.user.is_staff:
-        record = TimeOffRequest.objects.filter(id=id).first()
-        if record:
-            if record.accepted:
-                messages.warning(request, '指定された申請は既に承認済です')
-            else:
-                record.accepted = True
-                record.save()
-                users = get_users(False)
-                messages.success(
-                    request,
-                    users.get(record.username, record.username) + ' の ' +
-                    dateformat.format(
-                        record.date, 'Y/m/d (D)'
-                    ) + ' の ' + record.display_name + ' を承認しました'
-                )
+    record = TimeOffRequest.objects.filter(id=id).first()
+    if record:
+        if record.accepted:
+            messages.warning(request, '指定された申請は既に承認済です')
         else:
-            messages.error(request, '指定された申請は存在しないか既に取り消されています')
+            record.accepted = True
+            record.save()
+            users = get_users(False)
+            messages.success(
+                request,
+                users.get(record.username, record.username) + ' の ' +
+                dateformat.format(
+                    record.date, 'Y/m/d (D)'
+                ) + ' の ' + record.display_name + ' を承認しました'
+            )
     else:
-        messages.error(request, '指定された操作は管理者の権限が必要です')
+        messages.error(request, '指定された申請は存在しないか既に取り消されています')
     return redirect('worktime:time_off_list')
 
 
-@login_required
+@staff_required
 def time_off_cancel(request):
     """休暇申請の取り消し処理 (画面なし)
 
@@ -372,7 +374,8 @@ def time_off_cancel(request):
     """
     id = request.POST.get('id', None)
     record = TimeOffRequest.objects.filter(
-        id=id, username=request.user.username).first()
+        id=id, username=request.user.username
+    ).first()
     if record:
         if record.accepted:
             messages.warning(request, '承認済の申請は取り消しできません')
@@ -402,3 +405,35 @@ class ReadmeView(TemplateView):
         context["YEAR_FIRST_MONTH"] = timecard.settings.YEAR_FIRST_MONTH
         context["ENABLE_CHECK_LOCATION"] = timecard.settings.ENABLE_CHECK_LOCATION
         return context
+
+
+@staff_required
+def api_users_list(request):
+    """登録ユーザの一覧を取得
+
+    Args:
+        request: リクエスト情報
+
+    Returns:
+        json レスポンス
+    """
+    return JsonResponse(get_users(True))
+
+
+@staff_required
+def api_record_summary(request):
+    """指定したユーザと年月の打刻記録のサマリを取得
+
+    Args:
+        request: リクエスト情報
+
+    Returns:
+        json レスポンス
+    """
+    id = request.GET.get('id', None)
+    today = datetime.datetime.today()
+    year = int(request.GET.get('year', today.year))
+    month = int(request.GET.get('month', today.month))
+    records = get_monthly_records(id, year, month)
+    summary = summarize(records)
+    return JsonResponse(summary)

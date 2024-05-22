@@ -1,7 +1,6 @@
 {% extends 'worktime/base.html' %}
 {% load custom_filter %}
 {% load static %}
-{% load humanize %}
 {% block title %}{{ year }}年度 休暇集計 | {{ block.super }}{% endblock title %}
 {% block extra_head %}
 <link href="{% static 'worktime/print.css' %}" rel="stylesheet">
@@ -33,7 +32,7 @@
 </div>
 <div class="container mb-3">
     <div class="table-responsive">
-        <table id="calendar" class="table table-hover table-bordered text-nowrap text-center sortable">
+        <table id="entries" class="table table-hover table-bordered text-nowrap text-center sortable">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">氏名</th>

@@ -32,12 +32,13 @@ class Command(BaseCommand):
         reader = csv.reader(f)
         for columns in reader:
             try:
-                User.objects.create(
+                user = User(
                     username=columns[0],
-                    password=columns[1],
                     last_name=columns[2],
                     first_name=columns[3]
                 )
+                user.set_password(columns[1])
+                user.save()
                 self.stdout.write(self.style.SUCCESS(columns[0] + ' ok'))
             except Exception as e:
                 self.stdout.write(self.style.ERROR(
