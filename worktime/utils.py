@@ -102,11 +102,9 @@ def delta(time1: datetime.time, time2: datetime.time) -> int:
     Returns:
         int: 1個目の時刻から2個目の時刻までの分数
     """
-    if time1 is not None and time2 is not None:
-        seconds1 = time1.hour * 60 + time1.minute
-        seconds2 = time2.hour * 60 + time2.minute
-        return seconds2 - seconds1
-    return 0
+    seconds1 = time1.hour * 60 + time1.minute
+    seconds2 = time2.hour * 60 + time2.minute
+    return seconds2 - seconds1
 
 
 def minutes_to_hours(minutes: int, quantize: str, rounding_mode) -> Decimal:
