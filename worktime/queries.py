@@ -3,7 +3,7 @@
 """
 import datetime
 
-from django.db.models import Count, Max, Min, OuterRef, Q, QuerySet, Subquery
+from django.db.models import Count, Max, Min, OuterRef, Q, Subquery
 
 from worktime.models import BusinessCalendar, TimeOffRequest, TimeRecord
 from worktime.rules import worktime_calculation
@@ -26,7 +26,7 @@ def count_time_off_requests(username: str, date_range: tuple[datetime.date, date
     return results
 
 
-def get_monthly_time_off_requests(username: str, year: int, month: int) -> QuerySet:
+def get_monthly_time_off_requests(username: str, year: int, month: int) -> dict:
     """指定したユーザと年月の休暇申請を取得します。
 
     Args:
@@ -35,9 +35,10 @@ def get_monthly_time_off_requests(username: str, year: int, month: int) -> Query
         month (int): 月
 
     Returns:
-        QuerySet: 取得したクエリ結果
+        dict: 日付をキーにした休暇申請情報の dict
     """
-    return TimeOffRequest.objects.filter(date__year=year, date__month=month, username=username).values(
+    results = {}
+    records = TimeOffRequest.objects.filter(date__year=year, date__month=month, username=username).values(
         'id',
         'date',
         'display_name',
@@ -48,9 +49,12 @@ def get_monthly_time_off_requests(username: str, year: int, month: int) -> Query
         'back',
         'accepted'
     )
+    for record in records:
+        results[record['date']] = record
+    return results
 
 
-def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
+def get_monthly_records(username: str, year: int, month: int) -> list:
     """指定したユーザと年月の打刻記録を取得します。承認済の休暇申請は勤務時間の計算に反映されます。
 
     Args:
@@ -59,13 +63,13 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
         month (int): 月
 
     Returns:
-        QuerySet: 取得したクエリ結果
+        list: 打刻記録のリスト(日付順)
     """
     subquery = TimeRecord.objects.filter(date=OuterRef('date'), username=username).values('date').annotate(
         begin_record=Min('time', filter=Q(action='begin')),
         end_record=Max('time', filter=Q(action='end'))
     )
-    queryset_records = BusinessCalendar.objects.filter(date__year=year, date__month=month).annotate(
+    queryset_records = BusinessCalendar.objects.filter(date__year=year, date__month=month).order_by('date').annotate(
         begin_record=Subquery(subquery.values('begin_record')),
         end_record=Subquery(subquery.values('end_record')),
     ).values(
@@ -79,15 +83,11 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
         'begin_record',
         'end_record',
     )
-    queryset_time_off_requests = get_monthly_time_off_requests(
-        username, year, month
-    )
-    for record in queryset_records:
-        time_off_requests = queryset_time_off_requests.filter(
-            date=record['date']
-        )
-        if time_off_requests.exists():
-            time_off_request = time_off_requests[0]
+    records = list(queryset_records.values())
+    time_off_requests = get_monthly_time_off_requests(username, year, month)
+    for record in records:
+        time_off_request = time_off_requests.get(record['date'])
+        if time_off_request:
             time_off_accepted = time_off_request['accepted']
             record.update({
                 'time_off_request_id': time_off_request['id'],
@@ -103,4 +103,4 @@ def get_monthly_records(username: str, year: int, month: int) -> QuerySet:
                     'back': time_off_request['back']
                 })
         record.update(worktime_calculation(record))
-    return queryset_records
+    return records
