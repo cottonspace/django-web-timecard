@@ -20,7 +20,7 @@ function sort_table(table, index, order) {
         if (numeric) {
             cond = Number(text1) - Number(text2);
         } else {
-            cond = text1.localeCompare(text2);
+            cond = text1 > text2 ? 1 : text1 < text2 ? -1 : 0;
         }
         return cond * (order ? 1 : -1);
     });
