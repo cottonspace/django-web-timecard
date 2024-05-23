@@ -135,22 +135,21 @@
         }
         location.href = "{% url 'worktime:record_summary' %}?year=" + n_year + "&month=" + n_month
     }
-    function load_entry(index, id, name, year, month) {
-        return fetch(
-            "{% url 'worktime:api_record_summary' %}?id=" + id + "&year=" + year + "&month=" + month
-        ).then(
-            (response) => { return response.json(); }
-        ).then(
-            (data) => { entries[index] = { id: id, name: name, summary: data }; }
-        );
+    async function load_entry(index, id, name, year, month) {
+        const response = await fetch("{% url 'worktime:api_record_summary' %}?id=" + id + "&year=" + year + "&month=" + month);
+        if (!response.ok) {
+            throw new Error('Response error');
+        }
+        const summary = await response.json();
+        entries[index] = { id: id, name: name, summary: summary };
     }
     async function load_entries() {
         entries = [];
+        const progress = document.getElementById("load-progress");
         const users_response = await fetch("{% url 'worktime:api_users_list' %}");
         if (!users_response.ok) {
             throw new Error('Response error');
         }
-        const progress = document.getElementById("load-progress");
         const users = await users_response.json();
         const keys = Object.keys(users);
         const parallel = 4;
@@ -159,7 +158,8 @@
             const tasks = [];
             for (let i = 0; i < parallel; i++) {
                 if (index < keys.length) {
-                    tasks.push(load_entry(index, keys[index], users[keys[index]], year, month));
+                    const id = keys[index];
+                    tasks.push(load_entry(index, id, users[id], year, month));
                     index++;
                 }
             }
@@ -181,18 +181,19 @@
             const cell6 = row.insertCell(5);
             const cell7 = row.insertCell(6);
             cell1.innerHTML = "<a href=\"{% url 'worktime:record_calendar' %}?username=" + entry.id + "&year=" + year + "&month=" + month + "\">" + entry.name + "</a>";
+            cell1.setAttribute("data-sort", entry.name);
             cell2.innerHTML = 0 < summary.errors ? summary.errors + ' 個' : '';
-            cell2.setAttribute("data-sort", summary.errors)
+            cell2.setAttribute("data-sort", summary.errors);
             cell3.innerHTML = 0 < summary.work_days ? summary.work_days + ' 日' : '';
-            cell3.setAttribute("data-sort", summary.work_days)
+            cell3.setAttribute("data-sort", summary.work_days);
             cell4.innerHTML = 0 < summary.time_off_count ? summary.time_off_count + ' 回' + (0 < summary.time_off_not_yet_accepted_count ? ' (承認待ち)' : '') : '';
-            cell4.setAttribute("data-sort", summary.time_off_count)
+            cell4.setAttribute("data-sort", summary.time_off_count);
             cell5.innerHTML = 0 < summary.behind_count ? summary.behind_count + ' 回 (' + summary.behind_minutes.toLocaleString() + ' 分)' : '';
-            cell5.setAttribute("data-sort", summary.behind_count)
+            cell5.setAttribute("data-sort", summary.behind_count);
             cell6.innerHTML = 0 < summary.early_hours ? summary.early_hours + ' 時間 (' + summary.early_minutes.toLocaleString() + ' 分)' : '';
-            cell6.setAttribute("data-sort", summary.early_minutes)
+            cell6.setAttribute("data-sort", summary.early_minutes);
             cell7.innerHTML = 0 < summary.overtime_hours ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
-            cell7.setAttribute("data-sort", summary.overtime_minutes)
+            cell7.setAttribute("data-sort", summary.overtime_minutes);
         }
     }
     window.addEventListener('load', load_entries);
