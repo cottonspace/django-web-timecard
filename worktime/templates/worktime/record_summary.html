@@ -162,7 +162,7 @@
                 const key = keys[index];
                 promises.push(load_entry(index, key, users[key], year, month));
                 index++;
-                progress.textContent = Math.round(index / keys.length * 100 / 5) * 5 + ' %';
+                progress.textContent = Math.round(index / keys.length * 100 / 10) * 10 + ' %';
             }
             const complete = await Promise.race(promises.map((promise, i) => promise.then(() => i)));
             promises.splice(complete, 1);
