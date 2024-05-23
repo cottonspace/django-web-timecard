@@ -37,7 +37,6 @@ def get_monthly_time_off_requests(username: str, year: int, month: int) -> dict:
     Returns:
         dict: 日付をキーにした休暇申請情報の dict
     """
-    results = {}
     records = TimeOffRequest.objects.filter(date__year=year, date__month=month, username=username).values(
         'id',
         'date',
@@ -49,6 +48,7 @@ def get_monthly_time_off_requests(username: str, year: int, month: int) -> dict:
         'back',
         'accepted'
     )
+    results = {}
     for record in records:
         results[record['date']] = record
     return results
