@@ -135,22 +135,36 @@
         }
         location.href = "{% url 'worktime:record_summary' %}?year=" + n_year + "&month=" + n_month
     }
-    async function async_load_entries() {
+    function load_entry(index, id, name, year, month) {
+        return fetch(
+            "{% url 'worktime:api_record_summary' %}?id=" + id + "&year=" + year + "&month=" + month
+        ).then(
+            (response) => { return response.json(); }
+        ).then(
+            (data) => { entries[index] = { id: id, name: name, summary: data }; }
+        );
+    }
+    async function load_entries() {
         entries = [];
         const users_response = await fetch("{% url 'worktime:api_users_list' %}");
         if (!users_response.ok) {
             throw new Error('Response error');
         }
-        const users = await users_response.json();
         const progress = document.getElementById("load-progress");
-        for (const id in users) {
-            const summary_response = await fetch("{% url 'worktime:api_record_summary' %}?id=" + id + "&year=" + year + "&month=" + month);
-            if (!summary_response.ok) {
-                throw new Error('Response error');
+        const users = await users_response.json();
+        const keys = Object.keys(users);
+        const parallel = 4;
+        let index = 0;
+        while (index < keys.length) {
+            const tasks = [];
+            for (let i = 0; i < parallel; i++) {
+                if (index < keys.length) {
+                    tasks.push(load_entry(index, keys[index], users[keys[index]], year, month));
+                    index++;
+                }
             }
-            const summary = await summary_response.json();
-            entries.push({ id: id, name: users[id], summary: summary });
-            progress.textContent = '集計中 ' + Math.round(entries.length / Object.keys(users).length * 100) + ' %';
+            await Promise.all(tasks);
+            progress.textContent = '集計中 ' + Math.round(index / keys.length * 100) + ' %';
         }
         const tbody = document.getElementById("entries").getElementsByTagName('tbody')[0];
         while (tbody.firstChild) {
@@ -181,6 +195,6 @@
             cell7.setAttribute("data-sort", summary.overtime_minutes)
         }
     }
-    window.addEventListener('load', async_load_entries);
+    window.addEventListener('load', load_entries);
 </script>
 {% endblock main %}
