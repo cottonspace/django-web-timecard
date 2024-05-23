@@ -119,7 +119,7 @@ class BusinessCalendar(models.Model):
     Returns:
         str: 文字列表現
     """
-    date = models.DateField('日付', primary_key=True)
+    date = models.DateField('日付', primary_key=True, db_index=True)
     attendance = models.BooleanField('営業日')
     holiday = models.CharField('休業理由', max_length=40, blank=True)
     begin = models.TimeField('勤務開始', blank=True, null=True)
@@ -169,10 +169,10 @@ class TimeRecord(models.Model):
         str: 文字列表現
     """
     id = models.AutoField('ID', primary_key=True)
-    date = models.DateField('日付')
+    date = models.DateField('日付', db_index=True)
     time = models.TimeField('時刻')
-    username = models.CharField('ユーザー名', max_length=150)
-    action = models.CharField('種別', max_length=20)
+    username = models.CharField('ユーザー名', max_length=150, db_index=True)
+    action = models.CharField('種別', max_length=20, db_index=True)
     latitude = models.FloatField(
         '緯度', blank=True, null=True, validators=[
             MinValueValidator(-90), MaxValueValidator(90)
@@ -243,9 +243,9 @@ class TimeOffRequest(models.Model):
         str: 文字列表現
     """
     id = models.AutoField('ID', primary_key=True)
-    date = models.DateField('日付')
-    username = models.CharField('ユーザー名', max_length=150)
-    display_name = models.CharField('名称', max_length=40)
+    date = models.DateField('日付', db_index=True)
+    username = models.CharField('ユーザー名', max_length=150, db_index=True)
+    display_name = models.CharField('名称', max_length=40, db_index=True)
     attendance = models.BooleanField('勤務', default=True)
     begin = models.TimeField('勤務開始', blank=True, null=True)
     end = models.TimeField('勤務終了', blank=True, null=True)
