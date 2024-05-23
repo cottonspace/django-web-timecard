@@ -47,7 +47,9 @@
             </thead>
             <tbody class="table-group-divider">
                 <tr>
-                    <td colspan="7"><span id="load-progress">データが読み込まれていません</span></td>
+                    <td colspan="7">
+                        <div id="load-progress" class="my-5">&nbsp;</div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -160,7 +162,7 @@
                 const key = keys[index];
                 promises.push(load_entry(index, key, users[key], year, month));
                 index++;
-                progress.textContent = '集計中 ' + Math.round(index / keys.length * 100) + ' %';
+                progress.textContent = Math.round(index / keys.length * 100) + ' %';
             }
             const complete = await Promise.race(promises.map((promise, i) => promise.then(() => i)));
             promises.splice(complete, 1);
