@@ -154,17 +154,16 @@
         const keys = Object.keys(users);
         const parallel = 4;
         let index = 0;
-        while (index < keys.length) {
-            const tasks = [];
-            for (let i = 0; i < parallel; i++) {
-                if (index < keys.length) {
-                    const id = keys[index];
-                    tasks.push(load_entry(index, id, users[id], year, month));
-                    index++;
-                }
+        let promises = [];
+        while (index < keys.length || 0 < promises.length) {
+            while (index < keys.length && promises.length < parallel) {
+                const key = keys[index];
+                promises.push(load_entry(index, key, users[key], year, month));
+                index++;
+                progress.textContent = '集計中 ' + Math.round(index / keys.length * 100) + ' %';
             }
-            await Promise.all(tasks);
-            progress.textContent = '集計中 ' + Math.round(index / keys.length * 100) + ' %';
+            const complete = await Promise.race(promises.map((promise, i) => promise.then(() => i)));
+            promises.splice(complete, 1);
         }
         const tbody = document.getElementById("entries").getElementsByTagName('tbody')[0];
         while (tbody.firstChild) {
