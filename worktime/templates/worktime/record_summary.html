@@ -32,8 +32,11 @@
     </div>
 </div>
 <div class="container mb-3">
+    <div id="progress" class="progress mx-auto" role="progressbar" style="width:50%;">
+        <div class="progress-bar" style="width:0%;"></div>
+    </div>
     <div class="table-responsive">
-        <table id="entries" class="table table-hover table-bordered text-nowrap text-center sortable">
+        <table id="entries" class="table table-hover table-bordered text-nowrap text-center sortable d-none">
             <thead>
                 <tr class="table-dark">
                     <th scope="col">氏名</th>
@@ -45,13 +48,7 @@
                     <th scope="col">残業</th>
                 </tr>
             </thead>
-            <tbody class="table-group-divider">
-                <tr>
-                    <td colspan="7">
-                        <div id="load-progress" class="my-5">&nbsp;</div>
-                    </td>
-                </tr>
-            </tbody>
+            <tbody class="table-group-divider"></tbody>
         </table>
     </div>
 </div>
@@ -147,7 +144,7 @@
     }
     async function load_entries() {
         entries = [];
-        const progress = document.getElementById("load-progress");
+        const progress = document.querySelector('#progress .progress-bar');
         const users_response = await fetch("{% url 'worktime:api_users_list' %}");
         if (!users_response.ok) {
             throw new Error('Response error');
@@ -162,7 +159,7 @@
                 const key = keys[index];
                 promises.push(load_entry(index, key, users[key], year, month));
                 index++;
-                progress.textContent = Math.round(index / keys.length * 100 / 10) * 10 + ' %';
+                progress.style.width = Math.round(index / keys.length * 100) + '%';
             }
             const complete = await Promise.race(promises.map((promise, i) => promise.then(() => i)));
             promises.splice(complete, 1);
@@ -196,6 +193,8 @@
             cell7.innerHTML = 0 < summary.overtime_hours ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
             cell7.setAttribute("data-sort", summary.overtime_minutes);
         }
+        document.getElementById("progress").classList.add("d-none");
+        document.getElementById("entries").classList.remove("d-none");
     }
     window.addEventListener('load', load_entries);
 </script>
