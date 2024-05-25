@@ -32,8 +32,9 @@
     </div>
 </div>
 <div class="container mb-3">
-    <div id="progress" class="progress mx-auto" role="progressbar" style="width:50%;">
-        <div class="progress-bar" style="width:0%;"></div>
+    <div id="running" class="text-secondary text-center">
+        <div class="spinner-border spinner-border-sm" role="status"></div>
+        <span id="progress"></span>
     </div>
     <div class="table-responsive">
         <table id="entries" class="table table-hover table-bordered text-nowrap text-center sortable d-none">
@@ -144,7 +145,7 @@
     }
     async function load_entries() {
         entries = [];
-        const progress = document.querySelector('#progress .progress-bar');
+        const progress = document.getElementById('progress')
         const users_response = await fetch("{% url 'worktime:api_users_list' %}");
         if (!users_response.ok) {
             throw new Error('Response error');
@@ -159,7 +160,7 @@
                 const key = keys[index];
                 promises.push(load_entry(index, key, users[key], year, month));
                 index++;
-                progress.style.width = Math.round(index / keys.length * 100) + '%';
+                progress.innerText = Math.round(index / keys.length * 100 / 5) * 5 + ' %';
             }
             const complete = await Promise.race(promises.map((promise, i) => promise.then(() => i)));
             promises.splice(complete, 1);
@@ -193,7 +194,7 @@
             cell7.innerHTML = 0 < summary.overtime_hours ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
             cell7.setAttribute("data-sort", summary.overtime_minutes);
         }
-        document.getElementById("progress").classList.add("d-none");
+        document.getElementById("running").classList.add("d-none");
         document.getElementById("entries").classList.remove("d-none");
     }
     window.addEventListener('load', load_entries);
