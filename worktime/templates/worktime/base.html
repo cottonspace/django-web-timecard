@@ -22,8 +22,18 @@
         }
 
         .inline-help-icon {
-            vertical-align: middle;
-            padding-left: 4px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 1em;
+            height: 1em;
+            margin-left: 0.3em;
+            background-color: #77b179;
+            border: none;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 1em;
+            font-weight: bold;
         }
 
         .print-header {
@@ -63,10 +73,10 @@
                         element = labels[0];
                     }
                 }
-                let img = document.createElement('img');
-                img.src = "{% static 'worktime/question.svg' %}";
-                img.classList.add('inline-help-icon', 'no-print');
-                element.appendChild(img);
+                let div = document.createElement('div');
+                div.classList.add('inline-help-icon', 'no-print');
+                div.innerText = '?';
+                element.appendChild(div);
                 element.setAttribute('data-bs-toggle', 'tooltip');
                 element.setAttribute('data-bs-placement', 'auto');
                 new bootstrap.Tooltip(element);
