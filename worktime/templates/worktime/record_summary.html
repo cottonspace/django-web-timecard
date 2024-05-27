@@ -135,40 +135,23 @@
         }
         location.href = "{% url 'worktime:record_summary' %}?year=" + n_year + "&month=" + n_month
     }
-    async function load_entry(index, id, name, year, month) {
-        const response = await fetch("{% url 'worktime:api_record_summary' %}?id=" + id + "&year=" + year + "&month=" + month);
-        if (!response.ok) {
-            throw new Error('Response error');
-        }
-        const summary = await response.json();
-        entries[index] = { id: id, name: name, summary: summary };
-    }
     async function load_entries() {
-        entries = [];
         const progress = document.getElementById('progress')
         const users_response = await fetch("{% url 'worktime:api_users_list' %}");
         if (!users_response.ok) {
             throw new Error('Response error');
         }
         const users = await users_response.json();
-        const keys = Object.keys(users);
-        const parallel = 4;
-        let index = 0;
-        let promises = [];
-        while (index < keys.length || 0 < promises.length) {
-            while (index < keys.length && promises.length < parallel) {
-                const key = keys[index];
-                promises.push(load_entry(index, key, users[key], year, month));
-                index++;
-                progress.innerText = Math.round(index / keys.length * 100 / 5) * 5 + ' %';
+        for (let id in users) {
+            const response = await fetch("{% url 'worktime:api_record_summary' %}?id=" + id + "&year=" + year + "&month=" + month);
+            if (!response.ok) {
+                throw new Error('Response error');
             }
-            const complete = await Promise.race(promises.map((promise, i) => promise.then(() => i)));
-            promises.splice(complete, 1);
+            const summary = await response.json();
+            entries.push({ id: id, name: users[id], summary: summary });
+            progress.innerText = Math.round(entries.length / Object.keys(users).length * 100 / 5) * 5 + ' %';
         }
         const tbody = document.getElementById("entries").getElementsByTagName('tbody')[0];
-        while (tbody.firstChild) {
-            tbody.removeChild(tbody.firstChild);
-        }
         for (let entry of entries) {
             let summary = entry['summary']
             let row = tbody.insertRow();
