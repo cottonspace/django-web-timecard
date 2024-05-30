@@ -207,15 +207,15 @@
             cell4.setAttribute("data-sort", summary.time_off_count);
             cell5.innerHTML = 0 < summary.behind_count ? summary.behind_count + ' 回 (' + summary.behind_minutes.toLocaleString() + ' 分)' : '';
             cell5.setAttribute("data-sort", summary.behind_count);
-            cell6.innerHTML = 0 < summary.early_hours ? summary.early_hours + ' 時間 (' + summary.early_minutes.toLocaleString() + ' 分)' : '';
+            cell6.innerHTML = 0 < summary.early_minutes ? summary.early_hours + ' 時間 (' + summary.early_minutes.toLocaleString() + ' 分)' : '';
             cell6.setAttribute("data-sort", summary.early_minutes);
-            cell7.innerHTML = 0 < summary.overtime_hours ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
+            cell7.innerHTML = 0 < summary.overtime_minutes ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
             cell7.setAttribute("data-sort", summary.overtime_minutes);
             summary_count++;
             if (0 < summary.errors) summary_errors++;
             if (0 < summary.time_off_not_yet_accepted_count) summary_not_accepted++;
             if (0 < summary.behind_count) summary_behind++;
-            let overtime = summary.early_hours + summary.overtime_hours;
+            let overtime = Number(summary.early_hours) + Number(summary.overtime_hours);
             if (60 <= overtime) {
                 summary_overtime_3++;
             } else if (30 <= overtime) {
