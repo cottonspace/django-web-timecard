@@ -31,11 +31,39 @@
         </div>
     </div>
 </div>
+<div id="running" class="text-secondary text-center my-5 no-print">
+    <div class="spinner-border spinner-border-sm" role="status"></div>
+    <span id="progress">0 %</span>
+</div>
 <div class="container mb-3">
-    <div id="running" class="text-secondary text-center my-5 no-print">
-        <div class="spinner-border spinner-border-sm" role="status"></div>
-        <span id="progress">0 %</span>
+    <div class="table-responsive">
+        <table id="summary" class="table align-middle text-nowrap text-center d-none">
+            <thead>
+                <tr>
+                    <th>合計</th>
+                    <th>エラー</th>
+                    <th>承認待ち</th>
+                    <th>遅刻・早退</th>
+                    <th><span class="inline-help" data-bs-title="早出と残業の合計が 30 時間未満の人数です">30 時間未満</span></th>
+                    <th><span class="inline-help" data-bs-title="早出と残業の合計が 30 ～ 60 時間の人数です">30 時間以上</span></th>
+                    <th><span class="inline-help" data-bs-title="早出と残業の合計が 60 時間以上の人数です">60 時間以上</span></th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr>
+                    <td id="summary_count">-</td>
+                    <td id="summary_errors">-</td>
+                    <td id="summary_not_accepted">-</td>
+                    <td id="summary_behind">-</td>
+                    <td id="summary_overtime_1">-</td>
+                    <td id="summary_overtime_2">-</td>
+                    <td id="summary_overtime_3">-</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</div>
+<div class="container mb-3">
     <div class="table-responsive">
         <table id="entries" class="table table-hover table-bordered text-nowrap text-center sortable d-none">
             <thead>
@@ -152,6 +180,13 @@
             progress.innerText = Math.round(entries.length / Object.keys(users).length * 100 / 5) * 5 + ' %';
         }
         const tbody = document.getElementById("entries").getElementsByTagName('tbody')[0];
+        let summary_count = 0;
+        let summary_errors = 0;
+        let summary_not_accepted = 0;
+        let summary_behind = 0;
+        let summary_overtime_1 = 0;
+        let summary_overtime_2 = 0;
+        let summary_overtime_3 = 0;
         for (let entry of entries) {
             let summary = entry['summary']
             let row = tbody.insertRow();
@@ -176,8 +211,28 @@
             cell6.setAttribute("data-sort", summary.early_minutes);
             cell7.innerHTML = 0 < summary.overtime_hours ? summary.overtime_hours + ' 時間 (' + summary.overtime_minutes.toLocaleString() + ' 分)' : '';
             cell7.setAttribute("data-sort", summary.overtime_minutes);
+            summary_count++;
+            if (0 < summary.errors) summary_errors++;
+            if (0 < summary.time_off_not_yet_accepted_count) summary_not_accepted++;
+            if (0 < summary.behind_count) summary_behind++;
+            let overtime = summary.early_hours + summary.overtime_hours;
+            if (60 <= overtime) {
+                summary_overtime_3++;
+            } else if (30 <= overtime) {
+                summary_overtime_2++;
+            } else if (0 < overtime) {
+                summary_overtime_1++;
+            }
         }
+        if (0 < summary_count) document.getElementById('summary_count').innerText = summary_count + ' 人';
+        if (0 < summary_errors) document.getElementById('summary_errors').innerText = summary_errors + ' 人';
+        if (0 < summary_not_accepted) document.getElementById('summary_not_accepted').innerText = summary_not_accepted + ' 人';
+        if (0 < summary_behind) document.getElementById('summary_behind').innerText = summary_behind + ' 人';
+        if (0 < summary_overtime_1) document.getElementById('summary_overtime_1').innerText = summary_overtime_1 + ' 人';
+        if (0 < summary_overtime_2) document.getElementById('summary_overtime_2').innerText = summary_overtime_2 + ' 人';
+        if (0 < summary_overtime_3) document.getElementById('summary_overtime_3').innerText = summary_overtime_3 + ' 人';
         document.getElementById("running").classList.add("d-none");
+        document.getElementById("summary").classList.remove("d-none");
         document.getElementById("entries").classList.remove("d-none");
     }
     window.addEventListener('load', load_entries);
