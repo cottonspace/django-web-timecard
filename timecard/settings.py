@@ -6,7 +6,7 @@ from django.contrib import messages
 # Application information
 APP_SITE = 'https://github.com/cottonspace/time-record-system'
 APP_NAME = 'T-RECS'
-APP_VERSION = '0.9.23'
+APP_VERSION = '0.9.24'
 
 # Load local settings
 try:
