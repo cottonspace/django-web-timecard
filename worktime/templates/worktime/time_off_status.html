@@ -47,7 +47,7 @@
                 <tr>
                     <th>{{ entry.name }}</th>
                     {% for display_name in display_names %}
-                    {% with entry.counts|dict_value:display_name as count %}
+                    {% with entry.counts|dict_value:display_name|default:0 as count %}
                     <td data-sort="{{ count }}">{% if count %}{{ count }} 回{% endif %}</td>
                     {% endwith %}
                     {% endfor %}
