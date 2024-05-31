@@ -40,13 +40,16 @@
         <table id="summary" class="table align-middle text-nowrap text-center d-none">
             <thead>
                 <tr>
-                    <th>合計</th>
-                    <th>エラー</th>
-                    <th>承認待ち</th>
-                    <th>遅刻・早退</th>
-                    <th><span class="inline-help" data-bs-title="早出と残業の合計が 30 時間未満の人数です">30 時間未満</span></th>
-                    <th><span class="inline-help" data-bs-title="早出と残業の合計が 30 ～ 60 時間の人数です">30 時間以上</span></th>
-                    <th><span class="inline-help" data-bs-title="早出と残業の合計が 60 時間以上の人数です">60 時間以上</span></th>
+                    <th rowspan="2">合計</th>
+                    <th rowspan="2">エラー</th>
+                    <th rowspan="2">承認待ち</th>
+                    <th rowspan="2">遅刻・早退</th>
+                    <th colspan="3"><span class="inline-help" data-bs-title="早出と残業の合計時間です">時間外</span></th>
+                </tr>
+                <tr>
+                    <th>30 未満</th>
+                    <th>30 以上</th>
+                    <th>60 以上</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
