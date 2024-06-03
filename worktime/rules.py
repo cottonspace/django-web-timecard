@@ -34,7 +34,6 @@ def worktime_calculation(obj) -> dict:
 
     # データチェック
     try:
-        # 過去日の場合
         if obj['date'] < today:
             if obj['begin_record'] is None and obj['end_record'] is None:
                 if obj['attendance']:
@@ -54,9 +53,15 @@ def worktime_calculation(obj) -> dict:
                 if obj['end_record'] < obj['begin_record']:
                     raise ValueError('出勤と退勤の順序が不正です')
         elif obj['date'] == today:
-            if obj['begin_record'] is None or obj['end_record'] is None:
-                # 本日で打刻なしまたは不完全打刻 (正常)
+            if obj['begin_record'] is None and obj['end_record'] is None:
+                # 本日で打刻なし (正常)
                 return result
+            elif obj['begin_record'] is not None and obj['end_record'] is None:
+                # 本日で退勤なし (正常)
+                return result
+            elif obj['begin_record'] is None and obj['end_record'] is not None:
+                # 不完全打刻
+                raise ValueError('出勤がありません')
             else:
                 # 本日で出退勤打刻の両方あるが前後矛盾
                 if obj['end_record'] < obj['begin_record']:
