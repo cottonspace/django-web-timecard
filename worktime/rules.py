@@ -22,7 +22,6 @@ def worktime_calculation(obj) -> dict:
 
     # 初期化
     result = {
-        'past': obj['date'] <= datetime.datetime.now().date(),
         'work': obj['begin_record'] is not None or obj['end_record'] is not None,
         'behind':  0,
         'early': 0,
@@ -30,10 +29,13 @@ def worktime_calculation(obj) -> dict:
         'error': None
     }
 
+    # 本日の日付
+    today = datetime.datetime.now().date()
+
     # データチェック
     try:
         # 過去日の場合
-        if result['past']:
+        if obj['date'] < today:
             if obj['begin_record'] is None and obj['end_record'] is None:
                 if obj['attendance']:
                     # 過去日で打刻なし
@@ -49,6 +51,14 @@ def worktime_calculation(obj) -> dict:
                 raise ValueError('出勤がありません')
             else:
                 # 過去日で出退勤打刻の両方あるが前後矛盾
+                if obj['end_record'] < obj['begin_record']:
+                    raise ValueError('出勤と退勤の順序が不正です')
+        elif obj['date'] == today:
+            if obj['begin_record'] is None or obj['end_record'] is None:
+                # 本日で打刻なしまたは不完全打刻 (正常)
+                return result
+            else:
+                # 本日で出退勤打刻の両方あるが前後矛盾
                 if obj['end_record'] < obj['begin_record']:
                     raise ValueError('出勤と退勤の順序が不正です')
         else:
@@ -122,7 +132,6 @@ def summarize(objects) -> dict:
     result = {
         'days': 0,
         'attendance_days': 0,
-        'past_days': 0,
         'work_days': 0,
         'behind_minutes': 0,
         'behind_count': 0,
@@ -140,8 +149,6 @@ def summarize(objects) -> dict:
         result['days'] += 1
         if obj['attendance']:
             result['attendance_days'] += 1
-        if obj['past']:
-            result['past_days'] += 1
         if obj['work']:
             result['work_days'] += 1
         if obj['error']:

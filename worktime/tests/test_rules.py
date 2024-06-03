@@ -50,7 +50,7 @@ class TestWorktimeCalculationRulesValidations(TestCase):
         obj = self.get_attendance(1)
         self.assertEqual(
             worktime_calculation(obj), {
-                'past': False, 'work': False, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None
+                'work': False, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None
             }
         )
 
@@ -80,7 +80,7 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj['end_record'] = datetime.time(17, 0, 0)
         self.assertEqual(
             worktime_calculation(obj), {
-                'past': True, 'work': True, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None
+                'work': True, 'behind': 0, 'early': 0, 'overtime': 0, 'error': None
             }
         )
 
@@ -90,7 +90,7 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj['end_record'] = datetime.time(17, 0, 0)
         self.assertEqual(
             worktime_calculation(obj), {
-                'past': True, 'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None
+                'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None
             }
         )
 
@@ -100,7 +100,7 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj['end_record'] = datetime.time(16, 0, 0)
         self.assertEqual(
             worktime_calculation(obj), {
-                'past': True, 'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None
+                'work': True, 'behind': 60, 'early': 0, 'overtime': 0, 'error': None
             }
         )
 
@@ -110,7 +110,7 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj['end_record'] = datetime.time(17, 0, 0)
         self.assertEqual(
             worktime_calculation(obj), {
-                'past': True, 'work': True, 'behind': 0, 'early': 60, 'overtime': 0, 'error': None
+                'work': True, 'behind': 0, 'early': 60, 'overtime': 0, 'error': None
             }
         )
 
@@ -120,7 +120,7 @@ class TestWorktimeCalculationRulesCalculations(TestCase):
         obj['end_record'] = datetime.time(18, 0, 0)
         self.assertEqual(
             worktime_calculation(obj), {
-                'past': True, 'work': True, 'behind': 0, 'early': 0, 'overtime': 60, 'error': None
+                'work': True, 'behind': 0, 'early': 0, 'overtime': 60, 'error': None
             }
         )
 
